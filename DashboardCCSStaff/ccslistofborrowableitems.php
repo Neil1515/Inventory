@@ -17,22 +17,22 @@ $pendingreserveCount = 0;
 while ($row = mysqli_fetch_assoc($resultitems)) {
     switch ($row['status']) {
         case 'Available':
-            $availableCount++;
+            $availableCount += $row['quantity'];
             break;
         case 'Reserve':
-            $reserveCount++;
+            $reserveCount += $row['quantity'];
             break;
         case 'Borrowed':
-            $borrowedCount++;
+            $borrowedCount += $row['quantity'];
             break;
         case 'Missing':
-            $missingCount++;
+            $missingCount += $row['quantity'];
             break;
         case 'Pending Borrow':
-            $pendingborrowCount++;
+            $pendingborrowCount += $row['quantity'];
             break;    
         case 'Pending Reserve':
-            $pendingreserveCount++;
+            $pendingreserveCount += $row['quantity'];
             break;
     }
 }
@@ -148,7 +148,7 @@ mysqli_data_seek($resultitems, 0);
     <div class="container mt-1">
         <div class="row">
         <div class="d-flex justify-content-between mb-2">
-            <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>List of Borrowable Items</h3>
+            <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Dashboard</h3>
             <div class="text-end">
             <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
             </div>
@@ -211,7 +211,7 @@ mysqli_data_seek($resultitems, 0);
                         <th scope="col">Model No</th>
                         <th scope="col">Serial No</th>              
                         <th scope="col">Status</th>
-                        
+                        <th scope="col">Name of Borrower</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -269,6 +269,7 @@ mysqli_data_seek($resultitems, 0);
                         }
                         
                         echo "<td class='{$statusClass}'>{$row['status']}</td>";
+                        echo "<td></td>";
                         
 
                         echo "</tr>";

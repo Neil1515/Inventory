@@ -29,7 +29,7 @@ if ($stmtSelectUser) {
 }
 ?>
 
-<div class="container mt-1">
+<div class="container ">
     <h2><i class='fas fa-bookmark me-2'></i>List of Pending Accounts</h2>
     <div class="row row-cols-1 row-cols-md-1 row-cols-lg-4 g-1">
         <?php
@@ -41,7 +41,7 @@ if ($stmtSelectUser) {
             while ($rowPending = mysqli_fetch_assoc($resultPendingAccounts)) {
                 $genderIcon = ($rowPending['gender'] == 'Male') ? 'fas fa-male' : 'fas fa-female';
 
-                echo "<div class='card me-4'>
+                echo "<div class='card me-3'>
                         <div class='card-body'>
                             <h5 class='card-title'>
                                 <i class='fas fa-user me-2'></i>{$rowPending['fname']} {$rowPending['lname']}
@@ -67,7 +67,7 @@ if ($stmtSelectUser) {
                       </div>";
             }
         } else {
-            echo "<div class='card me-4'>
+            echo "<div class='card me-5'>
             <div class='card-body'>
                 <p class='card-text'>No pending accounts.</p>
             </div>

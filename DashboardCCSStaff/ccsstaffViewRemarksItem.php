@@ -72,7 +72,7 @@ if ($stmt) {
                         <h4 class="text-start"><i class="fas fa-plus-circle me-2"></i>View Remarks</h4>
                     </div>
                     <div class="col-md-10 text-end">
-                        <a href="ccsstaffDashboardPage.php" class="btn btn-danger">Back</a>
+                        <a href="ccsstaffBorrowableitems.php" class="btn btn-danger">Back</a>
                     </div>
                 </div>
                 <?php

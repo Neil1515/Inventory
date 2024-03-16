@@ -16,12 +16,7 @@
                     <span>Items Borrowed</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-file-alt me-2"></i>
-                    <span>Reports</span>
-                </a>
-            </li>
+           
             <li class="nav-item">
                 <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#approvalsSubMenu" aria-expanded="false">
                     <i class="fas fa-history me-2"></i>
@@ -41,6 +36,12 @@
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-file-alt me-2"></i>
+                    <span>Reports</span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/Inventory/logout.php">

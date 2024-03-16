@@ -13,7 +13,19 @@
             <li class="nav-item ">
                 <a class="nav-link " href="ccsstaffBorrowableitems.php">
                     <i class=" fas fa-box-open me-2"></i>
-                    <span>Borrowable Items</span>
+                    <span>All Items</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="ccstaffListofItems.php">
+                    <i class="fas fa-list-ul me-2"></i>
+                    <span>List of Items</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-list-ul me-2"></i>
+                    <span>Calendar</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -41,7 +53,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="ccsstaffReturnitem.php">
+                        <a class="nav-link" href="ccsstaffListofBorrowers.php">
                             <i class="fas fa-undo-alt me-2"></i> <!-- Icon for Return Items -->
                             Return Items
                         </a>
@@ -76,12 +88,7 @@
                 </ul>
             </li>
            
-            <li class="nav-item">
-                <a class="nav-link" href="ccstaffListofItems.php">
-                    <i class="fas fa-list-ul me-2"></i>
-                    <span>List of Items</span>
-                </a>
-            </li>
+            
             <li class="nav-item">
                 <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#newSubMenu" aria-expanded="false">
                     <i class="fas fa-tasks me-2"></i>

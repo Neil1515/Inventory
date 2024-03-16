@@ -1,4 +1,6 @@
 <!-- registrationform.php -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,6 +46,7 @@
                     ?>
                     <div class="card-body">
                         <form action="process_registration.php" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="department" name="department" value="">    
                             <div class="mb-1">
                                 <span for="Id" class="form-label">Student/Employee ID<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="Id" name="Id" required>
@@ -78,7 +81,25 @@
                             </div>
                             <div class="mb-1">
                                 <label for="department" class="form-label">Department<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="department" name="department" required>
+                                <select class="form-select" id="departmentSelect" name="department" required onchange="showOtherInput()">
+                                    <option value="" selected disabled>Select Department</option>
+                                    <option value="College of Business & Accountancy">College of Business & Accountancy</option>
+                                    <option value="College of Criminology">College of Criminology</option>
+                                    <option value="College of Computer Studies">College of Computer Studies</option>
+                                    <option value="College of Customs Administration">College of Customs Administration</option>
+                                    <option value="College of Engineering">College of Engineering</option>
+                                    <option value="College of Hotel & Restaurant Management">College of Hotel & Restaurant Management</option>
+                                    <option value="College of Maritime Education">College of Maritime Education</option>
+                                    <option value="College of Marine Transportation">College of Marine Transportation</option>
+                                    <option value="College of Nursing">College of Nursing</option>
+                                    <option value="College of Teacher Education">College of Teacher Education</option>
+                                    <option value="Others">Others</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-1" id="otherDepartmentInput" style="display: none;">
+                                <label for="otherDepartment" class="form-label">Other Department<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="otherDepartment" name="otherDepartment">
                             </div>
                             <div class="mb-2">
                                 <label for="idImage" class="form-label">Upload Image of Valid ID<span class="text-danger">*</span></label>
@@ -87,7 +108,7 @@
                             </div>
 
                             <div class="text-end ">
-                            <a href="index.php" class="btn btn-danger">Cancel</a>
+                            <a href="index.php" class="btn btn-danger">Login</a>
                                 <button type="submit" class="btn btn-primary">Register</button>
                             </div>
                         </form>
@@ -96,6 +117,28 @@
             </div>
         </div>
     </div>
+    <script>
+    function showOtherInput() {
+        var departmentSelect = document.getElementById("departmentSelect");
+        var otherDepartmentInput = document.getElementById("otherDepartmentInput");
+        var otherDepartmentTextbox = document.getElementById("otherDepartment");
+
+        if (departmentSelect.value === "Others") {
+            otherDepartmentInput.style.display = "block";
+            otherDepartmentTextbox.setAttribute("required", "required");
+            // Set the department hidden input value to the value of the Other Department input
+            document.getElementById("department").value = otherDepartmentTextbox.value;
+            // Clear the Other Department input value
+            otherDepartmentTextbox.value = "";
+        } else {
+            otherDepartmentInput.style.display = "none";
+            otherDepartmentTextbox.removeAttribute("required");
+            // Clear the department hidden input value
+            document.getElementById("department").value = "";
+        }
+    }
+</script>
+
     <style>  
 body {
     font-family: 'Arial', sans-serif;

@@ -1,3 +1,4 @@
+<!-- ccsmaincontainer.php -->
 <?php
 // Query to fetch categories
 $queryitems = "SELECT id, itembrand, categoryname, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor, COUNT(*) as quantity FROM tblitembrand GROUP BY itembrand, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor ORDER BY categoryname, assignfor, subcategoryname, itembrand";

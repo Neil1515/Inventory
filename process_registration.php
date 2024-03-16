@@ -23,18 +23,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($checkExistingStmt, "ss", $id, $email);
         mysqli_stmt_execute($checkExistingStmt);
         mysqli_stmt_store_result($checkExistingStmt);
-
-        // If the ID already exists, pass it to the registration form
+    
+        // Bind the result variables
+        mysqli_stmt_bind_result($checkExistingStmt, $existingId, $existingEmail);
+    
+        // If the ID or email already exists, pass it to the registration form
         if (mysqli_stmt_num_rows($checkExistingStmt) > 0) {
-            $errorMsg = "User with ID $id or email $email already exists. Please choose different credentials.";
+            mysqli_stmt_fetch($checkExistingStmt);
+    
+            if ($existingId == $id && $existingEmail == $email) {
+                $errorMsg = "User with ID $id and email $email already exists. Please choose different credentials.";
+            } elseif ($existingId == $id) {
+                $errorMsg = "User with ID $id already exists. Please choose a different ID.";
+            } else {
+                $errorMsg = "User with email $email already exists. Please choose a different email.";
+            }
+    
             echo "<script>window.location.href='registrationform.php?msg_fail=$errorMsg&existing_id=$id';</script>";
             exit();
         }
-
+    
         mysqli_stmt_close($checkExistingStmt);
     } else {
         echo "Failed to prepare checkExisting statement: " . mysqli_error($con);
     }
+    
+    
 
     // Process the image upload
     $targetDir = "images/validIDimages/";
@@ -58,6 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = "Pending";
     $password = "uclm-" . $id;
 
+    // If department is "Others", use the value from the "Other Department" field
+    if ($department === "Others") {
+        $department = $_POST['otherDepartment'];
+    }
+
     // Use prepared statement to avoid SQL injection
     $insertQuery = "INSERT INTO tblusers (id, password, usertype, fname, lname, email, gender, department, status, datetimeregister) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $insertStmt = mysqli_prepare($con, $insertQuery);
@@ -78,4 +97,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-

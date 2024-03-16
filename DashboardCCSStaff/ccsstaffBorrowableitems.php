@@ -86,7 +86,8 @@ if ($stmt) {
                     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                     echo '</div>';
                 }
-                include('ccslistofborrowableitems.php');
+                //include('ccslistofborrowableitems.php');
+                include('ccsmaincontainer.php');
                 ?>
             </div>
         </div>
