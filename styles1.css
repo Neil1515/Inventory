@@ -1,0 +1,101 @@
+/* styles1.css */
+
+/* Reset default margin and padding */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-image: url('images/hdbackgroundimage.png');
+    height: 100vh;
+}
+
+/* Styling for the login container */
+.login-container {
+    max-width: 400px; /* Adjust as needed */
+    margin: 30px auto;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styles */
+h2, h3 {
+    color: #bd2727;
+    text-align: center;
+}
+
+/* Centering the logo */
+.logo-container {
+    text-align: center;
+}
+
+/* Responsive logo */
+.logo {
+    max-width: 50%;
+    height: auto;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Margin for form groups */
+.form-group {
+    margin-bottom: 0px; 
+}
+
+/* Label styling */
+label {
+    color: #555;
+    font-size: 1.2em;
+}
+
+/* Positioning input container */
+.input-container {
+    position: relative;
+}
+
+/* Styling for input fields */
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 27px;
+}
+
+/* Styling for submit button */
+input[type="submit"] {
+    background-color: #4caf50;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+input[type="text"],
+input[type="password"]
+{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Hover effect for submit button */
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Styling for error messages */
+p {
+    color: red;
+    text-align: center;
+}
+

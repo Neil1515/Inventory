@@ -1,0 +1,42 @@
+.dropdown img{
+    width: 20px;
+    height: 20px;
+    cursor:pointer;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+.header--wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #fff;
+    border-radius: 10px;
+    padding: 2px 1rem;
+    margin-bottom: 1rem;
+}
+.user--info{
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+}
+.container {
+    margin-top: 5px;
+}
+/* Add this CSS to your stylesheet or in a style tag within your HTML file */
+.custom-dropdown-btn {
+    background-color: transparent !important; /* Set background to transparent */
+    border: none !important; /* Remove border */
+    color: #000 !important; /* Set text color */
+}
+
+.custom-dropdown-btn:hover {
+    background-color: transparent !important; /* Set background to transparent on hover */
+}
+.text-success {
+    color: green;
+}
+
+.text-danger {
+    color: red;
+}
