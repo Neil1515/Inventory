@@ -112,7 +112,6 @@ if ($stmtBorrowerDetails) {
                                             echo '<img src="' . $imagePath . '" alt="Image" width="100">';
                                             echo '</div>';  
                                             echo '<h7 class=" card-text">' . $rowItemDetails['subcategoryname'] . '<br></h7>';
-                                            echo '<h7 class=" text-center">' . $rowItemDetails['id'] . '<br></h7>';
                                             echo '<h7 class=" text-center">' . $rowItemDetails['itembrand'] . '<br></h7>';
                                             echo '<h7 class="card-text">Serial #: ' . $rowItemDetails['serialno'] . '</h7>';
                                             $formattedDatetime = date('F d, Y g:i A ', strtotime($rowItem['datetimereqborrow']));

@@ -108,7 +108,7 @@
                             </div>
 
                             <div class="text-end ">
-                            <a href="index.php" class="btn btn-danger">Login</a>
+                            <a href="index.php" class="btn btn-danger">Go to login</a>
                                 <button type="submit" class="btn btn-primary">Register</button>
                             </div>
                         </form>

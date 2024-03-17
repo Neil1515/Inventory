@@ -160,7 +160,9 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
         }
     }
 } else {
+    echo '<div class="col-md-10">';
     echo '<p class="alert alert-info">No borrowers with pending requests found.</p>';
+    echo '</div>';
 }
 
 // Close the container div

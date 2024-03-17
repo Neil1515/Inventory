@@ -58,7 +58,7 @@ mysqli_data_seek($resultitems, 0);
 
         .card-title {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
         }
         .category-row {
             cursor: pointer;
@@ -145,7 +145,7 @@ mysqli_data_seek($resultitems, 0);
 </script>
 
 <main class="ccs-main-container">
-    <div class="container mt-1">
+    <div class="container ">
         <div class="row">
         <div class="d-flex justify-content-between mb-2">
             <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Dashboard</h3>
@@ -198,10 +198,20 @@ mysqli_data_seek($resultitems, 0);
                         <span class="card-title"><i class="fas fa-times-circle"></i> Pending Reserve:  <?php echo $missingCount; ?></span>
                     </div>
                 </div>
-            </div>
+        </div>
         </div>
         <div class="row">
-            <table class="table">
+        <div class="col-md-12 text-end">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+        <a href="#" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
+        <a href="#" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
+        <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
+        <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Return Item</a>
+        </div>
+        </div>
+        </div>
+        <div class="row mt-1">
+            <table class="table table-bordered">
             <thead class="table-dark">
                     <tr>
                         <th scope="col">Image</th>
@@ -211,7 +221,6 @@ mysqli_data_seek($resultitems, 0);
                         <th scope="col">Model No</th>
                         <th scope="col">Serial No</th>              
                         <th scope="col">Status</th>
-                        <th scope="col">Name of Borrower</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -269,9 +278,6 @@ mysqli_data_seek($resultitems, 0);
                         }
                         
                         echo "<td class='{$statusClass}'>{$row['status']}</td>";
-                        echo "<td></td>";
-                        
-
                         echo "</tr>";
                     }
                     ?>

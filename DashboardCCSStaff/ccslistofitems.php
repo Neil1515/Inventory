@@ -3,6 +3,16 @@
  // Query to fetch categories
     $queryitems = "SELECT * FROM tblitembrand ORDER BY categoryname, subcategoryname, itembrand";
     $resultitems = mysqli_query($con, $queryitems);
+
+    // Define CSS classes for different statuses
+    $statusClasses = array(
+        'Available' => 'text-success',
+        'Reserve' => 'text-warning',
+        'Borrowed' => 'text-primary',
+        'Missing' => 'text-danger',
+        'Pending Borrow' => 'text-danger',
+        'Pending Reserve' => 'text-danger'
+    );
 ?>
  <style>
 body {
@@ -13,6 +23,21 @@ body {
     display: flex;
     justify-content: center;
 }
+.text-success {
+        color: green;
+    }
+
+    .text-warning {
+        color: #f39c12; /* Orange color */
+    }
+
+    .text-primary {
+        color: blue;
+    }
+
+    .text-danger {
+        color: red;
+    }
 </style>
 
 <!-- Add this script to include jQuery before your custom script -->
@@ -45,6 +70,7 @@ body {
                                 <th scope="col">Remarks</th> 
                                 <th scope="col">Assign to</th>                                
                                 <th scope="col">Borrowable</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -56,7 +82,7 @@ body {
                                 if ($currentCategory != $row['categoryname']) {
                                     // Display the category name row with a class for click event
                                     echo "<tr class='category-row'>
-                                    <td colspan='11' style='background-color: azure;'><strong>{$row['categoryname']}</strong></td>       
+                                    <td colspan='12' style='background-color: azure;'><strong>{$row['categoryname']}</strong></td>       
                                     </tr>";
                                     $currentCategory = $row['categoryname'];
                                 }
@@ -86,7 +112,10 @@ body {
                                 } else {
                                     // Display a times (X) icon for 'No' with bigger size
                                     echo "<i class='fas fa-times-circle fa-2x text-danger'></i>";
-                                }                              
+                                }
+                                $status = $row['status'];
+                                $statusClass = isset($statusClasses[$status]) ? $statusClasses[$status] : '';
+                                echo "<td class='{$statusClass}'>{$status}</td>";                             
                                 echo "</td>";
                                 echo "<td>
                                 <a href=\"ccstaffEditItemDetails.php?id={$row['id']}\" class=\"btn btn-outline-primary btn-sm\"><i class='fa-solid fa-pen-to-square fs-7 me-2'></i>Edit</a>

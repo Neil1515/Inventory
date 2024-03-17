@@ -41,6 +41,10 @@ echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>List of B
 echo '<div class="text-end">';
 echo '<input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">';
 echo '</div>';
+
+echo '</div>';
+echo '<div class=" text-end">';
+echo '<a href="ccsstaffDashboardPage.php"  class="btn btn-danger">Back</a>';
 echo '</div>';
 echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
 

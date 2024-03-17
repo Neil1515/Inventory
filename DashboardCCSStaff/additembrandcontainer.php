@@ -66,7 +66,6 @@ if (isset($_POST["addItemBrand"])) {
                 echo "Failed: " . mysqli_error($con);
             }
         }
-
         mysqli_stmt_close($stmt);
         echo "<script>window.location.href='ccstaffAddItemBrand.php?msg_success=New {$subcategoryName} {$itemBrand} Items created successfully';</script>";
         exit();

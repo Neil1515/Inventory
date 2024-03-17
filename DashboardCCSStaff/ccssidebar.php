@@ -23,12 +23,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-list-ul me-2"></i>
-                    <span>Calendar</span>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#approvalsSubMenu" aria-expanded="false">
                     <i class="fas fa-clock me-2"></i> <!-- Icon for Pending Approvals -->
                     <span>Pending Approvals</span>
@@ -50,12 +44,6 @@
                         <a class="nav-link" href="#">
                             <i class="fas fa-clock me-2"></i> <!-- Icon for Pending Reserve -->
                             Pending Reserve
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="ccsstaffListofBorrowers.php">
-                            <i class="fas fa-undo-alt me-2"></i> <!-- Icon for Return Items -->
-                            Return Items
                         </a>
                     </li>
                 </ul>

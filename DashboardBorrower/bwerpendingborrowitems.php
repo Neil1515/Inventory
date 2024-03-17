@@ -1,9 +1,9 @@
-<!-- bweritemsborrowed.php -->
+<!-- bwerpendingborrowitems.php -->
 <?php
 echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
-echo '<h3 class="text-start">Your Items Borrowed </h3>';
+echo '<h3 class="text-start">Pending Item(s) </h3>';
 
 $query = "SELECT borrowerid FROM tblborrowingreports WHERE borrowerid = ?";
 $stmt = mysqli_prepare($con, $query);
@@ -18,11 +18,10 @@ if ($stmt) {
             $borrower_row = mysqli_fetch_assoc($result);
             $borrowerId = $borrower_row['borrowerid'];
 
-            $query_items = "SELECT DISTINCT b.itemid, i.itembrand, i.categoryname, i.subcategoryname, i.modelno, i.serialno, b.approvebyid, b.datimeapproved, u.fname, u.lname
+            $query_items = "SELECT DISTINCT b.id, b.itemid, i.itembrand, i.categoryname, i.subcategoryname, i.modelno, i.serialno, b.approvebyid, b.datetimereqborrow
                             FROM tblborrowingreports b
                             INNER JOIN tblitembrand i ON b.itemid = i.id
-                            LEFT JOIN tblusers u ON b.approvebyid = u.id
-                            WHERE b.borrowerid = ? AND b.itemreqstatus = 'Approved'";
+                            WHERE b.borrowerid = ? AND b.itemreqstatus = 'Pending Borrow'";
             $stmt_items = mysqli_prepare($con, $query_items);
 
             if ($stmt_items) {
@@ -66,20 +65,17 @@ if ($stmt) {
                             echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
                             echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
-                            echo '<h7 class="card-text">Approved by: ' . $item_row['fname'] . ' ' . $item_row['lname'] . '<br></h7>';
-                            $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datimeapproved']));
-                            echo '<h7 class="card-text">Date Approved: <br> ' . $formattedDatetime . '</h7>';
-
+                            $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datetimereqborrow']));
+                            echo '<h7 class="card-text">Date Request: <br> ' . $formattedDatetime . '</h7>';
                             echo '<div class="card text-end">';
-                            echo ' <button type="submit" class="btn btn-success " name="requestBorrow">Request Return</button>';
+                            echo '<a class="btn btn-danger" onclick="cancelRequest(' . $item_row['id'] . ')">Cancel Request</a>';
                             echo '</div>';
                             echo '</div>';
                             echo '</div>';
                             echo '</div>';
                         }
                     } else {
-                        //echo 'No items found to your account.';
-                        echo '<p class="alert alert-info">No items found to your account.</p>';
+                        echo '<p class="alert alert-info">No pending item found to your account.</p>';
                     }
                 } else {
                     echo 'Statement execution failed: ' . mysqli_stmt_error($stmt_items);
@@ -88,7 +84,7 @@ if ($stmt) {
                 echo 'Statement preparation failed: ' . mysqli_error($con);
             }
         } else {
-            echo '<p class="alert alert-info">No items found to your account.</p>';
+            echo '<p class="alert alert-info">No pending item found to your account.</p>';
         }
     } else {
         echo 'Statement execution failed: ' . mysqli_stmt_error($stmt);
@@ -101,3 +97,23 @@ echo '</div>';
 echo '</div>';
 echo '</div>';
 ?>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function cancelRequest(itemId) {
+        if (confirm('Are you sure you want to cancel this item request?')) {
+            $.ajax({
+            type: "POST",
+            url: "bwercancel_request.php", // PHP script to handle the AJAX request
+            data: { itemId: itemId }, // Data to be sent to the server
+            success: function(response) {
+                // Handle the response from the server, if needed
+                console.log(response);
+                //alert('Item Canceled successfully!');
+                window.location.href = 'borrowerPendingborrowItems.php?msg_success=Item Successfully Canceled';
+            }
+        });
+        }
+    }
+</script>

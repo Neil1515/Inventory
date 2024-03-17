@@ -24,7 +24,7 @@
                 </a>
                 <ul class="nav submenu collapse" id="approvalsSubMenu">
                     <li>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="borrowerPendingborrowItems.php">
                             <i class="fas fa-clock me-2"></i>
                             Pending Borrow 
                         </a>
