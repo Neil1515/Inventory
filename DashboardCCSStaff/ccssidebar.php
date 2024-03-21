@@ -41,7 +41,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="ccsstaffUsersPendingReserveItems.php">
                             <i class="fas fa-clock me-2"></i> <!-- Icon for Pending Reserve -->
                             Pending Reserve
                         </a>

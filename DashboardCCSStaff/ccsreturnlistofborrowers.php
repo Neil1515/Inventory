@@ -41,12 +41,11 @@ echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>List of B
 echo '<div class="text-end">';
 echo '<input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">';
 echo '</div>';
-
 echo '</div>';
 echo '<div class=" text-end">';
 echo '<a href="ccsstaffDashboardPage.php"  class="btn btn-danger">Back</a>';
 echo '</div>';
-echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
+echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-4 g-1">';
 
 if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
     // Iterate through each borrower
@@ -139,7 +138,7 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
                                 ?>
                             </div>
                             <div class='text-end me-1'>
-                            <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Return All</a>
+                            <a href='ccsstaffReturnAll.php?borrower_id=<?php echo $borrowerDetails['id']; ?>' class='btn btn-primary mb-1'>Return All</a>
                                 <a href='#' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                             </div>
                         </div>

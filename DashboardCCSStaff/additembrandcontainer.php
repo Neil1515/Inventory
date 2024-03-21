@@ -44,12 +44,13 @@ if (isset($_POST["addItemBrand"])) {
     $datepurchased = $_POST['datePurchased'];
     $borrowable = $_POST['borrowable'];
     $quantity = $_POST['quantity'];
+    $itemcondition = $_POST['itemcondition'];
 
     date_default_timezone_set('Asia/Manila');
     $datetimeadded = date("Y-m-d H:i:s");
 
     // Use prepared statement to avoid SQL injection
-    $sql = "INSERT INTO `tblitembrand` (`itembrand`, `staffid`, `staffname`, `categoryname`, `subcategoryname`, `remarks`, `modelno`, `serialno`, `unitcost`, `datetimeadded`, `datepurchased`, `borrowable`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `tblitembrand` (`itembrand`, `staffid`, `staffname`, `categoryname`, `subcategoryname`, `remarks`, `modelno`, `serialno`, `unitcost`, `datetimeadded`, `datepurchased`, `borrowable`, `status`, `itemcondition`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Prepare the statement
     $stmt = mysqli_prepare($con, $sql);
@@ -58,7 +59,7 @@ if (isset($_POST["addItemBrand"])) {
         // Loop to insert rows based on quantity
         for ($i = 0; $i < $quantity; $i++) {
             // Add 's' for string and 'd' for double (decimal) placeholders for each parameter
-            mysqli_stmt_bind_param($stmt, "ssssssssdssss", $itemBrand, $staffid, $staffname, $categoryName, $subcategoryName, $remarks, $modelNo, $serialNo, $unitCost, $datetimeadded, $datepurchased, $borrowable, $status);
+            mysqli_stmt_bind_param($stmt, "ssssssssdsssss", $itemBrand, $staffid, $staffname, $categoryName, $subcategoryName, $remarks, $modelNo, $serialNo, $unitCost, $datetimeadded, $datepurchased, $borrowable, $status, $itemcondition);
 
             if (mysqli_stmt_execute($stmt)) {
                 // Success message or further processing if needed
@@ -73,8 +74,6 @@ if (isset($_POST["addItemBrand"])) {
         echo "Failed to prepare statement: " . mysqli_error($con);
     }
 }
-
-
 ?>
 
 <div class="container mt-3">
@@ -124,6 +123,17 @@ if (isset($_POST["addItemBrand"])) {
                     <label for="quantity" class="form-label">Item Quantity<span class="text-danger">*</span></label>
                     <input type="number" class="form-control" id="quantity" name="quantity" required>
                 </div>
+                <div class="mb-3">
+                    <label for="itemcondition" class="form-label">Item Condition<span class="text-danger">*</span></label>
+                    <select class="form-select" id="itemcondition" name="itemcondition" required>
+                        <option value="" selected disabled>Select Item Condition</option>
+                        <option value="New">New: The item is brand new and has never been used.</option>
+                        <option value="Like New">Like New: The item is in excellent condition, almost indistinguishable from new.</option>
+                        <option value="Good">Good: The item is in good condition with minor signs of wear or use.</option>
+                        <option value="Fair">Fair: The item is in acceptable condition but shows noticeable signs of wear or use.</option>
+                        <option value="Poor">Poor: The item is in poor condition and may require repairs or refurbishment.</option>
+                    </select>
+                </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
@@ -131,8 +141,8 @@ if (isset($_POST["addItemBrand"])) {
                     <input type="text" class="form-control" id="modelNo"  name="modelNo">
                 </div>
                 <div class="mb-3">
-                    <label for="serialNo" class="form-label">Serial No</label>
-                    <input type="text" class="form-control" id="serialNo"  name="serialNo">
+                    <label for="serialNo" class="form-label">Serial No<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="serialNo"  name="serialNo" required>
                 </div>
                 <div class="mb-3">
                     <label for="unitCost" class="form-label">Unit Cost</label>

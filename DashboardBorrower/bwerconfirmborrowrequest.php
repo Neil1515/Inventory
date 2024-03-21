@@ -142,7 +142,25 @@ if (isset($_GET['itemIds'])) {
                         $imagePath = 'inventory/SubcategoryItemsimages/defaultimageitem.png';
                     }
                     ?>
+                    <!-- Modal HTML Structure -->
+                    <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="noteModalLabel">Note</h5>
+                                    <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                                </div>
+                                <div class="modal-body">
+                                <p class="text-danger ">Any deformation or lost/damage of items borrowed are subject to replacement on your account.</p>
+                                    <img src="\Inventory\images\Itemsnotes.jpg" class="img-fluid" alt="Return of Damaged Goods">
 
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
@@ -196,3 +214,9 @@ echo '</form>';
     integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Show the modal when the page loads
+        $('#noteModal').modal('show');
+    });
+</script>

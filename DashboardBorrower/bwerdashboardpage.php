@@ -161,6 +161,7 @@ mysqli_data_seek($resultitems, 0);
                                 <th scope="col">Item Description</th>
                                 <th scope="col">Model No</th>
                                 <th scope="col">Serial No</th>
+                                <th scope="col">Item Condition</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -189,6 +190,28 @@ mysqli_data_seek($resultitems, 0);
                                 echo "<td>{$row['itembrand']}</td>";
                                 echo "<td class='text-center'>{$row['modelno']}</td>";
                                 echo "<td class='text-center'>{$row['serialno']}</td>";
+                                echo "<td class='text-center'>";
+                                // Display text with background color based on item condition
+                                switch ($row['itemcondition']) {
+                                    case 'New':
+                                        echo "<span class='badge bg-success fa-1x' title='New: The item is brand new and has never been used.'>New</span>";
+                                        break;
+                                    case 'Like New':
+                                        echo "<span class='badge bg-primary fa-1x' title='Like New: The item is in excellent condition, almost indistinguishable from new.'>Like New</span>";
+                                        break;
+                                    case 'Good':
+                                        echo "<span class='badge bg-info fa-1x' title='Good: The item is in good condition with minor signs of wear or use.'>Good</span>";
+                                        break;
+                                    case 'Fair':
+                                        echo "<span class='badge bg-warning fa-1x' title='Fair: The item is in acceptable condition but shows noticeable signs of wear or use.'>Fair</span>";
+                                        break;
+                                    case 'Poor':
+                                        echo "<span class='badge bg-danger fa-1x' title='Poor: The item is in poor condition and may require repairs or refurbishment.'>Poor</span>";
+                                        break;
+                                    default:
+                                        echo $row['itemcondition'];
+                                }
+                                echo "</td>";
                                 echo "<td><input type='checkbox'></td>";
                                 echo "</tr>";
                             }

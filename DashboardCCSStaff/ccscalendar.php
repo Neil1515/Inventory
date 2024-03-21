@@ -11,10 +11,13 @@ if ($events_result) {
         // Customize the event title to include borrower ID and item ID
         $title = 'Borrower ID: ' . $row['borrowerid'] . ', Item ID: ' . $row['itemid'];
 
+        // Check if 'datimereturn' key exists in the row array
+        $end_date = isset($row['datimereturn']) ? $row['datimereturn'] : ''; 
+
         $event = array(
             'title' => $title,
             'start' => $row['datimeapproved'],
-            'end' => $row['datimereturn'],
+            'end' => $end_date,
             'url' => 'event-details.php?id=' . $row['id'] // Link to event details page
         );
 

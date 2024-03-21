@@ -40,7 +40,7 @@ if ($stmt) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Message</title>
+    <title>Reserve Items</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,48 +65,30 @@ if ($stmt) {
             </div>
             <!-- Main container on the right -->
             <div class="col-md-10">
-                <div class="row">
-                <div class="col-md-9">
-            <!-- Display messages -->
-            <div class="list-group">
-                <h5 class="list-group-item list-group-item-action active" aria-current="true">Latest Messages</h5>
-                <?php
-                // Fetch the most recent message sent by each user based on timestamp
-                $user_messages_query = "SELECT u.id AS sender_id, u.fname, u.lname, m.message, m.timestamp
-                                        FROM tblusers u
-                                        INNER JOIN tblmessages m ON u.id = m.sender_id
-                                        INNER JOIN (
-                                            SELECT sender_id, MAX(timestamp) AS max_timestamp
-                                            FROM tblmessages
-                                            GROUP BY sender_id
-                                        ) latest_msg ON m.sender_id = latest_msg.sender_id AND m.timestamp = latest_msg.max_timestamp
-                                        WHERE u.usertype != 'CCS Staff' AND u.status = 'Active'
-                                        ORDER BY m.timestamp DESC"; // Order by timestamp in descending order
-                $user_messages_result = mysqli_query($con, $user_messages_query);
-
-                if ($user_messages_result && mysqli_num_rows($user_messages_result) > 0) {
-                    while ($user_message_row = mysqli_fetch_assoc($user_messages_result)) {
-                        echo '<a href="ccsstaffConversation.php?sender_id=' . $user_message_row['sender_id'] . '" class="list-group-item list-group-item-action">';
-                        echo '<div class="d-flex w-100 justify-content-between">';
-                        echo '<h7 class="mb-1">' . $user_message_row['fname'] . ' ' . $user_message_row['lname'] . '</h7>';
-                        echo '<small class="text-muted">' . date('F j, Y, g:i a', strtotime($user_message_row['timestamp'])) . '</small>';
-                        echo '</div>';
-                        echo '<p class="mb-1">Message: ' . $user_message_row['message'] . '</p>'; // Display the most recent message
-                        echo '</a>';
-                    }
-                } else {
-                    echo '<a href="#" class="list-group-item list-group-item-action">No users found.</a>';
+            <?php
+                if (isset($_GET["msg_success"])) {
+                    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
+                    echo $_GET["msg_success"];
+                    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                    echo '</div>';
                 }
+                
+                if (isset($_GET["msg_fail"])) {
+                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
+                    echo $_GET["msg_fail"];
+                    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                    echo '</div>';
+                }
+
+                if (isset($_GET["msg"])) {
+                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+                    echo $_GET["msg"];
+                    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                    echo '</div>';
+                }             
+                include('ccsusersreserveitems.php');
                 ?>
             </div>
-        </div>
-
-        <div class="col-md-3">
-        <?php include('ccsavailableusers.php'); ?>
-
-        </div>
-
-        </div>
         </div>
     </div>
     <!-- Bootstrap and Font Awesome -->

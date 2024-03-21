@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_stmt_close($stmt);
             mysqli_stmt_close($stmt_recipient);
             // Redirect with success message
-            header('Location: borrowerMessage.php?Message sent successfully');
+            header('Location: borrowerMessage.php?msg_success=Message sent successfully');
             exit();
         } else {
             // Redirect with error message
@@ -86,14 +86,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Fetch conversation history
-$conversation_query = "SELECT m.message, m.sender_id, u.fname, u.lname 
+// Fetch conversation history with staff names
+$conversation_query = "SELECT m.message, m.sender_id, m.timestamp, CONCAT(u.fname, ' ', u.lname) AS staff_name
                        FROM tblmessages m 
                        INNER JOIN tblusers u ON m.sender_id = u.id 
-                       WHERE m.sender_id = ? OR m.sender_id IN (SELECT recipient_id FROM tblmessage_recipients WHERE message_id = m.id)";
+                       WHERE m.sender_id = ? OR m.id IN (SELECT message_id FROM tblmessage_recipients WHERE recipient_id = ?)
+                       ORDER BY m.timestamp"; // Order by timestamp to display the most recent messages at the bottom
 $stmt_conversation = mysqli_prepare($con, $conversation_query);
 if ($stmt_conversation) {
-    mysqli_stmt_bind_param($stmt_conversation, "i", $borrowerId);
+    mysqli_stmt_bind_param($stmt_conversation, "ii", $borrowerId, $borrowerId);
     if (mysqli_stmt_execute($stmt_conversation)) {
         $conversation_result = mysqli_stmt_get_result($stmt_conversation);
     } else {
@@ -107,7 +108,7 @@ if ($stmt_conversation) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Message</title>
+    <title>Message to Staff</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -147,7 +148,7 @@ if ($stmt_conversation) {
                                     } else {
                                         // Staff's message
                                         echo '<div class="message staff-message">';
-                                        echo $conversation_row['message'];
+                                        echo '<strong>' . $conversation_row['staff_name'] . '</strong>: ' . $conversation_row['message'];
                                         echo '</div>';
                                     }
                                 }
