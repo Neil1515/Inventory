@@ -40,6 +40,7 @@ body {
     }
 </style>
 
+
 <!-- Add this script to include jQuery before your custom script -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -51,13 +52,41 @@ body {
             $(this).nextUntil('.category-row').toggle();
         });
     });
+
+    $(document).ready(function() {
+        // Event listener for changing the number of entries
+        $('#entriesDropdown').on('change', function() {
+            var entriesPerPage = parseInt($(this).val());
+
+            // Hide all table rows
+            $('tbody tr').hide();
+
+            // Show only the specified number of rows
+            $('tbody tr').slice(0, entriesPerPage).show();
+        });
+
+        // Trigger the change event initially to show the default number of entries
+        $('#entriesDropdown').trigger('change');
+    });
 </script>
 
         <main class="ccs-main-container">
             <div class="container">   
-            <h3><i class="fas fa-list me-2"></i>List of Items</h3>            
-                <div class="row">
-                    <table class="table">
+            <div class="row">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h3 class="text-start"><i class='fas fa-list me-2'></i>List of Items</h3>
+                    <div class="col-md-6 text-end">
+                        <div class="row">
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
+                    </div>
+                </div>
+            </div>
+                <div class="row table-responsive ">
+                    <table  class="table">
                         <thead class="table-dark">
                             <tr>
                                 <th scope="col">Category</th>

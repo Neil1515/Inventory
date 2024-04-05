@@ -106,7 +106,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="ccsstaffReports.php">
                     <i class="fas fa-file-alt me-2"></i>
                     <span>Reports</span>
                 </a>
@@ -125,16 +125,16 @@
         font-size: 20px;
     }
 
-
     /* Add a specific style for the submenu */
     .ccs-sidebar .submenu {
-        margin-left: 8px; /* Adjust the indentation as needed */
+        margin-left: 10px; /* Adjust the indentation as needed */
         
     }
 
     .ccs-sidebar .submenu .nav-link {
-        padding: 10px 0px; /* Adjust the padding as needed */
+        padding: 8px 0px; /* Adjust the padding as needed */
         color: #495057; /* Change the text color for submenu items */
+        font-size: 17px;
     }
 
     .ccs-sidebar .submenu .nav-link:hover {
@@ -143,14 +143,14 @@
 
     .ccs-sidebar .nav-link {
         color: #343a40; /* Dark text color */
-        padding: 10px 0px;
+        padding: 8px 0px;
         transition: background-color 0.3s ease;
         
     }
 
     .ccs-sidebar .nav-link:hover {
         background-color: #e9ecef; /* Light gray background on hover */
-        padding: 10px 0px;
+        padding: 8px 0px;
     }
 
     .ccs-sidebar .nav-link.active {

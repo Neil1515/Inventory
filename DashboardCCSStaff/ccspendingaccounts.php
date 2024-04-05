@@ -31,7 +31,7 @@ if ($stmtSelectUser) {
 
 <div class="container ">
     <h2><i class='fas fa-bookmark me-2'></i>List of Pending Accounts</h2>
-    <div class="row row-cols-1 row-cols-md-1 row-cols-lg-4 g-1">
+    <div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">
         <?php
         // Fetch and display pending accounts
         $queryPendingAccounts = "SELECT * FROM tblusers WHERE status = 'Pending' ORDER BY datetimeregister";
@@ -41,30 +41,33 @@ if ($stmtSelectUser) {
             while ($rowPending = mysqli_fetch_assoc($resultPendingAccounts)) {
                 $genderIcon = ($rowPending['gender'] == 'Male') ? 'fas fa-male' : 'fas fa-female';
 
-                echo "<div class='card me-3'>
+                echo '<div class="col">';
+                echo "<div class='card me-1'>
                         <div class='card-body'>
                             <h5 class='card-title'>
                                 <i class='fas fa-user me-2'></i>{$rowPending['fname']} {$rowPending['lname']}
                             </h5>
-                            <p class='card-text'>
-                                <i class='fas fa-id-card me-2'></i>ID: {$rowPending['id']}
-                            </p>
-                            <p class='card-text'>
-                                <i class='fas fa-envelope me-2'></i>Email: {$rowPending['email']}
-                            </p>
-                            <p class='card-text'>
-                                <i class='" . ($rowPending['gender'] == 'Male' ? 'fas fa-mars' : 'fas fa-venus') . " me-2'></i>Gender: {$rowPending['gender']}
-                            </p>
-                            <p class='card-text'>
-                                <i class='fas fa-building me-2'></i>Department: {$rowPending['department']}
-                            </p>
-                            <div class='text-end'>
-                                <a href='#' class='btn btn-danger mb-1'>Reject</a>
-                                <a href='#' class='btn btn-primary mb-1' onclick=\"approveUser('{$rowPending['id']}', '{$approveby}')\">Approve</a>                                
-                                <a href='ccsviewproofimage.php?userId={$rowPending['id']}' class='btn btn-success mb-1'>View Proof</a>
+                            <h7 class='card-text'>
+                                <i class='fas fa-id-card me-2'></i>ID: {$rowPending['id']}<br>
+                            </h7>
+                            <h7 class='card-text'>
+                                <i class='fas fa-envelope me-2'></i>Email: {$rowPending['email']}<br>
+                            </h7>
+                            <h7 class='card-text'>
+                                <i class='" . ($rowPending['gender'] == 'Male' ? 'fas fa-mars' : 'fas fa-venus') . " me-2'></i>Gender: {$rowPending['gender']}<br>
+                            </h7>
+                            <h7 class='card-text'>
+                                <i class='fas fa-building me-2 mb-2'></i>Department: {$rowPending['department']}<br>
+                            </h7>
+                            <div class='text-end '>
+                                <a href='#' class='btn btn-danger '>Reject</a>
+                                <a href='#' class='btn btn-primary ' onclick=\"approveUser('{$rowPending['id']}', '{$approveby}')\">Approve</a>                                
+                                <a href='ccsviewproofimage.php?userId={$rowPending['id']}' class='btn btn-success '>View Proof</a>
                             </div>
                         </div>
+                        </div>
                       </div>";
+                      
             }
         } else {
             echo "<div class='card me-5'>

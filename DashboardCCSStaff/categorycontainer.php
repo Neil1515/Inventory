@@ -123,7 +123,6 @@ if (isset($_GET["categoryname"])) {
         }
     }
 </script>
-
 <div class="container mt-3">
     <div class="row">
         <!-- Left side: Add Category form -->
@@ -144,7 +143,7 @@ if (isset($_GET["categoryname"])) {
         <div class="col-md-9">
             <h2>List of Categories</h2>
             <!-- Table to display existing categories -->
-            <table class="table">
+            <table id="example" class="table">
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">Category Name</th>

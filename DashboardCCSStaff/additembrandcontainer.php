@@ -130,8 +130,6 @@ if (isset($_POST["addItemBrand"])) {
                         <option value="New">New: The item is brand new and has never been used.</option>
                         <option value="Like New">Like New: The item is in excellent condition, almost indistinguishable from new.</option>
                         <option value="Good">Good: The item is in good condition with minor signs of wear or use.</option>
-                        <option value="Fair">Fair: The item is in acceptable condition but shows noticeable signs of wear or use.</option>
-                        <option value="Poor">Poor: The item is in poor condition and may require repairs or refurbishment.</option>
                     </select>
                 </div>
             </div>

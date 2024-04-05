@@ -45,7 +45,8 @@ $resultitems = mysqli_query($con, $queryitems);
             <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
             </div>
         </div>
-        <div class="row">
+        </div>
+        <div class="table-responsive row">
             <table class="table">
             <thead class="table-dark">
                 

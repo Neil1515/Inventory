@@ -1,10 +1,11 @@
-<!-- ccsmaincontainer.php -->
+<!-- ccslistofborrowableitems.php -->
 <?php
 // Query to fetch categories
 //$queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' ORDER BY categoryname, subcategoryname, itembrand";
 $queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname, modelno, serialno, status ORDER BY categoryname, subcategoryname, itembrand";
 
 $resultitems = mysqli_query($con, $queryitems);
+
 
 // Initialize counters for each status
 $availableCount = 0;
@@ -97,8 +98,8 @@ mysqli_data_seek($resultitems, 0);
         }
     </style>
 
-<!-- Add this script to include jQuery before your custom script -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Add this script to include jQuery before your custom script -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Your custom script -->
 <script>
@@ -143,18 +144,22 @@ mysqli_data_seek($resultitems, 0);
         });
     });
 </script>
-
 <main class="ccs-main-container">
     <div class="container ">
         <div class="row">
-        <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex justify-content-between mb-1">
             <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Dashboard</h3>
             <div class="text-end">
-            <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
-            </div>
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <a href="ccsstaffReports.php" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
+            <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
+            <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
+            <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Return Item</a>
+        </div>    
+        </div>
         </div>
             <!-- Column for Available Items -->
-            <div class="col-md-2 mb-2">
+            <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-box-open"></i> Available Items: <?php echo $availableCount; ?></span>
@@ -162,7 +167,7 @@ mysqli_data_seek($resultitems, 0);
                 </div>
             </div>
             <!-- Column for Reserve Items -->
-            <div class="col-md-2 mb-2">
+            <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-bookmark me-2"></i>Reserve Items: <?php echo $reserveCount; ?></span>
@@ -170,29 +175,29 @@ mysqli_data_seek($resultitems, 0);
                 </div>
             </div>
             <!-- Column for Borrowed Items -->
-            <div class="col-md-2 mb-2">
+            <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-handshake"></i> Borrowed Items: <?php echo $borrowedCount; ?></span>
                     </div>
                 </div>
             </div>
-            <!-- Column for Missing Items -->
-            <div class="col-md-2 mb-2">
+            <!-- Column for Damage\Lost Items -->
+            <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-times-circle"></i> Missing Items:  <?php echo $missingCount; ?></span>
+                        <span class="card-title"><i class="fas fa-times-circle"></i> Damage\Lost:  <?php echo $missingCount; ?></span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 mb-2">
+            <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-times-circle"></i> Pending Borrow:  <?php echo $pendingborrowCount; ?></span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 mb-2">
+            <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-times-circle"></i> Pending Reserve:  <?php echo $missingCount; ?></span>
@@ -200,18 +205,18 @@ mysqli_data_seek($resultitems, 0);
                 </div>
         </div>
         </div>
+        <div class="col-md-12">
         <div class="row">
-        <div class="col-md-12 text-end">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-        <a href="#" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
-        <a href="#" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
-        <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
-        <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Return Item</a>
+        <div class="col text-start">
+            <!--show  -->
+        </div>
+            <div class="col-3 text-end mb-2">
+             <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
+            </div>
         </div>
         </div>
-        </div>
-        <div class="row mt-1">
-            <table class="table table-bordered">
+        <div class="row table-responsive">
+            <table  id="example" class="table table-bordered" >
             <thead class="table-dark">
                     <tr>
                         <th scope="col">Image</th>
@@ -284,6 +289,7 @@ mysqli_data_seek($resultitems, 0);
                 </tbody>
             </table>
         </div>
+
     </div>
 </main>
 

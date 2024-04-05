@@ -38,7 +38,7 @@ if ($events_result) {
 </style>
 <div class="ccs-main-container">
     <div class="container">
-        <div class="row">
+        <div class="row table-responsive">
             <div class="d-flex justify-content-between">
                 <h3 class="text-start"><i class="fas fa-calendar-alt me-2"></i>Calendar</h3>
                 <div class="text-end">
