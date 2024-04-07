@@ -200,7 +200,7 @@ mysqli_data_seek($resultitems, 0);
             <div class="col-md-2 mb-1">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-times-circle"></i> Pending Reserve:  <?php echo $missingCount; ?></span>
+                        <span class="card-title"><i class="fas fa-times-circle"></i> Pending Reserve:  <?php echo $pendingreserveCount; ?></span>
                     </div>
                 </div>
         </div>
@@ -280,6 +280,9 @@ mysqli_data_seek($resultitems, 0);
                             case 'Pending Borrow':
                                 $statusClass = 'status-pendingborrow';
                                 break;
+                            case 'Pending Reserve':
+                                $statusClass = 'status-pendingreserve';
+                                break;    
                         }
                         
                         echo "<td class='{$statusClass}'>{$row['status']}</td>";

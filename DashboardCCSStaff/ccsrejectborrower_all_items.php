@@ -61,7 +61,6 @@ if (isset($_GET['borrowerId'])) {
                 mysqli_stmt_bind_param($stmtUpdateItemStatus, "i", $borrowerId);
 
                 if (mysqli_stmt_execute($stmtUpdateItemStatus)) {
-                    // Display a success message along with staff name
                     echo "<script>window.location.href='ccsstaffListofPendingBorrowerusers.php?msg_success=Items reject successfully';</script>";
                     //echo 'Items Rejected successfully!';
                 } else {

@@ -1,11 +1,11 @@
-<!-- ccsusersreserveitems.php -->
+<!-- ccsusersapprovereserveitems.php -->
 <?php
 // Output the container and search input
 echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
 echo '<div class="d-flex justify-content-between">';
-echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>List of Pending Reservation</h3>';
+echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>List of Accepted Reservation</h3>';
 echo '<div class="text-end">';
 echo '<input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">';
 echo '</div>';
@@ -16,8 +16,8 @@ echo '<a href="ccsstaffUsersApproveReserveItems.php"  class="btn btn-primary">Ac
 echo '</div>';
 echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
 
- // Fetch unique borrower IDs with pending requests
- $queryBorrowers = "SELECT DISTINCT borrowerid FROM tblborrowingreports WHERE itemreqstatus = 'Pending Reserve'";
+ // Fetch unique borrower IDs with Approve requests
+ $queryBorrowers = "SELECT DISTINCT borrowerid FROM tblborrowingreports WHERE itemreqstatus = 'Approve Reserve'";
  $resultBorrowers = mysqli_query($con, $queryBorrowers);
 
 
@@ -29,7 +29,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
          $borrowerId = $rowBorrower['borrowerid'];
 
          // Count the number of items requested by the current borrower
-         $queryItemCount = "SELECT COUNT(itemid) AS itemCount FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve'";
+         $queryItemCount = "SELECT COUNT(itemid) AS itemCount FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Approve Reserve'";
          $stmtItemCount = mysqli_prepare($con, $queryItemCount);
 
          if ($stmtItemCount) {
@@ -65,7 +65,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                      $queryPendingItems = "SELECT br.itemid, ib.subcategoryname
                                          FROM tblborrowingreports br
                                          INNER JOIN tblitembrand ib ON br.itemid = ib.id
-                                         WHERE br.borrowerid = ? AND br.itemreqstatus = 'Pending Reserve'";
+                                         WHERE br.borrowerid = ? AND br.itemreqstatus = 'Approve Reserve'";
                                      $stmtPendingItems = mysqli_prepare($con, $queryPendingItems);
 
                                      if ($stmtPendingItems) {
@@ -88,7 +88,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                                      }
                                                  }
 
-                                                 echo '<p class="card-text">Pending reserve item(s): ';
+                                                 echo '<p class="card-text">Accepted reserve item(s): ';
                                                  foreach ($itemCounts as $subcategory => $count) {
                                                      echo $subcategory;
 
@@ -116,7 +116,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                          <div class='text-end me-1'>
                              <a href='#' class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Reject All</a>
                              <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Approve All</a>
-                             <a href='ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $borrowerId; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
+                             <a href='ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                          </div>
                      </div>
                          <?php

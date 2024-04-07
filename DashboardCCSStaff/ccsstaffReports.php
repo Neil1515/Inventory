@@ -95,7 +95,7 @@ if ($stmt) {
                                 <th>Item</th>
                                 <th>Borrower</th>
                                 <th>Approved By</th>
-                                <th>Date Time Approved</th>
+                                <th>Date Time Released</th>
                                 <th>Approve Return By</th>
                                 <th>Date Time Return</th>
                                 

@@ -1,4 +1,4 @@
-<!-- ccsstaffUsersPendingReserveItems.php -->
+<!-- ccsstaffUsersApproveReserveItems.php -->
 <?php
 session_start();
 // Include necessary files
@@ -40,7 +40,7 @@ if ($stmt) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pending Reserve Items</title>
+    <title>Approve Reserve Items</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,7 +86,7 @@ if ($stmt) {
                     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                     echo '</div>';
                 }             
-                include('ccsusersreserveitems.php');
+                include('ccsusersapprovereserveitems.php');
                 ?>
             </div>
         </div>

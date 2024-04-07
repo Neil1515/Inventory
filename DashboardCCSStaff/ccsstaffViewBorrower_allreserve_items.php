@@ -1,4 +1,4 @@
-<!-- ccsstaffDashboardPage.php -->
+<!-- ccsstaffViewBorrower_allreserve_items.php -->
 <?php
 session_start();
 // Include necessary files
@@ -68,7 +68,6 @@ if ($stmt) {
             <!-- Main container on the right -->
             <div class="col-md-10">
             <?php
-
             if (isset($_GET["msg_success"])) {
                 echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
                 echo $_GET["msg_success"];
@@ -88,7 +87,8 @@ if ($stmt) {
                 echo $_GET["msg"];
                 echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                 echo '</div>';
-            }      
+            }  
+
             include 'ccsfunctions.php';
             // Fetch borrower ID from the query string
             $borrowerId = $_GET['borrowerId'];
@@ -120,7 +120,6 @@ if ($stmt) {
             } else {
                 die('Statement preparation failed: ' . mysqli_error($con));
             }
-
             ?>
            <div class="ccs-main-container">
                 <div class="container">
@@ -138,32 +137,50 @@ if ($stmt) {
                         </div>
                     </div>
                     <div class="row">
-                        <table class="table table-bordered">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
                             <thead class="table-dark">
                                 <tr>
                                     <th class="text-center">Image</th>
                                     <th>Item Name</th>
-                                    <th>Item Description</th>
+                                    <th>Item Description</th>   
                                     <th class="text-center">Serial No</th>
-                                    <th class="text-center">Date of use</th>
-                                    <th class="text-center">Time of use</th>
                                     <th class="text-center">Select</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                // Fetch items for the specified borrower with a pending status
-                                $queryItems = "SELECT * FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve' ORDER BY datetimereqborrow DESC";
-                                $stmtItems = mysqli_prepare($con, $queryItems);
+                            <?php
+                            // Fetch items for the specified borrower with a pending status
+                            $queryItems = "SELECT * FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve' ORDER BY datetimereqborrow DESC";
+                            $stmtItems = mysqli_prepare($con, $queryItems);
 
-                                if ($stmtItems) {
-                                    mysqli_stmt_bind_param($stmtItems, "i", $borrowerId);
+                            if ($stmtItems) {
+                                mysqli_stmt_bind_param($stmtItems, "i", $borrowerId);
 
-                                    if (mysqli_stmt_execute($stmtItems)) {
-                                        $resultItems = mysqli_stmt_get_result($stmtItems);
+                                if (mysqli_stmt_execute($stmtItems)) {
+                                    $resultItems = mysqli_stmt_get_result($stmtItems);
 
-                                        if ($resultItems && mysqli_num_rows($resultItems) > 0) {
-                                            while ($rowItem = mysqli_fetch_assoc($resultItems)) {
+                                    if ($resultItems && mysqli_num_rows($resultItems) > 0) {
+                                        // Initialize an empty array to store items grouped by datetimereserve
+                                        $groupedItems = array();
+
+                                        while ($rowItem = mysqli_fetch_assoc($resultItems)) {
+                                            $datetimereserve = $rowItem['datetimereserve'];
+
+                                            // Check if the group for this datetimereserve exists, if not, create it
+                                            if (!isset($groupedItems[$datetimereserve])) {
+                                                $groupedItems[$datetimereserve] = array();
+                                            }
+
+                                            // Add the item to the corresponding group
+                                            $groupedItems[$datetimereserve][] = $rowItem;
+                                        }
+
+                                        // Loop through each group and display items in the table
+                                        foreach ($groupedItems as $datetimereserve => $items) {
+                                            echo '<tr><td colspan="7" class="table-secondary">Date and Time of Reservation: ' . date('F d, Y g:i A', strtotime($datetimereserve)) .'<br> Purpose: ' . $items[0]['reservepurpose'] . '<br> Location: ' . $items[0]['reservelocation'] . ' </td></tr>';
+                                            
+                                            foreach ($items as $rowItem) {
                                                 // Fetch item details from tblitembrand based on itemid
                                                 $queryItemDetails = "SELECT * FROM tblitembrand WHERE id = ?";
                                                 $stmtItemDetails = mysqli_prepare($con, $queryItemDetails);
@@ -190,10 +207,6 @@ if ($stmt) {
                                                             echo '<td>' . $rowItemDetails['subcategoryname'] . '</td>';
                                                             echo '<td>' . $rowItemDetails['itembrand'] . '</td>';
                                                             echo '<td class="text-center">' . $rowItemDetails['serialno'] . '</td>';
-                                                            $formattedDate = date('F d, Y', strtotime($rowItem['datetimereserve']));
-                                                            $formattedTime = date('g:i A', strtotime($rowItem['datetimereserve']));
-                                                            echo '<td class="text-center">' . $formattedDate . '</td>';
-                                                            echo '<td class="text-center">' . $formattedTime . '</td>';
                                                             echo '<td class="text-center"><input type="checkbox" name="itemIds[]" value="' . $rowItem['id'] . '"></td>';
                                                             echo '</tr>';
                                                         } else {
@@ -208,74 +221,143 @@ if ($stmt) {
                                                     die('Statement preparation failed: ' . mysqli_error($con));
                                                 }
                                             }
-                                        } else {
-                                            echo '<tr><td colspan="7">No items with a pending status found for this borrower.</td></tr>';
                                         }
                                     } else {
-                                        die('Statement execution failed: ' . mysqli_stmt_error($stmtItems));
+                                        echo '<tr><td colspan="7">No items with a pending status found for this borrower.</td></tr>';
                                     }
-
-                                    mysqli_stmt_close($stmtItems);
                                 } else {
-                                    die('Statement preparation failed: ' . mysqli_error($con));
+                                    die('Statement execution failed: ' . mysqli_stmt_error($stmtItems));
                                 }
-                                ?>
+
+                                mysqli_stmt_close($stmtItems);
+                            } else {
+                                die('Statement preparation failed: ' . mysqli_error($con));
+                            }
+                            ?>
                             </tbody>
                         </table>
                         <!-- Buttons for approve and reject actions (initially hidden) -->
-                        <div class="text-end" id="actionButtons" style="display: none;">
+                        <div class="text-end mb-2" id="actionButtons" style="display: none;">
                             <button class="btn btn-primary" id="approveBtn">Approve Selected</button>
-                            <button class="btn btn-danger" id="rejectBtn">Reject Selected</button>
+                            <button type="submit" class="btn btn-danger" id="rejectBtn">Reject Selected</button>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
 
             <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
             <script>
-                $(document).ready(function() {
-                    // Handle click event for Select All button
-                    $('#selectAllBtn').click(function() {
-                        // Check all checkboxes in the table
-                        $('input[type="checkbox"]').prop('checked', true);
-                        // Show the action buttons
-                        $('#actionButtons').show();
-                    });
-                    
-                    // Function to handle checkbox click event
-                    $('input[type="checkbox"]').click(function() {
-                        if ($(this).prop("checked") == true) {
-                            $('#actionButtons').show(); // Show the action buttons when an item is selected
+             $(document).ready(function() {
+    // Handle click event for Select All button
+    $('#selectAllBtn').click(function() {
+        // Check all checkboxes in the table
+        $('input[type="checkbox"]').prop('checked', true);
+        // Show the action buttons
+        $('#actionButtons').show();
+    });
+    
+    // Function to handle checkbox click event
+    $('input[type="checkbox"]').click(function() {
+        if ($(this).prop("checked") == true) {
+            $('#actionButtons').show(); // Show the action buttons when an item is selected
+        } else {
+            // Check if any other checkbox is still selected
+            var anyChecked = false;
+            $('input[type="checkbox"]').each(function() {
+                if ($(this).prop("checked") == true) {
+                    anyChecked = true;
+                    return false; // Break out of the loop
+                }
+            });
+            // Hide the action buttons if no other checkbox is selected
+            if (!anyChecked) {
+                $('#actionButtons').hide();
+            }
+        }
+    });
+
+    // Approve selected items
+    $('#approveBtn').click(function() {
+        // Get the IDs of the selected items
+        var itemIds = [];
+        $('input[name="itemIds[]"]:checked').each(function() {
+            itemIds.push($(this).val());
+        });
+
+        if (itemIds.length > 0) {
+            // Display confirmation dialog
+            if (confirm("Are you sure you want to approve these selected item(s)?")) {
+                // Send AJAX request to update item status to "Approved"
+                $.ajax({
+                    type: 'POST',
+                    url: 'ccsapproveselected_item.php',
+                    data: { itemIds: itemIds }, // Send the array of item IDs
+                    dataType: 'json', // Expect JSON response
+                    success: function(response) {
+                        console.log('Success:', response); // Add this line for debugging
+                        // Handle success response
+                        if (response.success) {
+                            window.location.href = 'ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Selected Item(s) successfully approved';
                         } else {
-                            // Check if any other checkbox is still selected
-                            var anyChecked = false;
-                            $('input[type="checkbox"]').each(function() {
-                                if ($(this).prop("checked") == true) {
-                                    anyChecked = true;
-                                    return false; // Break out of the loop
-                                }
-                            });
-                            // Hide the action buttons if no other checkbox is selected
-                            if (!anyChecked) {
-                                $('#actionButtons').hide();
-                            }
+                            alert('Error: ' + response.error); // Show error message from PHP script
                         }
-                    });
-
-                    // Approve selected items
-                    $('#approveBtn').click(function() {
-                        // Implement logic to approve selected items
-                        alert('Approve selected items');
-                    });
-
-                    // Reject selected items
-                    $('#rejectBtn').click(function() {
-                        // Implement logic to reject selected items
-                        alert('Reject selected items');
-                    });
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        console.error(xhr.responseText); // Log error message
+                        // Redirect to the desired page with an error message
+                        window.location.href = 'ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_error=Error occurred while approving selected items';
+                    }
                 });
-            </script>
+            }
+        } else {
+            alert('Please select at least one item to approve.');
+        }
+    });
 
+    // Reject selected items
+    $('#rejectBtn').click(function() {
+        // Get the IDs of the selected items
+        var itemIds = [];
+        $('input[name="itemIds[]"]:checked').each(function() {
+            itemIds.push($(this).val());
+        });
+
+        if (itemIds.length > 0) {
+            // Display confirmation dialog
+            if (confirm("Are you sure you want to reject these selected item(s)?")) {
+                // Send AJAX request to update item status to "Rejected"
+                $.ajax({
+                    type: 'POST',
+                    url: 'ccsrejectselected_item.php',
+                    data: { itemIds: itemIds }, // Send the array of item IDs
+                    dataType: 'json', // Expect JSON response
+                    success: function(response) {
+                        // Handle success response
+                        if (response.success) {
+                            // Redirect to the desired page with a success message
+                            window.location.href = 'ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Selected Item(s) rejected successfully';
+                        } else {
+                            alert('Error: ' + response.error); // Show error message from PHP script
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        console.error(xhr.responseText); // Log error message
+                        // Remove the alert('Error occurred while updating item status.');
+                        window.location.href = 'ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Selected Item(s) rejected successfully';
+                    }
+                });
+            }
+        } else {
+            alert('Please select at least one item to reject.');
+        }
+    });
+
+});
+
+            </script>
         </div>
     </div>
 </div>
