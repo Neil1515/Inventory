@@ -92,13 +92,7 @@ if ($stmt) {
     <div class="notification-header">
         <h5><i class="fas fa-bell fs-5 ms-1 me-1"></i>Notifications</h5>
     </div>
-              <!-- SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datimeapproved AS datetime, 'Approved Request to borrow' AS action 
-          --FROM tblborrowingreports br
-          --JOIN tblusers u ON br.borrowerid = u.id
-          --JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          --WHERE br.datimeapproved IS NOT NULL
-          --GROUP BY br.borrowerid, br.datimeapproved
-          --UNION-->
+              
     <?php
 // Fetch notifications from tblborrowingreports
 $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datetimereqborrow AS datetime, 'Request to borrow' AS action 
@@ -106,6 +100,13 @@ $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategorynam
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
           GROUP BY br.borrowerid, br.datetimereqborrow
+          UNION
+          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datetimereqreturn AS datetime, 'Request to Return' AS action 
+          FROM tblborrowingreports br
+          JOIN tblusers u ON br.borrowerid = u.id
+          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+          WHERE br.datimeapproved IS NOT NULL
+          GROUP BY br.borrowerid, br.datetimereqreturn
           UNION
           SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datetimereturn AS datetime, 'Returned' AS action 
           FROM tblborrowingreports br
@@ -207,7 +208,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="ccsstafProfile.php">Profile</a></li>
                     <li><a class="dropdown-item" href="/Inventory/logout.php">Logout</a></li>
                 </ul>
             </div>

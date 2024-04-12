@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
     $timeOfUse = $_POST['timeOfUse'];
     $datetimereserve = date("Y-m-d H:i:s", strtotime("$dateOfUse $timeOfUse"));
 
+    
     // Get selected item IDs from form
     $selectedItemIds = isset($_POST['selectedItemIds']) ? $_POST['selectedItemIds'] : [];
 
@@ -165,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
                                                     <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p class="text-danger ">Reservation should be filed <strong>three days before the actual date of use.</strong> </p>
+                                                    <p class="text-danger ">Reservation should be filed <strong>--- days before the actual date of use.</strong>  Assigned CCS Staff must be notified there be any changes of schedule of the reserved time</p>
                                                     <img src="\Inventory\images\reserveditems.jpg" class="img-fluid" alt="Return of Damaged Goods">
                                                     <p class="text-danger ">Any deformation or lost/damage of items borrowed are subject to replacement on your account.</p>
                                                 </div>
@@ -217,7 +218,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
                     // Handle the case when item IDs are not present in the URL
                     echo '<p class="alert alert-warning">No item IDs selected.</p>';
                 }
-                
                 ?>
             </div>
             <div class="col-md-3">
@@ -253,8 +253,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
     </div>
     </form>
     <script>
-        $(document).ready(function() {
-            // Show the modal when the page loads
-            $('#noteModal').modal('show');
+         $(document).ready(function() {
+        // Show the modal when the page loads
+        $('#noteModal').modal('show');
+
+        // Set the minimum date for the "Date of Use" input to today
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById("dateOfUse").min = today;
         });
     </script>

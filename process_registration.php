@@ -3,14 +3,14 @@
 include('DBfunction.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $id = $_POST['Id'];
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $email = $_POST['email'];
-    $gender = $_POST['gender'];
-    $userType = $_POST['userType'];
-    $department = $_POST['department'];
+    // Retrieve form data and sanitize inputs
+    $id = mysqli_real_escape_string($con, $_POST['Id']);
+    $firstName = mysqli_real_escape_string($con, $_POST['firstName']);
+    $lastName = mysqli_real_escape_string($con, $_POST['lastName']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $gender = mysqli_real_escape_string($con, $_POST['gender']);
+    $userType = mysqli_real_escape_string($con, $_POST['userType']);
+    $department = mysqli_real_escape_string($con, $_POST['department']);
    
     date_default_timezone_set('Asia/Manila');
     $datetimeregister = date("Y-m-d H:i:s");
@@ -24,10 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_execute($checkExistingStmt);
         mysqli_stmt_store_result($checkExistingStmt);
     
-        // Bind the result variables
-        mysqli_stmt_bind_result($checkExistingStmt, $existingId, $existingEmail);
-    
-        // If the ID or email already exists, pass it to the registration form
         if (mysqli_stmt_num_rows($checkExistingStmt) > 0) {
             mysqli_stmt_fetch($checkExistingStmt);
     
@@ -46,38 +42,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_close($checkExistingStmt);
     } else {
         echo "Failed to prepare checkExisting statement: " . mysqli_error($con);
+        exit();
     }
     
-    
-
     // Process the image upload
     $targetDir = "images/validIDimages/";
-
-    // Get the file extension
-    $imageFileType = strtolower(pathinfo($_FILES['idImage']['name'], PATHINFO_EXTENSION));
-
-    // Construct the new file name with the user ID
-    $newFileName = $id . "." . $imageFileType;
+    $newFileName = $id . "." . strtolower(pathinfo($_FILES['idImage']['name'], PATHINFO_EXTENSION));
     $targetFile = $targetDir . $newFileName;
 
-    if (move_uploaded_file($_FILES['idImage']['tmp_name'], $targetFile)) {
-        // File was uploaded successfully
-        echo $targetFile;
-    } else {
-        // Error uploading file
+    if (!move_uploaded_file($_FILES['idImage']['tmp_name'], $targetFile)) {
         echo "Error uploading file.";
+        exit();
     }
 
     // Set the status to "Pending"
     $status = "Pending";
-    $password = "uclm-" . $id;
+
+    // Get the password from the form input
+    $password = $_POST['password'];
+
+   // Encrypt the password using password_hash
+   //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // If department is "Others", use the value from the "Other Department" field
     if ($department === "Others") {
-        $department = $_POST['otherDepartment'];
+        $department = mysqli_real_escape_string($con, $_POST['otherDepartment']);
     }
 
-    // Use prepared statement to avoid SQL injection
+     // Use prepared statement to avoid SQL injection
     $insertQuery = "INSERT INTO tblusers (id, password, usertype, fname, lname, email, gender, department, status, datetimeregister) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $insertStmt = mysqli_prepare($con, $insertQuery);
 
@@ -89,11 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         } else {
             echo "Failed: " . mysqli_error($con);
+            exit();
         }
 
         mysqli_stmt_close($insertStmt);
     } else {
         echo "Failed to prepare statement: " . mysqli_error($con);
+        exit();
     }
 }
 ?>

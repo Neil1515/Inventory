@@ -2,7 +2,7 @@
 <?php
 // Query to fetch categories
 //$queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' ORDER BY categoryname, subcategoryname, itembrand";
-$queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname, modelno, serialno, status ORDER BY categoryname, subcategoryname, itembrand";
+$queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname, modelno, serialno, itemcondition, status ORDER BY categoryname, subcategoryname, itembrand";
 
 $resultitems = mysqli_query($con, $queryitems);
 
@@ -52,7 +52,6 @@ mysqli_data_seek($resultitems, 0);
             display: flex;
             justify-content: center;
         }
-
         .card {
             margin-bottom: 2px;
         }
@@ -68,13 +67,15 @@ mysqli_data_seek($resultitems, 0);
         /*colors for each status */
         .status-available {
             color: green;
-
+            font-weight: bold;
         }
         .status-reserve {
             color: #808000;
+            font-weight: bold;
         }
         .status-borrowed {
             color: blue;
+            font-weight: bold;
         }
         .status-missing {
             color: red;
@@ -89,7 +90,7 @@ mysqli_data_seek($resultitems, 0);
             font-weight: bold;
         }
         .status-missing-row {
-            background-color: rgba(255, 0, 0, 0.2); /* Transparent red background */
+            background-color: rgba(255, 0, 0, 0.2); 
         }
         .card:hover {
          background-color: azure;
@@ -145,18 +146,18 @@ mysqli_data_seek($resultitems, 0);
     });
 </script>
 <main class="ccs-main-container">
-    <div class="container ">
-        <div class="row">
-        <div class="d-flex justify-content-between mb-1">
+            <div class="container ">
+            <div class="row">
+        <div class="col-md-6 ">
             <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Dashboard</h3>
-            <div class="text-end">
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a href="ccsstaffReports.php" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
-            <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
-            <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
-            <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Return Item</a>
-        </div>    
         </div>
+        <div class="col-md-6 text-md-end">
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <a href="ccsstaffReports.php" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
+                <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
+                <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
+                <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Return Item</a>
+            </div>
         </div>
             <!-- Column for Available Items -->
             <div class="col-md-2 mb-1">
@@ -217,14 +218,15 @@ mysqli_data_seek($resultitems, 0);
         </div>
         <div class="row table-responsive">
             <table  id="example" class="table table-bordered" >
-            <thead class="table-dark">
-                    <tr>
+            <thead class="table-dark ">
+                    <tr class='text-center'>
                         <th scope="col">Image</th>
                         <th scope="col">Quantity</th> 
                         <th scope="col">Item Name</th> 
                         <th scope="col">Item Description</th>                                           
                         <th scope="col">Model No</th>
-                        <th scope="col">Serial No</th>              
+                        <th scope="col">Serial No</th>
+                        <th scope="col">Item Condition</th>              
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
@@ -252,16 +254,17 @@ mysqli_data_seek($resultitems, 0);
                         // Check if an image exists, if not, use a default image
                         $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
                         if (file_exists($imagePath)) {
-                            echo "<td><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
+                            echo "<td class='text-center'><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
                         } else {
                             // Use a default image if no image is uploaded
-                            echo "<td><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
+                            echo "<td class='text-center'><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
                         }
                         echo "<td class='text-center'>{$row['quantity']}</td>";     
                         echo "<td>{$row['subcategoryname']}</td>";           
                         echo "<td>{$row['itembrand']}</td>";                    
                         echo "<td class='text-center'>{$row['modelno']}</td>";
-                        echo "<td class='text-center'>{$row['serialno']}</td>";                                            
+                        echo "<td class='text-center'>{$row['serialno']}</td>";
+                        echo "<td class='text-center'>{$row['itemcondition']}</td>";                                            
                         // Add class to status based on its value
                         $statusClass = '';
                         switch ($row['status']) {

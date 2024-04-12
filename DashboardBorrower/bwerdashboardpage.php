@@ -152,7 +152,8 @@ mysqli_data_seek($resultitems, 0);
                         <a href="#" id="borrowButton" class="btn btn-success mb-1" style="display: none;">Borrow</a>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row table-responsive">
+                
                     <table class="table">
                         <thead class="table-dark">
                             <tr>

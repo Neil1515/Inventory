@@ -29,7 +29,7 @@ if ($stmtSelectUser) {
 }
 
 // Fetch unique borrower IDs with pending requests
-$queryBorrowers = "SELECT DISTINCT borrowerid FROM tblborrowingreports WHERE itemreqstatus = 'Approved'";
+$queryBorrowers = "SELECT DISTINCT borrowerid FROM tblborrowingreports WHERE itemreqstatus = 'Approved' OR itemreqstatus = 'Request Return'";
 $resultBorrowers = mysqli_query($con, $queryBorrowers);
 
 // Output the container and search input
@@ -37,12 +37,13 @@ echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
 echo '<div class="d-flex justify-content-between">';
-echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>List of Borrowers</h3>';
+echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Return Item</h3>';
 echo '<div class="text-end">';
 echo '<input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">';
 echo '</div>';
 echo '</div>';
 echo '<div class=" text-end">';
+echo '<a href="ccsstaffRequestReturn.php"  class="btn btn-primary me-1">Request Return</a>';
 echo '<a href="ccsstaffDashboardPage.php"  class="btn btn-danger">Back</a>';
 echo '</div>';
 echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-4 g-1">';
@@ -53,7 +54,7 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
         $borrowerId = $rowBorrower['borrowerid'];
 
         // Count the number of items requested by the current borrower
-        $queryItemCount = "SELECT COUNT(itemid) AS itemCount FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Approved'";
+        $queryItemCount = "SELECT COUNT(itemid) AS itemCount FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Approved' OR itemreqstatus = 'Request Return'";
         $stmtItemCount = mysqli_prepare($con, $queryItemCount);
 
         if ($stmtItemCount) {

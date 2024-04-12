@@ -18,11 +18,11 @@ if ($stmt) {
             $borrower_row = mysqli_fetch_assoc($result);
             $borrowerId = $borrower_row['borrowerid'];
 
-            $query_items = "SELECT DISTINCT b.itemid, i.itembrand, i.categoryname, i.subcategoryname, i.modelno, i.serialno, b.approvebyid, b.datimeapproved, u.fname, u.lname
+            $query_items = "SELECT DISTINCT b.id, b.itemid, b.itemreqstatus, i.itembrand, i.categoryname, i.subcategoryname, i.modelno, i.serialno, b.approvebyid, b.datimeapproved, u.fname, u.lname
                             FROM tblborrowingreports b
                             INNER JOIN tblitembrand i ON b.itemid = i.id
                             LEFT JOIN tblusers u ON b.approvebyid = u.id
-                            WHERE b.borrowerid = ? AND b.itemreqstatus = 'Approved'";
+                            WHERE b.borrowerid = ? AND(b.itemreqstatus = 'Approved' OR b.itemreqstatus = 'Request return')";
             $stmt_items = mysqli_prepare($con, $query_items);
 
             if ($stmt_items) {
@@ -69,10 +69,22 @@ if ($stmt) {
                             echo '<h7 class="card-text">Approved by: ' . $item_row['fname'] . ' ' . $item_row['lname'] . '<br></h7>';
                             $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datimeapproved']));
                             echo '<h7 class="card-text">Date Approved: <br> ' . $formattedDatetime . '</h7>';
-
                             echo '<div class="card text-end">';
-                            echo ' <button type="submit" class="btn btn-success " name="requestBorrow">Request Return</button>';
-                            echo '</div>';
+                            if (isset($item_row['itemreqstatus'])) {
+                                switch ($item_row['itemreqstatus']) {
+                                    case 'Approved':
+                                        echo '<button type="button" class="btn btn-success request-return-btn" data-item-id="' . $item_row['id'] . '">Request Return</button>';
+                                        break;
+                                    case 'Request Return':
+                                        echo '<button type="button" class="btn btn-primary request-cancel-btn" data-item-id="' . $item_row['id'] . '">Request Sent</button>';                                        break;
+                                    default:
+                                        // Default action or no action for other statuses
+                                        break;
+                                }
+                            } else {
+                                echo '<p class="text-danger">Status not available</p>';
+                            }
+                            echo '</div>';                       
                             echo '</div>';
                             echo '</div>';
                             echo '</div>';
@@ -101,3 +113,103 @@ echo '</div>';
 echo '</div>';
 echo '</div>';
 ?>
+
+<script>
+    // JavaScript function to handle Request Return button click
+    document.addEventListener('DOMContentLoaded', function () {
+        const requestReturnButtons = document.querySelectorAll('.request-return-btn');
+
+        requestReturnButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.getAttribute('data-item-id');
+                requestReturn(itemId);
+            });
+        });
+
+        function requestReturn(itemId) {
+            // Send AJAX request to update itemreqstatus
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Handle successful response
+                        console.log(xhr.responseText);
+                        // Check if the response contains a success message
+                        if (xhr.responseText.includes("Item request status updated successfully.")) {
+                            // Display success message
+                            //alert("Item request status updated successfully.");
+                            // Redirect to the desired page
+                            window.location.href = 'borrowerItemsBorrowed.php?msg_success=Item request return updated successfully.';
+                        } else {
+                            // Handle other responses if needed
+                        }
+                    } else {
+                        // Handle error
+                        console.error('Request failed: ' + xhr.status);
+                    }
+                }
+            };
+
+            xhr.open('POST', 'bwerupdate_itemreqstatus.php', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send('itemId=' + encodeURIComponent(itemId));
+        }
+    });
+    // JavaScript function to handle Request cancel button click
+    document.addEventListener('DOMContentLoaded', function () {
+        const requestCancelButtons = document.querySelectorAll('.request-cancel-btn');
+
+        requestCancelButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const itemId = this.getAttribute('data-item-id');
+                requestCancel(itemId);
+            });
+        });
+
+        function requestCancel(itemId) {
+            // Send AJAX request to update itemreqstatus
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Handle successful response
+                        console.log(xhr.responseText);
+                        // Check if the response contains a success message
+                        if (xhr.responseText.includes("Item request status updated successfully.")) {
+
+                            window.location.href = 'borrowerItemsBorrowed.php?msg_success=Item request cancel return updated successfully.';
+                        } else {
+                            // Handle other responses if needed
+                        }
+                    } else {
+                        // Handle error
+                        console.error('Request failed: ' + xhr.status);
+                    }
+                }
+            };
+
+            xhr.open('POST', 'bwercancel_itemreqstatus.php', true);
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.send('itemId=' + encodeURIComponent(itemId));
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const requestCancelButtons = document.querySelectorAll('.request-cancel-btn');
+
+        requestCancelButtons.forEach(button => {
+            button.addEventListener('mouseover', function () {
+                this.textContent = 'Cancel Request';
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-danger');
+            });
+
+            button.addEventListener('mouseout', function () {
+                this.textContent = 'Request Sent';
+                this.classList.remove('btn-danger');
+                this.classList.add('btn-primary');
+            });
+        });
+    });
+</script>

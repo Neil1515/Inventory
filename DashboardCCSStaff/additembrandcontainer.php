@@ -81,11 +81,11 @@ if (isset($_POST["addItemBrand"])) {
         <div class="col-md-9 text-end"> 
             <!-- Form to add a new item Product -->
             <form action="ccstaffAddItemBrand.php" method="post" enctype="multipart/form-data" name="addItemBrandForm">
-            <h4 class="col-md text-start"><i class="fas fa-plus-circle me-2"></i>Add Product</h4>
+            <h4 class="col-md text-start"><i class="fas fa-plus-circle me-2"></i>Add Item</h4>
         </div>
         <div class="col-md-3 text-end">
             <a href="ccsstaffDashboardPage.php" class="col-md-5 btn btn-danger">Cancel</a>
-            <button type="submit" class="col-md-5 btn btn-success" name="addItemBrand">Add Product</button>
+            <button type="submit" class="col-md-5 btn btn-success" name="addItemBrand">Add Item</button>
         </div>
         
         <div class="col-md-6">          

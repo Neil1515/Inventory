@@ -1,6 +1,4 @@
 <!-- registrationform.php -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,16 +58,23 @@
                                 <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
                             <div class="mb-1">
-                                <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
-                            </div>
-                            <div class="mb-1">
                                 <label for="gender" class="form-label">Gender<span class="text-danger">*</span></label>
                                 <select class="form-select" id="gender" name="gender" required>
                                 <option value="" selected disabled>Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
+                            </div>
+                            <div class="mb-1">
+                                <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+                            </div>
+                            <div class="mb-1">
+                                <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="password" name="password" required onkeyup="checkPasswordStrength()">
+                                <div class="mb-1">
+                                    <div id="password-strength" class="form-text"></div>
+                                </div>
                             </div>
                             <div class="mb-1">
                                 <label for="userType" class="form-label">User Type<span class="text-danger">*</span></label>
@@ -80,7 +85,7 @@
                                 </select>
                             </div>
                             <div class="mb-1">
-                                <label for="department" class="form-label">Department<span class="text-danger">*</span></label>
+                                <p for="department" class="form-label">Department<span class="text-danger">*</span></p>
                                 <select class="form-select" id="departmentSelect" name="department" required onchange="showOtherInput()">
                                     <option value="" selected disabled>Select Department</option>
                                     <option value="College of Business & Accountancy">College of Business & Accountancy</option>
@@ -137,6 +142,23 @@
             document.getElementById("department").value = "";
         }
     }
+    function checkPasswordStrength() {
+            var password = document.getElementById('password').value;
+            var passwordStrength = document.getElementById('password-strength');
+            var weakRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
+            var midRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
+            var strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+
+            if (strongRegex.test(password)) {
+                passwordStrength.innerHTML = '<span style="color:green">Strong!</span>';
+            } else if (midRegex.test(password)) {
+                passwordStrength.innerHTML = '<span style="color:orange">Medium!</span>';
+            } else if (weakRegex.test(password)) {
+                passwordStrength.innerHTML = '<span style="color:red">Weak!</span>';
+            } else {
+                passwordStrength.innerHTML = '<span style="color:red">Password must be at least 8 characters and contain at least one letter and one number.</span>';
+            }
+        }
 </script>
 
     <style>  

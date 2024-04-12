@@ -50,7 +50,7 @@
         $approvereturnbyId = $_SESSION['staff_id'];
 
         // Prepare and execute update statement for updating item statuses
-        $query = "UPDATE tblborrowingreports SET itemreqstatus = 'Returned', returnremarks = ?, datetimereturn = ?, returnitemcondition = ?, approvereturnbyid = ?, returncode = ? WHERE borrowerid = ? AND itemreqstatus = 'Approved'";
+        $query = "UPDATE tblborrowingreports SET itemreqstatus = 'Returned', returnremarks = ?, datetimereturn = ?, returnitemcondition = ?, approvereturnbyid = ?, returncode = ? WHERE borrowerid = ? AND (itemreqstatus = 'Approved' OR itemreqstatus = 'Request Return')";
         $stmt = mysqli_prepare($con, $query);
 
         if ($stmt) {

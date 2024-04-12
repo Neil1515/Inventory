@@ -75,7 +75,7 @@ if ($stmt) {
 $query = "SELECT br.id, br.itemid, ib.itembrand, ib.subcategoryname, ib.serialno, ib.itemcondition 
           FROM tblborrowingreports br 
           INNER JOIN tblitembrand ib ON br.itemid = ib.id 
-          WHERE br.borrowerid = ? AND br.itemreqstatus = 'Approved'";
+          WHERE br.borrowerid = ? AND (br.itemreqstatus = 'Approved' OR br.itemreqstatus = 'Request return')";
 $stmt = mysqli_prepare($con, $query);
 $borrowerId = $_GET['borrower_id'];
 

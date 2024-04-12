@@ -197,42 +197,48 @@ $querySubcategories = "
         s.categoryname, s.subcategoryname
 ";
 $resultSubcategories = mysqli_query($con, $querySubcategories);
-
-
-
 ?>
+<!-- Bootstrap JavaScript (Ensure it's included after jQuery) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-     function confirmDeleteSubcategory(subcategoryId, sameSubcategoryCount) {
-        if (sameSubcategoryCount >= 1) {
-            alert("Cannot delete subcategory with items associated.");
-            return;
-        }
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        var confirmDelete = confirm("Are you sure you want to delete this subcategory?");
+<!-- Modal HTML Structure -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Item</h5>
+                <input type="hidden" id="subcategoryId" name="subcategoryId">
+                <input type="hidden" id="oldSubcategoryName" name="oldSubcategoryName">
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <img src="" alt="Upload New Image" id="subcategoryImage" style="max-width: 150px;">
+                </div>
+                <div class="mb-3">
+                    <label for="subcategoryName" class="form-label">Item Name<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" required>
+                </div>
+                <div class="mb-2">
+                    <label for="image" class="form-label">Upload New Image</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        if (confirmDelete) {
-            window.location.href = "ccstaffManageSubcategory.php?subcategoryid=" + subcategoryId;
-        }
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-            const searchInput = document.getElementById('searchInput');
-            const tableRows = document.querySelectorAll('.table tbody tr');
 
-            searchInput.addEventListener('input', function () {
-                const searchValue = this.value.toLowerCase();
-
-                tableRows.forEach(function (row) {
-                    const rowData = row.textContent.toLowerCase();
-                    row.style.display = rowData.includes(searchValue) ? '' : 'none';
-                });
-            });
-        });
-</script>
 <div class="container mt-3">
     <div class="row">
         <!-- Left side: Add Subcategory form -->
-        <div class="col-md-3">
+        <div class="col-md-4">
             <h4><i class="fas fa-plus-circle me-2"></i>Add Subcategory</h4>
             <!-- Form to add a new subcategory -->
             <form action="ccstaffManageSubcategory.php" method="post" enctype="multipart/form-data">
@@ -252,7 +258,6 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
                     <label for="subcategoryName" class="form-label">Item Name:<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" required>
                 </div>
-                
                 <div class="mb-2">
                     <label for="image" class="form-label">Upload Image:</label>
                     <input type="file" class="form-control" id="image" name="image" accept="image/*">
@@ -262,7 +267,7 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
         </div>
 
             <!-- Right side: Subcategories table -->
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="row">
                 <div class="col-md-8 ">
                     <h2>List of Items</h2>
@@ -301,15 +306,15 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
                         // Check if an image exists, if not, use a default image
                         $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
                         if (file_exists($imagePath)) {
-                            echo "<td><img src='{$imagePath}' alt='Subcategory Image' width='50'></td>";
+                            echo "<td class='text-center'><img src='{$imagePath}' alt='Subcategory Image' width='50'></td>";
                         } else {
                             // Use a default image if no image is uploaded
-                            echo "<td><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
+                            echo "<td class='text-center'><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
                         }            
                         echo "<td>{$row['subcategoryname']}</td>";  
                         echo "<td>{$row['sameSubcategoryCount']}</td>";
-                        echo "<td class='text-end'>
-                                <a href=\"ccstaffEditSubcategory.php?id={$row['id']}\" class=\"btn btn-outline-primary btn-sm\"><i class='fa-solid fa-pen-to-square fs-7 me-2'></i>Edit</a>
+                        echo "<td class='text-center'>
+                                <a class=\"btn btn-outline-primary btn-sm\" onclick=\"editItem('{$row['id']}', '{$row['subcategoryname']}')\"><i class='fa-solid fa-pen-to-square fs-7 me-2'></i>Edit</a>
                                 <a href=\"#\" onclick=\"confirmDeleteSubcategory('{$row['id']}')\" class=\"btn btn-outline-danger btn-sm\"><i class='fa-solid fa-trash fs-7'></i>Delete</a>
                             </td>";
                         echo "</tr>";
@@ -320,5 +325,106 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
         </div>
     </div>
 </div>
- <!-- Bootstrap -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+<script>
+
+      
+     function confirmDeleteSubcategory(subcategoryId, sameSubcategoryCount) {
+        if (sameSubcategoryCount >= 1) {
+            alert("Cannot delete subcategory with items associated.");
+            return;
+        }
+
+        var confirmDelete = confirm("Are you sure you want to delete this subcategory?");
+
+        if (confirmDelete) {
+            window.location.href = "ccstaffManageSubcategory.php?subcategoryid=" + subcategoryId;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('.table tbody tr');
+
+            searchInput.addEventListener('input', function () {
+                const searchValue = this.value.toLowerCase();
+
+                tableRows.forEach(function (row) {
+                    const rowData = row.textContent.toLowerCase();
+                    row.style.display = rowData.includes(searchValue) ? '' : 'none';
+                });
+            });
+    });
+
+      // Function to handle file input change
+      $("#image").change(function () {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#subcategoryImage').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+        
+    function editItem(subcategoryId, subcategoryName) {
+    // Populate the modal with the subcategory ID and name
+    $('#editModal').modal('show');
+    $('#subcategoryName').val(subcategoryName);
+
+    // Store the subcategoryId and current subcategory name in hidden inputs for later use
+    $('#subcategoryId').val(subcategoryId);
+    $('#oldSubcategoryName').val(subcategoryName);
+
+    // Get the URL of the subcategory image
+    var imagePath = 'inventory/SubcategoryItemsimages/' + subcategoryName + '.png';
+
+    // Set the src attribute of the img tag
+    $('#subcategoryImage').attr('src', imagePath);
+    }
+
+
+    $('#saveChangesBtn').click(function() {
+    // Get the subcategory ID, current subcategory name, new subcategory name, and the new image file
+    var subcategoryId = $('#subcategoryId').val();
+    var oldSubcategoryName = $('#oldSubcategoryName').val();
+    var newSubcategoryName = $('#subcategoryName').val();
+    var newImageFile = $('#image')[0].files[0]; // Get the file object
+
+    // Create a FormData object to send file data
+    var formData = new FormData();
+    // Append the subcategory ID, current subcategory name, and new subcategory name to FormData
+    formData.append('subcategoryId', subcategoryId);
+    formData.append('oldSubcategoryName', oldSubcategoryName);
+    formData.append('newSubcategoryName', newSubcategoryName);
+
+    // Client-side validation to check if the new subcategory name is empty
+    if (newSubcategoryName.trim() === '') {
+        alert("Subcategory name cannot be empty.");
+        return;
+    }
+
+    // Check if a new image file is selected and append it to FormData
+    if (newImageFile) {
+        formData.append('image', newImageFile);
+    }
+    // Send an AJAX request to update the subcategory details
+    $.ajax({
+        url: 'ccsupdate_subcategory_details.php',
+        method: 'POST',
+        data: formData,
+        processData: false, // Prevent jQuery from processing the data
+        contentType: false, // Prevent jQuery from setting contentType
+        success: function(response) {
+            // Redirect back to ccstaffManageSubcategory.php with success message
+            window.location.href = 'ccstaffManageSubcategory.php?msg_success=Item updated successfully';
+            // Close the modal or perform any other necessary actions
+            $('#editModal').modal('hide');
+        },
+        error: function(xhr, status, error) {
+            // Handle errors if needed
+            console.error(xhr.responseText);
+        }
+    });
+});
+</script>
