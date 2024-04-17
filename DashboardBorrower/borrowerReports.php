@@ -2,22 +2,21 @@
 <?php
 session_start();
 // Include necessary files
-include('ccsfunctions.php');
+include('bwerfunctions.php');
 // Check if the user is logged in
-if (!isset($_SESSION['staff_id'])) {
+if (!isset($_SESSION['borrower_id'])) {
     // Redirect to the login page or handle accordingly
     header('Location: /Inventory/index.php');
     exit();
 }
-
 // Retrieve user information based on the logged-in user ID
-$staffId = $_SESSION['staff_id'];
+$borrowerId = $_SESSION['borrower_id'];
 
 $query = "SELECT * FROM tblusers WHERE id = ?";
 $stmt = mysqli_prepare($con, $query);
 
 if ($stmt) {
-    mysqli_stmt_bind_param($stmt, "s", $staffId);
+    mysqli_stmt_bind_param($stmt, "s", $borrowerId);
 
     if (mysqli_stmt_execute($stmt)) {
         $result = mysqli_stmt_get_result($stmt);
@@ -46,24 +45,23 @@ if ($stmt) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="short icon" type="x-icon" href="/Inventory/images/imsicon.png">
-    <link rel="stylesheet" type="text/css" href="staffstyles.css">
+    <link rel="stylesheet" type="text/css" href="borrowerstyles.css">
     <!-- Bootstrap and Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 
 </head>
 <body>
 <div class="container-fluid">
         <!-- Header at the top -->
         <div class="row">      
-                <?php include('ccsheader.php'); ?>
+                <?php include('bwerheader.php'); ?>
         </div>
         <!-- Sidebar on the left and Main container on the right -->
         <div class="row">
             <!-- Sidebar on the left -->
             <div class="col-md-2">
-                <?php include('ccssidebar.php'); ?>
+                <?php include('bwersidebar.php'); ?>
             </div>
             <!-- Main container on the right -->
             <div class="col-md-10">
@@ -95,12 +93,11 @@ if ($stmt) {
                                 <th>Serial Number</th>
                                 <th>Item Status</th>
                                 <th>Item</th>
-                                <th>Borrower</th>
-                                <th>Released By</th>
+                                <th>Approved By</th>
                                 <th>Date Time Released</th>
-                                <th>Recieved By</th>
+                                <th>Approve Return By</th>
                                 <th>Date Time Return</th>
-                                
+                                <th>Return Condition</th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -110,35 +107,43 @@ if ($stmt) {
                             $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
                             // Prepare the SQL query with placeholders for the date range
-                            $query = "SELECT br.itemreqstatus, br.itemid, ib.subcategoryname,
-                                        u1.fname AS borrower_fname, u1.lname AS borrower_lname, 
-                                        u2.fname AS approve_fname, u2.lname AS approve_lname, 
-                                        br.id, br.datimeapproved, 
-                                        u3.fname AS approvereturn_fname, u3.lname AS approvereturn_lname, 
-                                        br.datetimereturn
-                                    FROM tblborrowingreports AS br
-                                    LEFT JOIN tblusers AS u1 ON br.borrowerid = u1.id
-                                    LEFT JOIN tblusers AS u2 ON br.approvebyid = u2.id
-                                    LEFT JOIN tblusers AS u3 ON br.approvereturnbyid = u3.id
-                                    LEFT JOIN tblitembrand AS ib ON br.itemid = ib.id";
+                            $query = "SELECT br.itemreqstatus, br.itemid, br.returnitemcondition, ib.subcategoryname,
+                            u1.fname AS borrower_fname, u1.lname AS borrower_lname, 
+                            u2.fname AS approve_fname, u2.lname AS approve_lname, 
+                            br.id, br.datimeapproved, 
+                            u3.fname AS approvereturn_fname, u3.lname AS approvereturn_lname, 
+                            br.datetimereturn
+                            FROM tblborrowingreports AS br
+                            LEFT JOIN tblusers AS u1 ON br.borrowerid = u1.id
+                            LEFT JOIN tblusers AS u2 ON br.approvebyid = u2.id
+                            LEFT JOIN tblusers AS u3 ON br.approvereturnbyid = u3.id
+                            LEFT JOIN tblitembrand AS ib ON br.itemid = ib.id
+                            WHERE br.borrowerid = ?"; // Assuming you want to filter by borrower ID initially
 
                             // Add WHERE clause if both start date and end date are provided
                             if (!empty($start_date) && !empty($end_date)) {
-                                // Add a WHERE clause to filter the data based on the date range
-                                $query .= " WHERE DATE(br.datetimereqborrow) BETWEEN '$start_date' AND '$end_date'";
+                            // Add a WHERE clause to filter the data based on the date range
+                            $query .= " AND DATE(br.datetimereqborrow) BETWEEN ? AND ?";
                             }
 
-                            // Add ORDER BY clause to order by datetimereqborrow in descending order
-                            $query .= " ORDER BY br.datetimereqborrow DESC"; 
-                                                    
-                            $result = mysqli_query($con, $query);
-                            while ($row = mysqli_fetch_assoc($result)) {
+                            $stmt = mysqli_prepare($con, $query);
+                            if ($stmt) {
+                                // Bind parameters including the start date and end date if provided
+                                if (!empty($start_date) && !empty($end_date)) {
+                                    mysqli_stmt_bind_param($stmt, "sss", $borrowerId, $start_date, $end_date);
+                                } else {
+                                    mysqli_stmt_bind_param($stmt, "s", $borrowerId);
+                                }
+                                if (mysqli_stmt_execute($stmt)) {
+                                    $result = mysqli_stmt_get_result($stmt);
+                                    while ($row = mysqli_fetch_assoc($result)) {
+
                                 echo "<tr>";
                                 // Check if the value is NULL, if so, display ---
-                                //$datetimereqborrow = $row['datetimereqborrow'] ? date("m/d/Y H:i", strtotime($row['datetimereqborrow'])) : '---';
-                                //echo "<td class='text-center'>{$datetimereqborrow}</td>";
                                 $itemID = $row['id'] ?? '---';
                                 echo "<td class='text-center'>{$itemID}</td>";
+                                //$datetimereqborrow = $row['datetimereqborrow'] ? date("m/d/Y H:i", strtotime($row['datetimereqborrow'])) : '---';
+                                //echo "<td class='text-center'>{$datetimereqborrow}</td>";
 
 
                                 // Check if the value is NULL, if so, display ---
@@ -147,11 +152,11 @@ if ($stmt) {
                                 
                                 // Similarly, check other fields and display --- if NULL
                                 $itemName = $row['subcategoryname'] ?? '---';
-                                echo "<td '>{$itemName}</td>";
+                                echo "<td>{$itemName}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
-                                $borrower = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : '---';
-                                echo "<td class='text-center'>{$borrower}</td>";
+                                //$borrower = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : '---';
+                                //echo "<td class='text-center'>{$borrower}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
                                 $approvedBy = ($row['approve_fname'] && $row['approve_lname']) ? "{$row['approve_fname']} {$row['approve_lname']}" : '---';
@@ -168,8 +173,19 @@ if ($stmt) {
                                 // Check if the value is NULL, if so, display ---
                                 $dateTimeReturn = $row['datetimereturn'] ? date("Y-m-d h:i A", strtotime($row['datetimereturn'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeReturn}</td>";
-                                
+
+                                 // Similarly, check other fields and display --- if NULL
+                                 $returncondition = $row['returnitemcondition'] ?? '---';
+                                 echo "<td class='text-center'>{$returncondition}</td>";
+
                                 echo "</tr>";
+                                }
+                                } else {
+                                    echo 'Statement execution failed: ' . mysqli_stmt_error($stmt);
+                                }
+                                mysqli_stmt_close($stmt);
+                            } else {
+                                echo 'Statement preparation failed: ' . mysqli_error($con);
                             }
                             ?>
                         </tbody>
@@ -212,9 +228,8 @@ $(document).ready(function(){
     //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
     table.buttons().container().appendTo('#table-buttons-container');
 });
+
 </script>
 
-
-    
 </body>
 </html>

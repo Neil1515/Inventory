@@ -191,7 +191,6 @@ if ($stmt_messages) {
         </div>
     </form>
 </div>
-
                 </div>
             </div>
             <!-- Available users sidebar -->

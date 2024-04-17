@@ -3,7 +3,7 @@
 echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
-echo '<h3 class="text-start">Your Items Borrowed </h3>';
+echo '<h3 class="text-start">Current Borrowed Items </h3>';
 
 $query = "SELECT borrowerid FROM tblborrowingreports WHERE borrowerid = ?";
 $stmt = mysqli_prepare($con, $query);

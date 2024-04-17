@@ -92,23 +92,30 @@ if ($stmt) {
     <div class="notification-header">
         <h5><i class="fas fa-bell fs-5 ms-1 me-1"></i>Notifications</h5>
     </div>
-              
     <?php
 // Fetch notifications from tblborrowingreports
-$query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datetimereqborrow AS datetime, 'Request to borrow' AS action 
+$query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqborrow AS datetime, 'request to borrow' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+          WHERE br.datetimereqborrow IS NOT NULL
           GROUP BY br.borrowerid, br.datetimereqborrow
           UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datetimereqreturn AS datetime, 'Request to Return' AS action 
+          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreservation AS datetime, 'request to reserve' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          WHERE br.datimeapproved IS NOT NULL
+          WHERE br.datetimereqreservation IS NOT NULL
+          GROUP BY br.borrowerid, br.datetimereqreservation
+          UNION
+          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreturn AS datetime, 'request to returned' AS action 
+          FROM tblborrowingreports br
+          JOIN tblusers u ON br.borrowerid = u.id
+          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+          WHERE br.datetimereqreturn IS NOT NULL
           GROUP BY br.borrowerid, br.datetimereqreturn
           UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname) AS subcategories, br.datetimereturn AS datetime, 'Returned' AS action 
+          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereturn AS datetime, 'returned' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
@@ -147,14 +154,19 @@ if ($result && mysqli_num_rows($result) > 0) {
 
         // Determine the href based on the action
         $href = '#'; // Default href
-        if ($row['action'] === 'Request to borrow') {
+        if ($row['action'] === 'request to borrow') {
             $borrowerId = $row['borrowerid']; // Get borrower ID
             $href = 'ccsstaffViewBorrower_all_items.php?borrowerId=' . $borrowerId; // Set appropriate URL for Request to borrow
-        } elseif ($row['action'] === 'Approved Request to borrow') {
-            $href = 'approved.php'; // Change to appropriate URL for Approved
+        } elseif ($row['action'] === 'request to reserve') {
+            $borrowerId = $row['borrowerid']; // Get borrower ID
+            $href = 'ccsstaffViewBorrower_allreserve_items.php?borrowerId=' . $borrowerId; // Set appropriate URL for Request to borrow
         } elseif ($row['action'] === 'Returned') {
             $href = 'return.php'; // Change to appropriate URL for Return
         }
+
+        // Explode the concatenated subcategories
+        $subcategories = explode('|', $row['subcategories']);
+        $subcategory_counts = array_count_values($subcategories);
 
         // Display each notification as a dropdown item
         echo '<li class="notification-item">';
@@ -163,7 +175,14 @@ if ($result && mysqli_num_rows($result) > 0) {
         echo '<div class="notification-content">';
         echo '<p class="notification-text">';
         echo '<i class="fas fa-user me-1"></i><strong>'.$row['fname'] . ' ' . $row['lname'] . '</strong> ';
-        echo $row['action'] . ' item(s) ' . $row['subcategories'] . '<br>' . $timeframe . ' ' . $formattedDatetime;
+        echo $row['action'] . ' item ';
+
+        // Display each subcategory with its count
+        foreach ($subcategory_counts as $subcategory => $count) {
+            echo $subcategory . ($count > 1 ? "($count)" : "") . ', ';
+        }
+
+        echo '<br>' . $timeframe . ' ' . $formattedDatetime;
         echo '</p>';
         echo '</div>';
         echo '</a>';
@@ -176,12 +195,6 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 ?>
 </ul>
-
-
-
-
-
-
                 <button class="btn btn-secondary dropdown-toggle custom-dropdown-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <?php 
                     if (isset($row)) {
@@ -208,7 +221,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
-                    <li><a class="dropdown-item" href="ccsstafProfile.php">Profile</a></li>
+                    <li><a class="dropdown-item" href="ccsstafProfile.php?staffId=<?php echo $staffId; ?>">Profile</a></li>
                     <li><a class="dropdown-item" href="/Inventory/logout.php">Logout</a></li>
                 </ul>
             </div>

@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
     date_default_timezone_set('Asia/Manila');
 
     // Get the current date and time in the Philippines timezone
-    $datetimereqborrow = date("Y-m-d H:i:s");
+    $datetimereqreservation = date("Y-m-d H:i:s");
 
     // Concatenate dateOfUse and timeOfUse to form datetimereserve
     $dateOfUse = $_POST['dateOfUse'];
@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
     $selectedItemIds = isset($_POST['selectedItemIds']) ? $_POST['selectedItemIds'] : [];
 
     // Prepare SQL statement to insert into tblborrowingreports
-    $sqlInsert = "INSERT INTO tblborrowingreports (itemid, borrowerid, itemreqstatus, datetimereqborrow, reservelocation, reservepurpose, datetimereserve) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sqlInsert = "INSERT INTO tblborrowingreports (itemid, borrowerid, itemreqstatus, datetimereqreservation, reservelocation, reservepurpose, datetimereserve) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmtInsert = mysqli_prepare($con, $sqlInsert);
 
     // Prepare SQL statement to update status in tblitembrand
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
         // Loop through each selected item ID
         foreach ($selectedItemIds as $itemid) {
             // Bind parameters for inserting into tblborrowingreports
-            mysqli_stmt_bind_param($stmtInsert, "iisssss", $itemid, $borrowerId, $itemreqstatus, $datetimereqborrow, $_POST['location'], $_POST['purpose'], $datetimereserve);
+            mysqli_stmt_bind_param($stmtInsert, "iisssss", $itemid, $borrowerId, $itemreqstatus, $datetimereqreservation, $_POST['location'], $_POST['purpose'], $datetimereserve);
 
             // Execute the insert statement
             if (!mysqli_stmt_execute($stmtInsert)) {

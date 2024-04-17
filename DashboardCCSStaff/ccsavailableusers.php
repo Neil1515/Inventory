@@ -14,7 +14,9 @@
 
             if ($user_result && mysqli_num_rows($user_result) > 0) {
                 while ($user_row = mysqli_fetch_assoc($user_result)) {
-                    echo '<a href="#" class="list-group-item list-group-item-action">';
+                    //echo '<a href="ccsstaffConversation.php" class="list-group-item list-group-item-action">';
+                    echo '<a href="ccsstaffConversation.php?sender_id=' . $user_row['id'] . '" class="list-group-item list-group-item-action">';
+
                     echo '<div class="d-flex w-100 justify-content-between">';
                     echo '<h7 class="mb-1">' . $user_row['fname'] . ' ' . $user_row['lname'] . '</h7>';
                     echo '</div>';

@@ -121,6 +121,7 @@ if ($stmt) {
                 die('Statement preparation failed: ' . mysqli_error($con));
             }
             ?>
+
            <div class="ccs-main-container">
                 <div class="container">
                     <div class="d-flex justify-content-between">
@@ -247,8 +248,14 @@ if ($stmt) {
             </div>
 
             <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-            <script>
-             $(document).ready(function() {
+                <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+            <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+     $(document).ready(function() {
     // Handle click event for Select All button
     $('#selectAllBtn').click(function() {
         // Check all checkboxes in the table

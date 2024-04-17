@@ -1,8 +1,8 @@
+<!-- ccsborrowableitems.php -->
 <!-- ccslistofborrowableitems.php -->
 <?php
 // Query to fetch categories
 include('ccsfunctions.php');
-
 //$queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' ORDER BY categoryname, subcategoryname, itembrand";
 $queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname, modelno, serialno, itemcondition, status ORDER BY categoryname, subcategoryname, itembrand";
 $resultitems = mysqli_query($con, $queryitems);
@@ -145,7 +145,7 @@ mysqli_data_seek($resultitems, 0);
             $(this).nextUntil('.category-row').toggle();
         });
     });
-    
+
 </script>
 <main class="ccs-main-container">
         <div id="dashboard-container" class="container">
@@ -218,7 +218,7 @@ mysqli_data_seek($resultitems, 0);
             </div>
         </div>
         </div>
-        <div class="row table-responsive" >
+        <div class="row table-responsive">
             <table  id="example" class="table table-bordered" >
             <thead class="table-dark ">
                     <tr class='text-center'>
@@ -254,7 +254,7 @@ mysqli_data_seek($resultitems, 0);
                         }
                         echo "'>";
                         // Check if an image exists, if not, use a default image
-                        $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
+                        $imagePath = '/inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
                         if (file_exists($imagePath)) {
                             echo "<td class='text-center'><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
                         } else {
@@ -297,7 +297,6 @@ mysqli_data_seek($resultitems, 0);
                 </tbody>
             </table>
         </div>
-
     </div>
 </main>
 

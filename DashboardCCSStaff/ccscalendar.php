@@ -1,7 +1,7 @@
 <!-- ccscalendar.php -->
 <?php
-// Fetch events from tblborrowingreports with itemreqstatus as "Approved"
-$events_query = "SELECT * FROM tblborrowingreports WHERE itemreqstatus = 'Approved'";
+// Fetch events from tblborrowingreports
+$events_query = "SELECT * FROM tblborrowingreports";
 $events_result = mysqli_query($con, $events_query);
 
 $events = array();

@@ -1,4 +1,5 @@
 <!-- ccsupdate_subcategory_details.php -->
+
 <?php
 include 'ccsfunctions.php';
 
@@ -51,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Check if a new image file is uploaded
                 if (!empty($_FILES['image']['name'])) {
-                    $newImageName = preg_replace("/[^a-zA-Z0-9]/", "", $newSubcategoryName);
+                    $newImageName = preg_replace("/[^a-zA-Z0-9]/", " ", $newSubcategoryName);
                     $uploadDir = 'inventory/SubcategoryItemsimages/';
                     $uploadPath = $uploadDir . $newImageName . '.png';
 

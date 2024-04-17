@@ -121,12 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                             </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <!-- Your left column content -->
-                                    <div class="mb-3">
-                                        <span class="form-label">Item Brand:<span class="text-danger">*</span></span>
-                                        <input type="text" class="form-control" id="itembrand" name="itembrand" value="<?php echo $row['itembrand'] ?? ''; ?>" required>
-                                    </div>
+                                <div class="col-md-6">                                 
                                     <div class="mb-3">
                                     <span class="form-label">Category Name:<span class="text-danger">*</span></span>
                                     <select class="form-select" id="categoryname" name="categoryname" required>
@@ -143,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                        <span class="form-label">Subcategory Name:<span class="text-danger">*</span></span>
+                                        <span class="form-label">Item Name:<span class="text-danger">*</span></span>
                                         <select class="form-select" id="subcategoryname" name="subcategoryname" required>
                                             <?php
                                             // Check if the category is set in the $row
@@ -168,6 +163,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                                             }
                                             ?>
                                         </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <span class="form-label">Item Description:<span class="text-danger">*</span></span>
+                                        <input type="text" class="form-control" id="itembrand" name="itembrand" value="<?php echo $row['itembrand'] ?? ''; ?>" required>
                                     </div>
                                     <div class="mb-3">
                                         <span class="form-label">Serial No:</span>
@@ -197,7 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                                     </div>
                                     <div class="mb-3">
                                         <span for="remarks" class="form-label">Remarks:</span>
-                                        <textarea class="form-control" id="remarks" placeholder="Ex.Complete" name="remarks"><?php echo $row['remarks'] ?? ''; ?></textarea>
+                                        <textarea class="form-control" id="remarks" name="remarks"><?php echo $row['remarks'] ?? ''; ?></textarea>
                                     </div>
                                     
                                     <div class="mb-3">

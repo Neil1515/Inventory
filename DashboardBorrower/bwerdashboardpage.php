@@ -1,5 +1,33 @@
 <!-- ccslistofborrowableitems.php -->
 <?php
+// Include necessary files
+include('bwerfunctions.php');
+
+
+$query = "SELECT * FROM tblusers WHERE id = ?";
+$stmt = mysqli_prepare($con, $query);
+
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmt)) {
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            // Valid user, retrieve user information
+            $row = mysqli_fetch_assoc($result);
+        } else {
+            // Handle the case when user information is not found
+            // You might want to redirect or display an error message
+        }
+    } else {
+        die('Statement execution failed: ' . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_close($stmt);
+} else {
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
 // Query to fetch categories
 $queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' AND status = 'Available' ORDER BY categoryname, subcategoryname, itembrand";
 $resultitems = mysqli_query($con, $queryitems);

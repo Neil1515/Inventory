@@ -43,8 +43,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
         $staffId = $_SESSION['staff_id']; // Adjust this based on your session variable storing staff ID
 
+        date_default_timezone_set('Asia/Manila');
         // Get the current date and time
-        $currentDateTime = date('Y-m-d H:i:s');
+        $datimeapproved = date('Y-m-d H:i:s');
 
         // Prepare and execute the query to update tblborrowingreports
         $queryUpdateItemStatus = "UPDATE tblborrowingreports SET itemreqstatus = 'Approved', approvebyid = ?, datimeapproved = ? WHERE id = ? AND itemreqstatus = 'Approve Reserve'";
@@ -52,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmtUpdateItemStatus) {
             foreach ($itemIds as $itemId) {
-                mysqli_stmt_bind_param($stmtUpdateItemStatus, "isi", $staffId, $currentDateTime, $itemId);
+                mysqli_stmt_bind_param($stmtUpdateItemStatus, "isi", $staffId, $datimeapproved, $itemId);
                 mysqli_stmt_execute($stmtUpdateItemStatus);
             }
             mysqli_stmt_close($stmtUpdateItemStatus);

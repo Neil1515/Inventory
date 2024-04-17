@@ -30,7 +30,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="borrowerPendingReserve.php">
                             <i class="fas fa-clock me-2"></i>
                             Pending Reserve 
                         </a>
@@ -38,7 +38,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="borrowerReports.php">
                     <i class="fas fa-file-alt me-2"></i>
                     <span>Reports</span>
                 </a>

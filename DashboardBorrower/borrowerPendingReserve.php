@@ -1,22 +1,23 @@
-<!-- ccsstaffCalendar.php -->
+<!-- borrowerPendingReserve.php -->
 <?php
 session_start();
+
 // Include necessary files
-include('ccsfunctions.php');
+include('bwerfunctions.php');
 // Check if the user is logged in
-if (!isset($_SESSION['staff_id'])) {
+if (!isset($_SESSION['borrower_id'])) {
     // Redirect to the login page or handle accordingly
     header('Location: /Inventory/index.php');
     exit();
 }
 // Retrieve user information based on the logged-in user ID
-$staffId = $_SESSION['staff_id'];
+$borrowerId = $_SESSION['borrower_id'];
 
 $query = "SELECT * FROM tblusers WHERE id = ?";
 $stmt = mysqli_prepare($con, $query);
 
 if ($stmt) {
-    mysqli_stmt_bind_param($stmt, "s", $staffId);
+    mysqli_stmt_bind_param($stmt, "s", $borrowerId);
 
     if (mysqli_stmt_execute($stmt)) {
         $result = mysqli_stmt_get_result($stmt);
@@ -35,40 +36,37 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Calendar</title>
+    <title>Pending Reserve</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="short icon" type="x-icon" href="/Inventory/images/imsicon.png">
-    <link rel="stylesheet" type="text/css" href="staffstyles.css">
+    <link rel="stylesheet" type="text/css" href="borrowerstyles.css">
     <!-- Bootstrap and Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- FullCalendar CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container-fluid">
+<div class="container-fluid">
         <!-- Header at the top -->
         <div class="row">      
-            <?php include('ccsheader.php'); ?>
+                <?php include('bwerheader.php'); ?>
         </div>
         <!-- Sidebar on the left and Main container on the right -->
         <div class="row">
             <!-- Sidebar on the left -->
             <div class="col-md-2">
-                <?php include('ccssidebar.php'); ?>
+                <?php include('bwersidebar.php'); ?>
             </div>
             <!-- Main container on the right -->
             <div class="col-md-10">
-                <?php
+            <?php
                 if (isset($_GET["msg_success"])) {
                     echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
                     echo $_GET["msg_success"];
@@ -89,12 +87,16 @@ if ($stmt) {
                     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                     echo '</div>';
                 }
-                include('ccscalendar.php');
+                include('bwerreserveitems.php');
                 ?>
-                
             </div>
         </div>
     </div>
-
+    <!-- Bootstrap and Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

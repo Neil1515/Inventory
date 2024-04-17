@@ -1,71 +1,16 @@
-<!-- ccsstafProfile.php -->
+<!-- borrowerProfile.php -->
 <?php
 session_start();
-include('ccsfunctions.php');
+include('bwerfunctions.php');
 
 // Check if the user is logged in
-if (!isset($_SESSION['staff_id'])) {
+if (!isset($_SESSION['borrower_id'])) {
     header('Location: /Inventory/index.php');
     exit();
 }
 
 // Retrieve user ID from the URL parameter
-$staffId = $_SESSION['staff_id'];
-
-
-
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
-    // Validate and sanitize input
-    $currentPassword = mysqli_real_escape_string($con, $_POST['currentPassword']);
-    $newPassword = mysqli_real_escape_string($con, $_POST['newPassword']);
-    $confirmNewPassword = mysqli_real_escape_string($con, $_POST['confirmNewPassword']);
-
-    // Fetch the current password from the database
-    $query = "SELECT password FROM tblusers WHERE id = $staffId";
-    $result = mysqli_query($con, $query);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $hashedPassword = $row['password'];
-
-        // Verify the current password
-        if (password_verify($currentPassword, $hashedPassword)) {
-            // Check if the new password and confirm new password match
-            if ($newPassword === $confirmNewPassword) {
-                // Hash the new password
-                $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-                // Update the password in the database
-                $updateQuery = "UPDATE tblusers SET password = '$hashedNewPassword' WHERE id = $staffId";
-                $updateResult = mysqli_query($con, $updateQuery);
-
-                if ($updateResult) {
-                    // Password updated successfully
-                    $msg_success = "Password updated successfully.";
-                    header("Location: ccsstafProfile.php?msg_success=" . urlencode($msg_success));
-                    exit();
-                } else {
-                    $msg_fail = "Failed to update password. Please try again.";
-                    header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
-                    exit();
-                }
-            } else {
-                $msg_fail = "New password and confirm new password do not match.";
-                header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
-                exit();
-            }
-        } else {
-            $msg_fail = "Current password is incorrect.";
-            header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
-            exit();
-        }
-    } else {
-        $msg_fail = "Failed to fetch user data. Please try again.";
-        header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
-        exit();
-    }
-}
+$borrowerId = $_SESSION['borrower_id'];
 ?>
 
 <!DOCTYPE html>
@@ -76,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="short icon" type="x-icon" href="/Inventory/images/imsicon.png">
-    <link rel="stylesheet" type="text/css" href="staffstyles.css">
+    <link rel="stylesheet" type="text/css" href="borrowerstyles.css">
     <!-- Bootstrap and Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -87,13 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
     <div class="container-fluid">
         <!-- Header at the top -->
         <div class="row">      
-            <?php include('ccsheader.php'); ?>
+            <?php include('bwerheader.php'); ?>
         </div>
         <!-- Sidebar on the left and Main container on the right -->
         <div class="row">
             <!-- Sidebar on the left -->
             <div class="col-md-2">
-                <?php include('ccssidebar.php'); ?>
+                <?php include('bwersidebar.php'); ?>
             </div>
             <!-- Main container on the right -->
             <div class="col-md-10">
@@ -119,36 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                     echo '</div>';
                 }
                 ?>
-<!-- Modal HTML Structure -->
-<div class="modal fade" id="changepassModal" tabindex="-1" aria-labelledby="changepassModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changepassModalLabel">Change Password</h5>
-                </div>
-                <form method="post" action="">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Enter Current Password<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="currentPassword" required>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Enter New Password<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="newPassword" required>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Enter Confirm New Password<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="confirmNewPassword" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" name="saveChangesBtn">Save changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
                <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -159,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                             <div class="card-body">
                             <?php 
                             // Fetch user information based on the provided user ID
-                            $query = "SELECT * FROM tblusers WHERE id = $staffId";
+                            $query = "SELECT * FROM tblusers WHERE id = $BorrowerId";
                             $result = mysqli_query($con, $query);
 
                             if ($result) {
@@ -169,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                                     $row = mysqli_fetch_assoc($result);
                                 } else {
                                     // Output a message if no rows are returned
-                                    echo "No user information found for ID: $staffId";
+                                    echo "No user information found for ID: $BorrowerId";
                                 }
                                 mysqli_free_result($result); // Free the result set
                             } else {
@@ -219,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                                     <div class="col-md-4 align-items-center d-flex">
                                         <div class="mb-3">
                                             <!-- <a href="#" class="btn btn-danger mb-1">Change Image</a>-->
-                                            <a href="#" class="btn btn-success mb-1" onclick="editItem('<?php echo $row['id']; ?>')">Change Password</a>
+                                            <a href="#" class="btn btn-success mb-1">Change Password</a>
                                         </div>
                                     </div>
                                 </div>
@@ -237,18 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
             </div>
         </div>
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-function editItem() {
-    // Populate the modal with the subcategory ID and name
-    $('#changepassModal').modal('show');
-}
-</script>
+    <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
