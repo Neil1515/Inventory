@@ -226,7 +226,7 @@ if ($stmt) {
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
                     <li><a class="dropdown-item" href="borrowerProfile.php?borrowerId=<?php echo $BorrowerId; ?>">Profile</a></li>
-                    <li><a class="dropdown-item" href="/Inventory/logout.php">Logout</a></li>
+                    <li><a class="dropdown-item" href="bwerlogout.php">Logout</a></li>
                 </ul>
             </div>
         </div>

@@ -44,7 +44,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/Inventory/logout.php">
+                <a class="nav-link" href="bwerlogout.php">
                     <i class="fas fa-sign-out-alt me-2"></i>
                     <span>Log out</span>
                 </a>

@@ -88,7 +88,7 @@ if ($stmt) {
                     while ($user_message_row = mysqli_fetch_assoc($user_messages_result)) {
                         echo '<a href="ccsstaffConversation.php?sender_id=' . $user_message_row['sender_id'] . '" class="list-group-item list-group-item-action">';
                         echo '<div class="d-flex w-100 justify-content-between">';
-                        echo '<h7 class="mb-1">' . $user_message_row['fname'] . ' ' . $user_message_row['lname'] . '</h7>';
+                        echo '<h7 class="mb-1"><i class="fas fa-user me-1"></i> ' . $user_message_row['fname'] . ' ' . $user_message_row['lname'] . '</h7>';
                         echo '<small class="text-muted">' . date('F j, Y, g:i a', strtotime($user_message_row['timestamp'])) . '</small>';
                         echo '</div>';
                         echo '<p class="mb-1">Message: ' . $user_message_row['message'] . '</p>'; // Display the most recent message
