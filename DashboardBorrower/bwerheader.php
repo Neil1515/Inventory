@@ -199,29 +199,46 @@ if ($stmt) {
 
 </ul>
                 
-                <button class="btn btn-secondary dropdown-toggle custom-dropdown-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <?php 
-                    if (isset($row)) {
-                        echo $row['fname'] . ' ' . $row['lname'];
+<button class="btn btn-secondary dropdown-toggle custom-dropdown-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <?php 
+    if (isset($row)) {
+        echo $row['fname'] . ' ' . $row['lname'];
+        
+        if (!empty($row['id'])) {
+            // If the user has a profile image, display it
+            echo '<img src="/inventory/images/imageofusers/' . $row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
+        } else {
+            // If the user does not have a profile image, display the default image
+            echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
+        }
+        
+    } else {
+        // Retrieve user information based on the logged-in user ID
+        $query = "SELECT fname, lname, id FROM tblusers WHERE id = ?";
+        $stmt = mysqli_prepare($con, $query);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $_SESSION['borrower_id']);
+            if (mysqli_stmt_execute($stmt)) {
+                $result = mysqli_stmt_get_result($stmt);
+                if ($result && mysqli_num_rows($result) > 0) {
+                    $user_row = mysqli_fetch_assoc($result);
+                    echo $user_row['fname'] . ' ' . $user_row['lname'];
+                    if (!empty($user_row['id'])) {
+                        // If the user has a profile image, display it
+                        echo '<img src="/inventory/images/imageofusers/' . $user_row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
                     } else {
-                        // Retrieve user information based on the logged-in user ID
-                        $query = "SELECT fname, lname FROM tblusers WHERE id = ?";
-                        $stmt = mysqli_prepare($con, $query);
-                        if ($stmt) {
-                            mysqli_stmt_bind_param($stmt, "s", $_SESSION['borrower_id']);
-                            if (mysqli_stmt_execute($stmt)) {
-                                $result = mysqli_stmt_get_result($stmt);
-                                if ($result && mysqli_num_rows($result) > 0) {
-                                    $user_row = mysqli_fetch_assoc($result);
-                                    echo $user_row['fname'] . ' ' . $user_row['lname'];
-                                }
-                            }
-                            mysqli_stmt_close($stmt);
-                        }
+                        // If the user does not have a profile image, display the default image
+                        echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
                     }
-                    ?>
-                    <img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture">
-                </button>
+                   
+                }
+            }
+            mysqli_stmt_close($stmt);
+        }
+    }
+    ?>
+</button>
+
 
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
@@ -286,8 +303,8 @@ if ($stmt) {
     }
 
     .dropdown img {
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         cursor: pointer;
         border-radius: 50%;
         margin-left: 5px;

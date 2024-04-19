@@ -12,8 +12,6 @@ if (!isset($_SESSION['staff_id'])) {
 // Retrieve user ID from the URL parameter
 $staffId = $_SESSION['staff_id'];
 
-
-
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
     // Validate and sanitize input
@@ -27,42 +25,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
-        $hashedPassword = $row['password'];
+        $currentPasswordFromDB = $row['password'];
 
         // Verify the current password
-        if (password_verify($currentPassword, $hashedPassword)) {
+        if ($currentPassword === $currentPasswordFromDB) {
             // Check if the new password and confirm new password match
             if ($newPassword === $confirmNewPassword) {
-                // Hash the new password
-                $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-                // Update the password in the database
-                $updateQuery = "UPDATE tblusers SET password = '$hashedNewPassword' WHERE id = $staffId";
+                // Update the password in the database (without hashing)
+                $updateQuery = "UPDATE tblusers SET password = '$newPassword' WHERE id = $staffId";
                 $updateResult = mysqli_query($con, $updateQuery);
 
                 if ($updateResult) {
                     // Password updated successfully
                     $msg_success = "Password updated successfully.";
-                    header("Location: ccsstafProfile.php?msg_success=" . urlencode($msg_success));
+                    header("Location: borrowerProfile.php?msg_success=" . urlencode($msg_success));
                     exit();
                 } else {
                     $msg_fail = "Failed to update password. Please try again.";
-                    header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+                    header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
                     exit();
                 }
             } else {
                 $msg_fail = "New password and confirm new password do not match.";
-                header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+                header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
                 exit();
             }
         } else {
             $msg_fail = "Current password is incorrect.";
-            header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+            header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
             exit();
         }
     } else {
         $msg_fail = "Failed to fetch user data. Please try again.";
-        header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+        header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
         exit();
     }
 }
@@ -149,6 +144,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
             </div>
         </div>
     </div>
+
+    <!-- Modal HTML Structure -->
+<div class="modal fade" id="changeimageModal" tabindex="-1" aria-labelledby="changeimageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeimageModalLabel">Change Password</h5>
+                </div>
+                <form method="post" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                        
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" name="saveChangesBtn">Update Image</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
                <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -218,8 +235,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                                     <!-- Main container on the left -->
                                     <div class="col-md-4 align-items-center d-flex">
                                         <div class="mb-3">
-                                            <!-- <a href="#" class="btn btn-danger mb-1">Change Image</a>-->
-                                            <a href="#" class="btn btn-success mb-1" onclick="editItem('<?php echo $row['id']; ?>')">Change Password</a>
+                                            <!-- <a  class="btn btn-danger mb-1">Change Image</a>-->
+                                            <a class="btn btn-success mb-1" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
                                         </div>
                                     </div>
                                 </div>
@@ -245,7 +262,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-function editItem() {
+function editPass() {
+    // Populate the modal with the subcategory ID and name
+    $('#changepassModal').modal('show');
+}
+function editImage() {
     // Populate the modal with the subcategory ID and name
     $('#changepassModal').modal('show');
 }

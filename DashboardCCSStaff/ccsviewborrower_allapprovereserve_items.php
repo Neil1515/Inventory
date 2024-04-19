@@ -208,7 +208,11 @@ if ($stmtBorrowerDetails) {
 
             <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
             <script>
-            $(document).ready(function() {
+                $(document).ready(function() {
+         // Set the minimum date for the "Date of Use" input to today
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById("dateOfUse").min = today;
+    
                     // Pass the current date to JavaScript
                     var currentDate = '<?php echo $currentDate; ?>';
 
@@ -464,7 +468,6 @@ $('#saveChangesBtn').click(function() {
     });
 });
 
-
-                    
 });
+
 </script>

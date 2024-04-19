@@ -27,10 +27,13 @@ if ($events_result) {
         } else {
             // Create a new event group
             $grouped_events[$datetime] = array(
-                'title' => "<i class='fas fa-user me-2'></i><strong>" . $row['borrower_name'] . '</strong><br>Request to reserve item ' . $row['item_names'],                
+                'title' => "<i class='fas fa-user me-2'></i><strong>" . $row['borrower_name'] . '</strong><br>Request to reserve item ' . $row['item_names'],
+                'reservelocation' => $row['reservelocation'],
+                'reservepurpose' =>$row['reservepurpose'],                   
                 'start' => $datetime,
                 'end' => isset($row['datetimeapproved']) ? $row['datetimeapproved'] : '',
-                'url' => 'ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=' . $row['borrowerid'] // Include borrower ID in URL
+                'url' => 'ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=' . $row['borrowerid'], // Include borrower ID in URL
+                'borrowerid' => $row['borrowerid']
             );
         }
     }
@@ -56,23 +59,32 @@ if ($events_result) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="reqtoborrowModalLabel">Reservation <?php echo $formattedDateTime; ?></h5>
+                <h5 class="modal-title" id="reqtoborrowModalLabel">Reservation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" action="">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label"></label>
-                    </div>
+            <div class="modal-body">
+                <div class="mb-1">
+                    <label class="form-label" id="modalEventTitle"></label>
                 </div>
+                <div class="mb">
+                    <label class="form-label"><i class='fas fa-map-marker-alt me-2'></i><strong>Location:</strong> <label id="modalLocation"></label></label>
+                </div>
+                <div class="mb">
+                    <label class="form-label"><i class='fas fa-tasks me-2'></i><strong>Purpose:</strong>  <label id="modalPurpose"></label></label>
+                   
+                </div>
+            </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                     <a href="#" class="btn btn-primary" id="viewBtn">View</a>
+                    <a href="#" class="btn btn-success" id="messageBtn"><i class='fas fa-envelope me-2'></i>Message</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 <div class="ccs-main-container">
     <div class="container">
@@ -112,12 +124,26 @@ $(document).ready(function() {
         eventLimit: true,
         events: <?php echo json_encode($events); ?>,
         eventClick: function(event) {
-            $('#reqtoborrowModal .modal-body label').html(event.title); // Use html() instead of text()
-            $('#reqtoborrowModal').modal('show');
+            // Update the modal title with the event title
+            $('#modalEventTitle').html(event.title);
+            // Display reservation location with icon
+            $('#modalLocation').html(event.reservelocation);
+            // Display reservation purpose with icon
+            $('#modalPurpose').html(event.reservepurpose);
 
+            // Format and display the event start date and time
+            var formattedDateTime = moment(event.start).format('h:mm A MMMM DD, YYYY');
+            $('#reqtoborrowModal .modal-title').html('Reservation ' + formattedDateTime);
+            
             // Set the href attribute of the View button to the correct URL with borrower ID
             $('#viewBtn').attr('href', event.url);
 
+             // Set the href attribute of the Message button to the conversation page URL with sender ID
+             $('#messageBtn').attr('href', 'ccsstaffConversation.php?sender_id=' + event.borrowerid);
+
+            // Show the modal
+            $('#reqtoborrowModal').modal('show');
+            
             return false; // Prevent default event behavior
         },
         eventOverlap: false, // Prevent events from overlapping
@@ -126,4 +152,5 @@ $(document).ready(function() {
         }
     });
 });
+
 </script>

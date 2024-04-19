@@ -9,8 +9,95 @@ if (!isset($_SESSION['borrower_id'])) {
     exit();
 }
 
-// Retrieve user ID from the URL parameter
+// Retrieve user ID from the session
 $borrowerId = $_SESSION['borrower_id'];
+
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
+    // Validate and sanitize input
+    $currentPassword = mysqli_real_escape_string($con, $_POST['currentPassword']);
+    $newPassword = mysqli_real_escape_string($con, $_POST['newPassword']);
+    $confirmNewPassword = mysqli_real_escape_string($con, $_POST['confirmNewPassword']);
+
+    // Fetch the current password from the database
+    $query = "SELECT password FROM tblusers WHERE id = $borrowerId";
+    $result = mysqli_query($con, $query);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $currentPasswordFromDB = $row['password'];
+
+        // Verify the current password
+        if ($currentPassword === $currentPasswordFromDB) {
+            // Check if the new password and confirm new password match
+            if ($newPassword === $confirmNewPassword) {
+                // Update the password in the database (without hashing)
+                $updateQuery = "UPDATE tblusers SET password = '$newPassword' WHERE id = $borrowerId";
+                $updateResult = mysqli_query($con, $updateQuery);
+
+                if ($updateResult) {
+                    // Password updated successfully
+                    $msg_success = "Password updated successfully.";
+                    header("Location: borrowerProfile.php?msg_success=" . urlencode($msg_success));
+                    exit();
+                } else {
+                    $msg_fail = "Failed to update password. Please try again.";
+                    header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+                    exit();
+                }
+            } else {
+                $msg_fail = "New password and confirm new password do not match.";
+                header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+                exit();
+            }
+        } else {
+            $msg_fail = "Current password is incorrect.";
+            header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+            exit();
+        }
+    } else {
+        $msg_fail = "Failed to fetch user data. Please try again.";
+        header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+        exit();
+    }
+}
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
+    // Handle file upload
+    if (isset($_FILES['image'])) {
+        $file = $_FILES['image'];
+        $fileName = $file['name'];
+        $fileTmpName = $file['tmp_name'];
+        $fileError = $file['error'];
+
+        // Check for upload errors
+        if ($fileError === 0) {
+            // Move the uploaded file to the desired directory with the desired name
+            $uploadDir = '/Inventory/images/imageofusers/';
+            $newFileName = $borrowerId . '.png'; // Name the file as borrower ID with .png extension
+            $destination = $_SERVER['DOCUMENT_ROOT'] . $uploadDir . $newFileName;
+
+            if (move_uploaded_file($fileTmpName, $destination)) {
+                // Image uploaded successfully
+                $msg_success = "Image updated successfully.";
+                header("Location: borrowerProfile.php?msg_success=" . urlencode($msg_success));
+                exit();
+            } else {
+                $msg_fail = "Error occurred while uploading image.";
+                header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+                exit();
+            }
+        } else {
+            $msg_fail = "Error occurred while uploading image: " . $fileError;
+            header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+            exit();
+        }
+    } else {
+        $msg_fail = "No image uploaded.";
+        header("Location: borrowerProfile.php?msg_fail=" . urlencode($msg_fail));
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,6 +150,63 @@ $borrowerId = $_SESSION['borrower_id'];
                     echo '</div>';
                 }
                 ?>
+                <!--  Modal HTML Structure -->
+<div class="modal fade" id="changepassModal" tabindex="-1" aria-labelledby="changepassModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changepassModalLabel">Change Password</h5>
+                </div>
+                <form method="post" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Enter Current Password<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="currentPassword" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Enter New Password<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="newPassword" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Enter Confirm New Password<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="confirmNewPassword" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" name="saveChangesBtn">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+                <!-- Change Image Modal -->
+                <div class="modal fade" id="changeimageModal" tabindex="-1" aria-labelledby="changeimageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="changeimageModalLabel">Update Image</h5>
+                            </div>
+                            <form method="post" action="" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="text-center mb-3">
+                                        <img src="" alt="Image" id="userImage" style="max-width: 150px;">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="image" class="form-label">Upload New Image<span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" name="updateImageBtn">Update Image</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -125,15 +269,24 @@ $borrowerId = $_SESSION['borrower_id'];
                                 <div class="row">
                                     <!-- Main container on the right -->
                                     <div class="col-md-4 text-center">
-                                        <div class="mb-3">
-                                            <img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width='160'>
-                                        </div>
+                                    <div class="mb-3">
+                                        <?php
+                                        // Check if the user has a profile image
+                                        if (!empty($row['id'])) {
+                                            // If the user has a profile image, display it
+                                            echo '<img src="/inventory/images/imageofusers/' . $row['id'] . '.png" alt="userpicture" class="userpicture" width="160">';
+                                        } else {
+                                            // If the user does not have a profile image, display a default image
+                                            echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="160">';
+                                        }
+                                        ?>
+                                    </div>
                                     </div>
                                     <!-- Main container on the left -->
-                                    <div class="col-md-4 align-items-center d-flex">
+                                    <div class="col-md-5 align-items-center d-flex">
                                         <div class="mb-3">
-                                            <!-- <a href="#" class="btn btn-danger mb-1">Change Image</a>-->
-                                            <a href="#" class="btn btn-success mb-1">Change Password</a>
+                                            <a class="btn btn-danger mb-1" onclick="editImage('<?php echo $row['id']; ?>')">Change Profile Picture</a>
+                                            <a class="btn btn-success mb-1" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
                                         </div>
                                     </div>
                                 </div>
@@ -151,8 +304,36 @@ $borrowerId = $_SESSION['borrower_id'];
             </div>
         </div>
     </div>
-    <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function editPass() {
+        // Populate the modal with the subcategory ID and name
+        $('#changepassModal').modal('show');
+    }
+    function editImage() {
+        // Populate the modal with the subcategory ID and name
+        $('#changeimageModal').modal('show');
+        // Get the URL of the current image
+        var currentImageUrl = '<?php echo !empty($row['id']) ? "/inventory/images/imageofusers/" . $row['id'] . ".png" : "/inventory/images/profile-user.png"; ?>';
+        // Set the src attribute of the userImage to the current image URL
+        $('#userImage').attr('src', currentImageUrl);
+    }
+        // Function to handle file input change
+    $("#image").change(function () {
+        var input = this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#userImage').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
+</script>
 </body>
 </html>
