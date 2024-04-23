@@ -173,7 +173,6 @@ echo '</div>';
 echo '</div>';
 ?>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <script>
     function approveAllItemsToThisBorrowerId(borrowerId) {
         if (confirm('Are you sure you want to approve all items to this user?')) {

@@ -23,10 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($checkExistingStmt, "ss", $id, $email);
         mysqli_stmt_execute($checkExistingStmt);
         mysqli_stmt_store_result($checkExistingStmt);
-    
+        
+        // Bind the result variables
+        mysqli_stmt_bind_result($checkExistingStmt, $existingId, $existingEmail);
+        
         if (mysqli_stmt_num_rows($checkExistingStmt) > 0) {
+            // Fetch the results
             mysqli_stmt_fetch($checkExistingStmt);
-    
+        
             if ($existingId == $id && $existingEmail == $email) {
                 $errorMsg = "User with ID $id and email $email already exists. Please choose different credentials.";
             } elseif ($existingId == $id) {
@@ -34,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $errorMsg = "User with email $email already exists. Please choose a different email.";
             }
-    
+        
             echo "<script>window.location.href='registrationform.php?msg_fail=$errorMsg&existing_id=$id';</script>";
             exit();
         }
-    
+        
         mysqli_stmt_close($checkExistingStmt);
     } else {
         echo "Failed to prepare checkExisting statement: " . mysqli_error($con);
@@ -77,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($insertStmt, "ssssssssss", $id, $password, $userType, $firstName, $lastName, $email, $gender, $department, $status, $datetimeregister);
 
         if (mysqli_stmt_execute($insertStmt)) {
-            echo "<script>window.location.href='registrationform.php?msg_success={$lastName} please await approval from CCS staff or the Dean.';</script>";
+            echo "<script>window.location.href='index.php?msg_success={$lastName} please await approval from CCS staff or the Dean.';</script>";
             exit();
         } else {
             echo "Failed: " . mysqli_error($con);

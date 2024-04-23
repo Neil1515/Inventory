@@ -1,16 +1,23 @@
-<!-- ccsstafProfile.php -->
+<!-- deanProfile.php -->
 <?php
 session_start();
-include('ccsfunctions.php');
 
-// Check if the user is logged in
-if (!isset($_SESSION['staff_id'])) {
-    header('Location: /Inventory/index.php');
-    exit();
+// Assuming you have a valid database connection here
+$servername = 'localhost';
+$db_id = 'root';
+$db_password = '';
+$db_name = 'maininventorydb';
+
+// Attempt to connect to the database
+$con = mysqli_connect($servername, $db_id, $db_password, $db_name);
+
+// Check for connection errors
+if (!$con) {
+    die('Connection failed: ' . mysqli_connect_error());
 }
 
 // Retrieve user ID from the URL parameter
-$staffId = $_SESSION['staff_id'];
+$deanId = $_SESSION['dean_id'];
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
@@ -20,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
     $confirmNewPassword = mysqli_real_escape_string($con, $_POST['confirmNewPassword']);
 
     // Fetch the current password from the database
-    $query = "SELECT password FROM tblusers WHERE id = $staffId";
+    $query = "SELECT password FROM tblusers WHERE id = $deanId";
     $result = mysqli_query($con, $query);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -32,32 +39,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
             // Check if the new password and confirm new password match
             if ($newPassword === $confirmNewPassword) {
                 // Update the password in the database (without hashing)
-                $updateQuery = "UPDATE tblusers SET password = '$newPassword' WHERE id = $staffId";
+                $updateQuery = "UPDATE tblusers SET password = '$newPassword' WHERE id = $deanId";
                 $updateResult = mysqli_query($con, $updateQuery);
 
                 if ($updateResult) {
                     // Password updated successfully
                     $msg_success = "Password updated successfully.";
-                    header("Location: ccsstafProfile.php?msg_success=" . urlencode($msg_success));
+                    header("Location: deanProfile.php?msg_success=" . urlencode($msg_success));
                     exit();
                 } else {
                     $msg_fail = "Failed to update password. Please try again.";
-                    header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+                    header("Location: deanProfile.php?msg_fail=" . urlencode($msg_fail));
                     exit();
                 }
             } else {
                 $msg_fail = "New password and confirm new password do not match.";
-                header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+                header("Location: deanProfile.php?msg_fail=" . urlencode($msg_fail));
                 exit();
             }
         } else {
             $msg_fail = "Current password is incorrect.";
-            header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+            header("Location: deanProfile.php?msg_fail=" . urlencode($msg_fail));
             exit();
         }
     } else {
         $msg_fail = "Failed to fetch user data. Please try again.";
-        header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+        header("Location: deanProfile.php?msg_fail=" . urlencode($msg_fail));
         exit();
     }
 }
@@ -71,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="short icon" type="x-icon" href="/Inventory/images/imsicon.png">
-    <link rel="stylesheet" type="text/css" href="staffstyles.css">
+    <link rel="stylesheet" type="text/css" href="deanstyles.css">
     <!-- Bootstrap and Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -82,16 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
     <div class="container-fluid">
         <!-- Header at the top -->
         <div class="row">      
-            <?php include('ccsheader.php'); ?>
+            <?php include('deanheader.php'); ?>
         </div>
         <!-- Sidebar on the left and Main container on the right -->
-        <div class="row">
-            <!-- Sidebar on the left -->
-            <div class="col-md-2">
-                <?php include('ccssidebar.php'); ?>
-            </div>
+
+
             <!-- Main container on the right -->
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <?php
                 if (isset($_GET["msg_success"])) {
                     echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
@@ -176,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                             <div class="card-body">
                             <?php 
                             // Fetch user information based on the provided user ID
-                            $query = "SELECT * FROM tblusers WHERE id = $staffId";
+                            $query = "SELECT * FROM tblusers WHERE id = $deanId";
                             $result = mysqli_query($con, $query);
 
                             if ($result) {
@@ -186,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                                     $row = mysqli_fetch_assoc($result);
                                 } else {
                                     // Output a message if no rows are returned
-                                    echo "No user information found for ID: $staffId";
+                                    echo "No user information found for ID: $deanId";
                                 }
                                 mysqli_free_result($result); // Free the result set
                             } else {
@@ -209,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                                     <div class="col-md-4 align-items-center d-flex">
                                         <div class="mb-1">
                                             <!-- <a  class="btn btn-danger mb-1">Change Image</a>-->
+                                            <a  href="deanDashboardPage.php" class="btn btn-danger mb-1">Back</a>
                                             <a class="btn btn-success" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
                                         </div>
                                     </div>
@@ -247,7 +252,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
             </div>
             </div>
         </div>
-    </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 

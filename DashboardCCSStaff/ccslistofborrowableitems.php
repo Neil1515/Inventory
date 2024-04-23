@@ -218,7 +218,7 @@ mysqli_data_seek($resultitems, 0);
             </div>
         </div>
         </div>
-        <div class="row table-responsive" >
+        <div class="row table-responsive">
             <table  id="example" class="table table-bordered" >
             <thead class="table-dark ">
                     <tr class='text-center'>

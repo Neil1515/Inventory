@@ -84,3 +84,4 @@ if (isset($_GET['borrowerId'])) {
     echo 'Borrower ID not provided in the query string.';
 }
 ?>
+

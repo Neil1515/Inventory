@@ -114,8 +114,8 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                      ?>
                                  </div>
                          <div class='text-end me-1'>
-                             <a href='#' class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Reject All</a>
-                             <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Approve All</a>
+                             <a  class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Reject All</a>
+                             <a  class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Accept All</a>
                              <a href='ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $borrowerId; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                          </div>
                      </div>
@@ -176,7 +176,7 @@ echo '</div>';
      if (response.includes('Items approved successfully')) {
          //alert('Items approved successfully!');
          // You can also update the UI dynamically if needed
-         window.location.href = 'ccsstaffListofPendingBorrowerusers.php?msg_success=Items approved successfully by ';
+         window.location.href = 'ccsstaffUsersPendingReserveItems.php?msg_success=Items approved successfully by ';
      } else {
          alert('Error: ' + response);
      }
@@ -206,7 +206,7 @@ echo '</div>';
      if (response.includes('Items reject successfully')) {
          //alert('Items reject successfully!');
          // You can also update the UI dynamically if needed
-         window.location.href = 'ccsstaffListofPendingBorrowerusers.php?msg_success=Items reject successfully ';
+         window.location.href = 'ccsstaffUsersPendingReserveItems.php?msg_success=Items reject successfully ';
      } else {
          alert('Error: ' + response);
      }

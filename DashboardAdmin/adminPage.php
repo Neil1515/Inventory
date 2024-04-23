@@ -50,7 +50,7 @@ if ($stmt) {
 include('adminfunctions.php');
 
 $search = isset($_GET["search"]) ? $_GET["search"] : '';
-$sql = "SELECT * FROM `tblusers` WHERE usertype NOT IN ('Admin', 'Student', 'Employee') AND (id LIKE '%$search%' OR lname LIKE '%$search%' OR usertype LIKE '%$search%')";
+$sql = "SELECT * FROM `tblusers` WHERE usertype NOT IN ('Admin') AND status NOT IN ('Pending') AND (id LIKE '%$search%' OR lname LIKE '%$search%' OR usertype LIKE '%$search%')";
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -124,7 +124,7 @@ $result = mysqli_query($conn, $sql);
         }
         echo '<div class="row mb-2">';
         echo '<div class="col-md-9 mb-1">';
-        echo '<a href="addusers.php" class="btn btn-dark btn-block btn-add-new">Add New</a>';
+        echo '<a href="addusers.php" class="btn btn-dark btn-block btn-add-new">Add Staff</a>';
         echo '</div>';
         echo '<div class="col-md-3 text-end">';
         echo '<form action="" method="GET" class="input-group">';
@@ -133,15 +133,16 @@ $result = mysqli_query($conn, $sql);
         echo '</div>';
         echo '</div>';
 
-        echo '<table class="table table-hover text-center">';
-        echo '<thead class="table-dark">';
+        echo '<table class="table table-hover">';
+        echo '<thead class="table-dark ">';
         echo '<tr>';
         echo '<th scope="col">ID</th>';
         echo '<th scope="col">First Name</th>';
         echo '<th scope="col">Last Name</th>';
+        echo '<th scope="col">Email</th>';
         echo '<th scope="col">User Type</th>';
         echo '<th scope="col">Status</th>';
-        echo '<th scope="col">Action</th>';
+        echo '<th class="text-center" scope="col">Action</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
@@ -150,12 +151,13 @@ $result = mysqli_query($conn, $sql);
             echo '<td>' . $row["id"] . '</td>';
             echo '<td>' . $row["fname"] . '</td>';
             echo '<td>' . $row["lname"] . '</td>';
+            echo '<td>' . $row["email"] . '</td>';
             echo '<td>' . $row["usertype"] . '</td>';
             echo '<td class="' . (strtolower($row["status"]) === 'active' ? 'text-success' : 'text-danger') . '">' . $row["status"] . '</td>';
-            echo '<td>';
+            echo '<td class="text-center">';
             echo '<a href="edit.php?id=' . $row["id"] . '" class="link-dark"><i class="fa-solid fa-pen-to-square fs-7 me-2"></i></a>';
             echo '<a href="javascript:void(0);" onclick="confirmResetPassword(' . $row["id"] . ')" class="link-dark"><i class="fa-solid fa-key fs-7 me-2"></i></a>';
-            echo ' <a href="javascript:void(0);" onclick="confirmDeleteUser(' . $row["id"] . ')" class="link-dark"><i class="fa-solid fa-trash fs-7"></i></a>';
+            //echo ' <a href="javascript:void(0);" onclick="confirmDeleteUser(' . $row["id"] . ')" class="link-dark"><i class="fa-solid fa-trash fs-7"></i></a>';
             echo '</td>';
             echo ' </tr>';
         }

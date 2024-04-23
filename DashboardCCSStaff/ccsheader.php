@@ -114,13 +114,6 @@ $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategorynam
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
           WHERE br.datetimereqreturn IS NOT NULL
           GROUP BY br.borrowerid, br.datetimereqreturn
-          UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereturn AS datetime, 'returned' AS action 
-          FROM tblborrowingreports br
-          JOIN tblusers u ON br.borrowerid = u.id
-          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          WHERE br.datetimereturn IS NOT NULL
-          GROUP BY br.borrowerid, br.datetimereturn
           ORDER BY datetime DESC";
 
 $result = mysqli_query($con, $query);
@@ -174,7 +167,23 @@ if ($result && mysqli_num_rows($result) > 0) {
 
         echo '<div class="notification-content">';
         echo '<p class="notification-text">';
-        echo '<i class="fas fa-user me-1"></i><strong>'.$row['fname'] . ' ' . $row['lname'] . '</strong> ';
+        // Check if the user has a profile image
+        if (!empty($borrowerId)) {
+            // Check if the profile image exists
+            $profileImagePath = "/inventory/images/imageofusers/" . $borrowerId . ".png";
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                // If the user has a profile image, display it with a timestamp
+                echo '<img src="' . $profileImagePath . '?' . time() . '" width="160">';
+            } else {
+                // If the profile image does not exist, display the default image with a timestamp
+                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="160">';
+            }
+        } else {
+            // If senderId is empty, display the default image with a timestamp
+            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="160">';
+        }
+
+        echo '<strong> '.$row['fname'] . ' ' . $row['lname'] . '</strong> ';
         echo $row['action'] . ' item ';
 
         // Display each subcategory with its count

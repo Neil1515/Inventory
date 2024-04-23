@@ -10,15 +10,16 @@ if (isset($_POST["submit"])) {
     $lname = $_POST['lname'];
     $usertype = $_POST['usertype'];
     $status = $_POST['status']; 
+    $email = $_POST['email']; 
 
     // Set default password
     $password = "uclm-" . $id;
 
-    $sql = "INSERT INTO `tblusers`(`id`, `fname`, `lname`, `usertype`, `status`, `password`) VALUES ('$id','$fname','$lname','$usertype','$status','$password')";
+    $sql = "INSERT INTO `tblusers`(`id`, `fname`, `lname`, `usertype`, `status`, `password`, `email`) VALUES ('$id','$fname','$lname','$usertype','$status','$password','$email')";
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
-        header("Location: adminPage.php?msg=New record created successfully");
+        header("Location: adminPage.php?msg=New staff created account successfully");
         exit();
     } else {
         echo "Failed: " . mysqli_error($conn);
@@ -29,6 +30,7 @@ if (isset($_POST["submit"])) {
 <html lang="en">
 
 <head>
+    <title>Add Staff</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +43,7 @@ if (isset($_POST["submit"])) {
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <title>Add Users</title>
+    
 </head>
 
 <body>
@@ -53,31 +55,36 @@ if (isset($_POST["submit"])) {
     <?php include('adminheader.php'); ?>
     <div class="container">
         <div class="text-center mb-4">
-            <h3>Add New User</h3>
+            <h3>Add New Staff</h3>
         </div>
 
         <div class="container d-flex justify-content-center">
             <form action="" method="post" style="width:50vw; min-width:300px;">
                 <div class="">
                      <div class="mb-3">
-                        <label class="form-label">User ID:</label>
+                        <label class="form-label">User ID<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="id" placeholder="User ID (Required)" required>
                      </div>
 
                     <div class="mb-3">
-                        <label class="form-label">First Name:</label>
+                        <label class="form-label">First Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="fname" placeholder="First Name (Required)" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Last Name:</label>
+                        <label class="form-label">Last Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="lname" placeholder="Last Name (Required)" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email<span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="email" placeholder="Email (Required)" required>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="usertype" class="form-label">User type:</label>
+                    <label for="usertype" class="form-label">User type<span class="text-danger">*</span></label>
                     <select class="form-control" id="usertype" name="usertype" required>
+                        <option value="" selected disabled>Select user type</option>
                         <option value="CCS Staff">CCS Staff</option>
                         <option value="Dean">Dean</option>
                     </select>
@@ -87,9 +94,9 @@ if (isset($_POST["submit"])) {
                 <input type="hidden" name="status" value="Active">
                 <input type="hidden" name="password" value=password>
 
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-success" name="submit">Save</button>
+                <div class="text-end mb-3">    
                     <a href="adminPage.php" class="btn btn-danger">Cancel</a>
+                    <button type="submit" class="btn btn-success" name="submit">Save</button>
                 </div>
             </form>
         </div>

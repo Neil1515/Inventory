@@ -143,8 +143,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-md-7">
                 <div class="container-fluid">
                 <div class="message-container">
-    <!-- Display conversation header -->
-    <h3 class="mb-4"><i class='fas fa-user me-2'></i> <?php echo $senderName; ?></h3>
+        <!-- Display conversation header -->
+        <h3 class="mb-4">
+        <?php
+         // Check if the user has a profile image
+         if (!empty($senderId)) {
+            // Check if the profile image exists
+            $profileImagePath = "/inventory/images/imageofusers/$senderId.png";
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                // If the user has a profile image, display it with a timestamp
+                echo '<img src="' . $profileImagePath . '?' . time() . '"  width="30" height="30">';
+            } else {
+                // If the profile image does not exist, display the default image with a timestamp
+                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '"  width="30" height="30">';
+            }
+        } else {
+            // If senderId is empty, display the default image with a timestamp
+            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '"  width="30" height="30">';
+        }
+        ?>
+        <?php echo $senderName; ?></h3>
     <!-- Display conversation messages -->
     <div class="message-box" id="message-box">
         <!-- Inside the div with class="message-box" -->
@@ -247,6 +265,15 @@ if ($stmt_messages) {
         .message-box::-webkit-scrollbar {
             width: 0px; /* Remove scrollbar width */
         }
+        img {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border-radius: 50%;
+        align-items: center;
+        margin-left: 5px;
+        }
+
     </style>
 
     <script>

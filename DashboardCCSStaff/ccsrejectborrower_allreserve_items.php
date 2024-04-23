@@ -1,4 +1,5 @@
-<!--ccsapproveborrower_allreserve_items.php-->
+<!-- ccsrejectborrower_allreserve_items.php -->
+<!-- ccsrejectborrower_all_items.php -->
 <?php
 // Include your database connection file
 include 'ccsfunctions.php';
@@ -20,7 +21,7 @@ if ($stmtSelectUser) {
 
     if ($resultUser && $rowUser = mysqli_fetch_assoc($resultUser)) {
         $staffname = $rowUser['fname'] . ' ' . $rowUser['lname'];
-        $approvebyid = $rowUser['id'];
+        $rejectedbyid = $rowUser['id'];
     } else {
         // Log the error instead of displaying to users
         error_log("Failed to fetch user data: " . mysqli_error($con));
@@ -40,30 +41,29 @@ if (isset($_GET['borrowerId'])) {
     date_default_timezone_set('Asia/Manila');
 
     // Get the current date and time in the Philippines timezone
-    $datimeapproved = date("Y-m-d H:i:s");
+    $datimerejected = date("Y-m-d H:i:s");
 
-    // Use $approvebyid directly from $rowUser
-    $approvebyid = $rowUser['id'];
+    // Use $rejectedbyid directly from $rowUser
+    $rejectedbyid = $rowUser['id'];
 
-    // Update the itemreqstatus to 'Approved', approvebyid, and datimeapproved for the specified borrower
-    $queryUpdateStatus = "UPDATE tblborrowingreports SET itemreqstatus = 'Approve Reserve', approvebyid = ?, datimeapproved = ? WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve'";
+    // Update the itemreqstatus to 'Rejected', rejectedbyid, and datimerejected for the specified borrower
+    $queryUpdateStatus = "UPDATE tblborrowingreports SET itemreqstatus = 'Rejected', rejectedbyid = ?, datimerejected = ? WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve'";
     $stmtUpdateStatus = mysqli_prepare($con, $queryUpdateStatus);
 
     if ($stmtUpdateStatus) {
-        mysqli_stmt_bind_param($stmtUpdateStatus, "iss", $approvebyid, $datimeapproved, $borrowerId);
+        mysqli_stmt_bind_param($stmtUpdateStatus, "iss", $rejectedbyid, $datimerejected, $borrowerId);
 
         if (mysqli_stmt_execute($stmtUpdateStatus)) {
-            // Update the status in tblitembrand to 'Borrowed' for the approved items
-            $queryUpdateItemStatus = "UPDATE tblitembrand SET status = 'Reserve' WHERE id IN (SELECT itemid FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Approve Reserve')";
+            // Update the status in tblitembrand to 'Available' for the Rejected items
+            $queryUpdateItemStatus = "UPDATE tblitembrand SET status = 'Available' WHERE id IN (SELECT itemid FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Rejected')";
             $stmtUpdateItemStatus = mysqli_prepare($con, $queryUpdateItemStatus);
 
             if ($stmtUpdateItemStatus) {
                 mysqli_stmt_bind_param($stmtUpdateItemStatus, "i", $borrowerId);
 
                 if (mysqli_stmt_execute($stmtUpdateItemStatus)) {
-                    // Display a success message along with staff name
-                    echo "<script>window.location.href='ccsstaffUsersPendingReserveItems.php?msg_success=Items approved successfully';</script>";
-                    //echo 'Items approved successfully!';
+                    echo "<script>window.location.href='ccsstaffUsersPendingReserveItems.php?msg_success=Items reject successfully';</script>";
+                    //echo 'Items Rejected successfully!';
                 } else {
                     echo 'Error updating item statuses in tblitembrand: ' . mysqli_stmt_error($stmtUpdateItemStatus);
                 }

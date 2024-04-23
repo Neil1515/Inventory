@@ -33,6 +33,17 @@ if ($stmtBorrowerDetails) {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
 ?>
+<style>
+.text-start img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    margin-left: 5px;
+    }
+
+</style>
 <!-- Modal HTML Structure -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -68,7 +79,23 @@ if ($stmtBorrowerDetails) {
             </div>
         </div>
         <div class="d-flex justify-content-between">
-            <h5 class="text-start">Borrower: <?= $borrowerName ?></h5>
+            <h5 class="text-start"><?php
+                    // Check if the user has a profile image
+                        if (!empty($borrowerId)) {
+                                // Check if the profile image exists
+                                $profileImagePath = "/inventory/images/imageofusers/" . $borrowerId . ".png";
+                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                                // If the user has a profile image, display it with a timestamp
+                                echo '<img src="' . $profileImagePath . '?' . time() . '" width="50">';
+                                } else {
+                                // If the profile image does not exist, display the default image with a timestamp
+                                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
+                                }
+                            } else {
+                                // If senderId is empty, display the default image with a timestamp
+                                    echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
+                                }
+                                ?> <?= $borrowerName ?></h5>
             <div class="text-end mb-1">
                 <button class="btn btn-primary" id="selectAllBtn">Select All</button>
                 <a href="ccsstaffUsersApproveReserveItems.php" id="back" class="btn btn-danger">Back</a>

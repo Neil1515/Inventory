@@ -3,13 +3,6 @@
 // Start the session
 session_start();
 
-// Check if dean ID is set in the session
-if (!isset($_SESSION['dean_id'])) {
-    // Redirect to the login page or display an error message
-    header('Location: /inventory/logout.php'); // You may adjust the URL as needed
-    exit();
-}
-
 // Assuming you have a valid database connection here
 $servername = 'localhost';
 $db_id = 'root';
@@ -24,13 +17,24 @@ if (!$con) {
     die('Connection failed: ' . mysqli_connect_error());
 }
 
+
+
+// Check if dean ID is set in the session
+if (!isset($_SESSION['dean_id'])) {
+    // Redirect to the login page or display an error message
+    header('Location: /inventory/logout.php'); // You may adjust the URL as needed
+    exit();
+}
+
+
+
 // Retrieve user information based on the logged-in user ID
-$adminId = $_SESSION['dean_id'];
+$deanId = $_SESSION['dean_id'];
 $query = "SELECT * FROM tblusers WHERE id = ?";
 $stmt = mysqli_prepare($con, $query);
 
 if ($stmt) {
-    mysqli_stmt_bind_param($stmt, "s", $adminId);
+    mysqli_stmt_bind_param($stmt, "s", $deanId);
 
     if (mysqli_stmt_execute($stmt)) {
         $result = mysqli_stmt_get_result($stmt);
@@ -101,7 +105,7 @@ $resultitems = mysqli_query($con, $queryitems);
     <div class="container-fluid">
         <!-- Header at the top -->
         <div class="row">
-                <?php include('deanheader.php'); ?>
+              
         </div>
         <div class="row">
             <?php
@@ -115,78 +119,124 @@ $resultitems = mysqli_query($con, $queryitems);
                 }
             }
             ?>
-            <h4 class="col-md text-start">Items Details</h4>
-            <table class="table table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">Category Name</th>
-                        <th scope="col">Item Brand</th> 
-                        <th scope="col">Subcategory Name</th>                                             
+            <?php
+// Query to fetch categories
+$queryitems = "SELECT id, itembrand, categoryname, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor, COUNT(*) as quantity FROM tblitembrand GROUP BY itembrand, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor ORDER BY categoryname, assignfor, subcategoryname, itembrand";
+$resultitems = mysqli_query($con, $queryitems);
+
+?>
+<!-- Add this script to include jQuery before your custom script -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Your custom script -->
+<script>
+    $(document).ready(function() {
+        // Event listener for the search input
+        $('#searchInput').on('input', function() {
+            // Get the search query value
+            var searchQuery = $(this).val().toLowerCase();
+
+            // Iterate through each row in the table body
+            $('.item-details-row').each(function() {
+                var rowContent = $(this).text().toLowerCase();
+
+                // Check if any column contains the search query
+                if (rowContent.includes(searchQuery)) {
+                    // Show the row if it contains the search query
+                    $(this).show();
+                } else {
+                    // Hide the row if it doesn't contain the search query
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Use event delegation for the click event on a parent container
+        $('.table').on('click', '.category-row', function() {
+            $(this).nextUntil('.category-row').toggle();
+        });
+    });
+</script>
+<main class="ccs-main-container">
+    <div class="container ">
+    <?php include('deanheader.php'); ?>
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between mb-2">
+                <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>List of CCS Inventory Properties</h3>
+            <div class="text-end">
+                <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
+            </div>
+        
+        </div>
+        <div class="table-responsive row">
+            <table class="table">
+            <thead class="table-dark">
+                
+                    <tr> 
+                        <th scope="col">Image</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Item Name</th> 
+                        <th scope="col">Item Description</th>                                             
                         <th scope="col">Model No</th>
-                        <th scope="col">Serial No</th>
-                        <th scope="col">Date Purchased</th>
-                        <th scope="col">Unit Cost</th>
-                        <th scope="col">Remarks</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Serial No</th> 
+                        <th scope="col">Date of Purchase</th>             
+                        <th scope="col">Per Unit Cost</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php
+            </thead>
+            <?php
                     $currentCategory = null;
+                    $currentAssignFor = null;
+                    
                     while ($row = mysqli_fetch_assoc($resultitems)) {
                         // Check if the category has changed
                         if ($currentCategory != $row['categoryname']) {
                             // Display the category name row with a class for click event
-                            echo "<tr class='category-row'><td colspan='9' style='background-color: azure;'><strong>{$row['categoryname']}</strong></td></tr>";
+                            echo "<tr class='category-row text-center'>
+                                    <td colspan='9' style='background-color: azure;'><strong>{$row['categoryname']}</strong></td>  
+                                  </tr>";
+                    
                             $currentCategory = $row['categoryname'];
                         }
-
-                        // Display the subcategory and other item details with a class for toggling
-                        echo "<tr class='item-details-row";
-                        // Add class for highlighting missing items
-                        if ($row['status'] == 'Missing') {
-                            echo " status-missing-row";
+                    
+                        // Check if the assignfor is not empty and has changed
+                        if (!empty($row['assignfor']) && $currentAssignFor != $row['assignfor']) {
+                            // Display the assignfor row with a class for click event
+                            echo "<tr class='assignfor-row'>
+                                    <td colspan='9' style='background-color: gray;'><i class='fas fa-chalkboard-teacher me-2'></i><strong>{$row['assignfor']}</strong></td>  
+                                  </tr>";
+                    
+                            $currentAssignFor = $row['assignfor'];
                         }
-                        echo "'>";
-                        echo "<td></td>";                   
+                    
+                        // Display the subcategory and other item details
+                        echo "<tr class='item-details-row'>";
+                        $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
+                        if (file_exists($imagePath)) {
+                            echo "<td><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
+                        } else {
+                            echo "<td><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
+                        }
+                    
+                        echo "<td class='text-center'>{$row['quantity']}</td>";
+                        echo "<td>{$row['subcategoryname']}</td>";
                         echo "<td>{$row['itembrand']}</td>";
-                        echo "<td>{$row['subcategoryname']}</td>";                        
-                        echo "<td>{$row['modelno']}</td>";
-                        echo "<td>{$row['serialno']}</td>";   
-                        echo "<td>{$row['datepurchased']}</td>"; 
-                        echo "<td><a>₱</a>{$row['unitcost']}</td>";                  
-                        echo "<td>{$row['remarks']}</td>";
-                        // Add class to status based on its value
-                        $statusClass = '';
-                        switch ($row['status']) {
-                            case 'Available':
-                                $statusClass = 'status-available';
-                                break;
-                            case 'Reserve':
-                                $statusClass = 'status-reserve';
-                                break;
-                            case 'Borrowed':
-                                $statusClass = 'status-borrowed';
-                                break;
-                            case 'Missing':
-                                $statusClass = 'status-missing';
-                                break;
-                        }
-                        echo "<td class='$statusClass'>{$row['status']}</td>";
+                        echo "<td class='text-center'>{$row['modelno']}</td>";
+                        echo "<td class='text-center'>{$row['serialno']}</td>";
+                    
+                        $datepurchased = new DateTime($row['datepurchased']);
+                        echo "<td class='text-center'>{$datepurchased->format('m-d-Y')}</td>";
+                        echo "<td class='text-center'>{$row['unitcost']}</td>";
                         echo "</tr>";
                     }
                     ?>
-                </tbody>
-            </table>
+            <tbody>
+            </tbody>
+        </div>
         </div>
     </div>
-<!-- Add this script to include jQuery before your custom script -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <!-- Bootstrap and Font Awesome -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- Bootstrap and Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</main>

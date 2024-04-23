@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                             <div class="card-body">
                             <?php 
                             // Fetch user information based on the provided user ID
-                            $query = "SELECT * FROM tblusers WHERE id = $BorrowerId";
+                            $query = "SELECT * FROM tblusers WHERE id = $borrowerId";
                             $result = mysqli_query($con, $query);
 
                             if ($result) {
@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                                     $row = mysqli_fetch_assoc($result);
                                 } else {
                                     // Output a message if no rows are returned
-                                    echo "No user information found for ID: $BorrowerId";
+                                    echo "No user information found for ID: $borrowerId";
                                 }
                                 mysqli_free_result($result); // Free the result set
                             } else {
@@ -236,9 +236,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                             }
 
                             if (!empty($row)) : ?>
-                                <div class="row">
+                            <div class="row">
                             <!-- Main container on the left -->
                             <div class="col-md-6">
+                            <div class="row">
+                                    <!-- Main container on the right -->
+                                    <div class="col-md-4 text-center">
+                                    <div class="mb-3">
+                                    <?php
+                                        // Check if the user has a profile image
+                                        if (!empty($row['id'])) {
+                                            // Check if the profile image exists
+                                            $profileImagePath = "/inventory/images/imageofusers/" . $row['id'] . ".png";
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                                                // If the user has a profile image, display it with a timestamp
+                                                echo '<img src="' . $profileImagePath . '?' . time() . '" width="160" height="160">';
+                                            } else {
+                                                // If the profile image does not exist, display the default image with a timestamp
+                                                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="160" height="160">';
+                                            }
+                                        } else {
+                                            // If senderId is empty, display the default image with a timestamp
+                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="160" height="160">';
+                                        }
+                                    ?>
+                                    </div>
+                                    </div>
+                                    <!-- Main container on the left -->
+                                    <div class="col-md-8 align-items-center d-flex">
+                                        <div class="mb-3">
+                                            <a class="btn btn-danger mb-1" onclick="editImage('<?php echo $row['id']; ?>')">Change Profile Picture</a>
+                                            <a class="btn btn-success mb-1" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">First Name:</label>
                                     <p class="form-control"><?php echo $row['fname']; ?></p>
@@ -247,48 +278,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                                     <label class="form-label">Last Name:</label>
                                     <p class="form-control"><?php echo $row['lname']; ?></p>
                                 </div>
+                                
+                            </div>
+                            <!-- Main container on the right -->
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Email:</label>
                                     <p class="form-control"><?php echo $row['email']; ?></p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Gender:</label>
-                                    <p class="form-control"><?php echo $row['gender']; ?></p>
+                                    <label class="form-label">User Type:</label>
+                                    <p class="form-control"><?php echo $row['usertype']; ?></p>
                                 </div>
-                            </div>
-                            <!-- Main container on the right -->
-                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Department:</label>
                                     <p class="form-control"><?php echo $row['department']; ?></p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">User Type:</label>
-                                    <p class="form-control"><?php echo $row['usertype']; ?></p>
-                                </div>
-                                <div class="row">
-                                    <!-- Main container on the right -->
-                                    <div class="col-md-4 text-center">
-                                    <div class="mb-3">
-                                        <?php
-                                        // Check if the user has a profile image
-                                        if (!empty($row['id'])) {
-                                            // If the user has a profile image, display it
-                                            echo '<img src="/inventory/images/imageofusers/' . $row['id'] . '.png" alt="userpicture" class="userpicture" width="160">';
-                                        } else {
-                                            // If the user does not have a profile image, display a default image
-                                            echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="160">';
-                                        }
-                                        ?>
-                                    </div>
-                                    </div>
-                                    <!-- Main container on the left -->
-                                    <div class="col-md-5 align-items-center d-flex">
-                                        <div class="mb-3">
-                                            <a class="btn btn-danger mb-1" onclick="editImage('<?php echo $row['id']; ?>')">Change Profile Picture</a>
-                                            <a class="btn btn-success mb-1" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
-                                        </div>
-                                    </div>
+                                    <label class="form-label">Gender:</label>
+                                    <p class="form-control"><?php echo $row['gender']; ?></p>
                                 </div>
                             </div>
                         </div>
@@ -318,22 +326,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
     function editImage() {
         // Populate the modal with the subcategory ID and name
         $('#changeimageModal').modal('show');
+
+        // Function to handle file input change
+        $("#image").change(function () {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#userImage').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+
         // Get the URL of the current image
-        var currentImageUrl = '<?php echo !empty($row['id']) ? "/inventory/images/imageofusers/" . $row['id'] . ".png" : "/inventory/images/profile-user.png"; ?>';
+        var currentImageUrl = '<?php echo !empty($row['id']) ? "/inventory/images/imageofusers/" . $row['id'] . ".png" . "?" . time() : "/inventory/images/profile-user.png" . "?" . time(); ?>';
+
         // Set the src attribute of the userImage to the current image URL
         $('#userImage').attr('src', currentImageUrl);
+
     }
-        // Function to handle file input change
-    $("#image").change(function () {
-        var input = this;
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#userImage').attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    });
 </script>
 </body>
 </html>

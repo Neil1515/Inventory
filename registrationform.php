@@ -71,11 +71,17 @@
                             </div>
                             <div class="mb-1">
                                 <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="password" name="password" required onkeyup="checkPasswordStrength()">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" required onkeyup="checkPasswordStrength()">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                                 <div class="mb-1">
                                     <div id="password-strength" class="form-text"></div>
                                 </div>
                             </div>
+
                             <div class="mb-1">
                                 <label for="userType" class="form-label">User Type<span class="text-danger">*</span></label>
                                 <select class="form-select" id="userType" name="userType" required>
@@ -112,9 +118,9 @@
                                 <small class="form-text text-muted">Please make sure the uploaded image is clear and readable.</small>
                             </div>
 
-                            <div class="text-end ">
-                            <a href="index.php" class="btn btn-danger">Go to login</a>
-                                <button type="submit" class="btn btn-primary">Register</button>
+                            <div class="text-end">
+                                <a href="index.php" class="btn btn-danger">Go to login</a>
+                                <button type="submit" id="registerButton" class="btn btn-primary" disabled>Register</button>
                             </div>
                         </form>
                     </div>
@@ -143,25 +149,45 @@
         }
     }
     function checkPasswordStrength() {
-            var password = document.getElementById('password').value;
-            var passwordStrength = document.getElementById('password-strength');
-            var weakRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
-            var midRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
-            var strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+        var password = document.getElementById('password').value;
+        var passwordStrength = document.getElementById('password-strength');
+        var weakRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
+        var midRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
+        var strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+        var registerButton = document.getElementById('registerButton');
 
-            if (strongRegex.test(password)) {
-                passwordStrength.innerHTML = '<span style="color:green">Strong!</span>';
-            } else if (midRegex.test(password)) {
-                passwordStrength.innerHTML = '<span style="color:orange">Medium!</span>';
-            } else if (weakRegex.test(password)) {
-                passwordStrength.innerHTML = '<span style="color:red">Weak!</span>';
-            } else {
-                passwordStrength.innerHTML = '<span style="color:red">Password must be at least 8 characters and contain at least one letter and one number.</span>';
-            }
+        if (strongRegex.test(password)) {
+            passwordStrength.innerHTML = '<span style="color:green">Strong!</span>';
+            registerButton.disabled = false;
+        } else if (midRegex.test(password)) {
+            passwordStrength.innerHTML = '<span style="color:orange">Medium!</span>';
+            registerButton.disabled = false;
+        } else if (weakRegex.test(password)) {
+            passwordStrength.innerHTML = '<span style="color:red">Weak!</span>';
+            registerButton.disabled = true;
+        } else {
+            passwordStrength.innerHTML = '<span style="color:red">Password must be at least 8 characters and contain at least one letter and one number.</span>';
+            registerButton.disabled = true;
         }
+    }
+
+        document.getElementById("togglePassword").addEventListener("click", function() {
+        var passwordInput = document.getElementById("password");
+        var icon = this.querySelector("i");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    });
 </script>
 
-    <style>  
+<style>  
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;

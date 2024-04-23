@@ -203,13 +203,20 @@ if ($stmt) {
     <?php 
     if (isset($row)) {
         echo $row['fname'] . ' ' . $row['lname'];
-        
+        // Check if the user has a profile image
         if (!empty($row['id'])) {
-            // If the user has a profile image, display it
-            echo '<img src="/inventory/images/imageofusers/' . $row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
+            // Check if the profile image exists
+            $profileImagePath = "/inventory/images/imageofusers/" . $row['id'] . ".png";
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                // If the user has a profile image, display it with a timestamp
+                echo '<img src="' . $profileImagePath . '?' . time() . '" width="30" height="30px">';
+            } else {
+                // If the profile image does not exist, display the default image with a timestamp
+                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="30" height="30px">';
+            }
         } else {
-            // If the user does not have a profile image, display the default image
-            echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
+            // If senderId is empty, display the default image with a timestamp
+            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="30" height="30px">';
         }
         
     } else {
@@ -225,12 +232,14 @@ if ($stmt) {
                     echo $user_row['fname'] . ' ' . $user_row['lname'];
                     if (!empty($user_row['id'])) {
                         // If the user has a profile image, display it
-                        echo '<img src="/inventory/images/imageofusers/' . $user_row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
+                        $profileImagePath = "/inventory/images/imageofusers/" . $user_row['id'] . ".png";
+                        echo '<img src="' . $profileImagePath . '?' . time() . '" alt="userpicture" class="userpicture" width="50">';
+                        //echo '<img src="/inventory/images/imageofusers/' . $user_row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
                     } else {
                         // If the user does not have a profile image, display the default image
-                        echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
+                        //echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
+                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" alt="userpicture" class="userpicture" width="50">';
                     }
-                   
                 }
             }
             mysqli_stmt_close($stmt);

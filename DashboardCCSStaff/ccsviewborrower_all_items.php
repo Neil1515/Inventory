@@ -33,7 +33,17 @@ if ($stmtBorrowerDetails) {
 }
 
 ?>
+<style>
+.text-start img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 50%;
+    align-items: center;
+    margin-left: 5px;
+    }
 
+</style>
 <div class="ccs-main-container">
     <div class="container">
         <div class="row">
@@ -44,7 +54,24 @@ if ($stmtBorrowerDetails) {
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <h5 class="text-start">Borrower: <?= $borrowerName ?></h5>
+                <h5 class="text-start"> 
+                    <?php
+                    // Check if the user has a profile image
+                        if (!empty($borrowerId)) {
+                                // Check if the profile image exists
+                                $profileImagePath = "/inventory/images/imageofusers/" . $borrowerId . ".png";
+                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                                // If the user has a profile image, display it with a timestamp
+                                echo '<img src="' . $profileImagePath . '?' . time() . '" width="50">';
+                                } else {
+                                // If the profile image does not exist, display the default image with a timestamp
+                                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
+                                }
+                            } else {
+                                // If senderId is empty, display the default image with a timestamp
+                                    echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
+                                }
+                                ?> <?= $borrowerName ?></h5>
                 <div class="text-end">
                 <a href="ccsstaffListofPendingBorrowerusers.php" id="back" class="btn btn-danger mb-1">Back</a>
                 </div>
@@ -153,6 +180,7 @@ if ($stmtBorrowerDetails) {
     </div>
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     function approveItem(itemId, borrowerId) {
@@ -188,3 +216,4 @@ if ($stmtBorrowerDetails) {
     }
 
 </script>
+

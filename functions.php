@@ -3,28 +3,6 @@
 // Initialize the loginError variable
 $loginError = false;
 
-// Function to encrypt passwords
-function encryptPassword($password) {
-    $key = 'your_secret_key'; // Change this to your secret key
-    $cipher = 'AES-128-CBC';
-    $options = 0;
-    $iv = 'your_iv_here'; // Change this to your initialization vector
-
-    $encryptedPassword = openssl_encrypt($password, $cipher, $key, $options, $iv);
-    return $encryptedPassword;
-}
-
-// Function to decrypt passwords
-function decryptPassword($encryptedPassword) {
-    $key = 'your_secret_key'; // Change this to your secret key
-    $cipher = 'AES-128-CBC';
-    $options = 0;
-    $iv = 'your_iv_here'; // Change this to your initialization vector
-
-    $decryptedPassword = openssl_decrypt($encryptedPassword, $cipher, $key, $options, $iv);
-    return $decryptedPassword;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Assuming you have a valid database connection here
     $servername = 'localhost';

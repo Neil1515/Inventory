@@ -29,8 +29,9 @@ include('adminfunctions.php');
 </head>
 
 <body>
-    <?php include('adminheader.php');?>
     <div class="container">
+    <?php include('adminheader.php');?>
+    
         <div class="text-center mt-4">
             <h3>Edit User Information</h3>
         </div>
@@ -58,8 +59,9 @@ include('adminfunctions.php');
                     $lname = $_POST['lname'];
                     $usertype = $_POST['usertype'];
                     $status = $_POST['status'];
+                    $email = $_POST['email'];
 
-                    $sql = "UPDATE `tblusers` SET `fname`='$fname', `lname`='$lname', `usertype`='$usertype', `status`='$status' WHERE id = $id";
+                    $sql = "UPDATE `tblusers` SET `fname`='$fname', `lname`='$lname', `usertype`='$usertype', `status`='$status', `email`='$email' WHERE id = $id";
 
                     $result = mysqli_query($conn, $sql);
 
@@ -82,34 +84,42 @@ include('adminfunctions.php');
 
                 <?php if (isset($row)): ?>
                     <div class="mb-3">
-                        <label for="fname" class="form-label">First Name:</label>
+                        <label for="fname" class="form-label">First Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="fname" name="fname" placeholder="(Required)" value="<?php echo $row['fname'] ?>" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="lname" class="form-label">Last Name:</label>
+                        <label for="lname" class="form-label">Last Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="lname" name="lname" placeholder="(Required)" value="<?php echo $row['lname'] ?>" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="usertype" class="form-label">User type:</label>
+                        <label for="lname" class="form-label">Email<span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="(Required)" value="<?php echo $row['email'] ?>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="usertype" class="form-label">User type<span class="text-danger">*</span></label>
                         <select class="form-control" id="usertype" name="usertype">
                             <option value="CCS Staff" <?php if ($row['usertype'] == 'CCS Staff') echo 'selected'; ?>>CCS Staff</option>
                             <option value="Dean" <?php if ($row['usertype'] == 'Dean') echo 'selected'; ?>>Dean</option>
+                            <option value="Employee" <?php if ($row['usertype'] == 'Employee') echo 'selected'; ?>>Employee</option>
+                            <option value="Student" <?php if ($row['usertype'] == 'Student') echo 'selected'; ?>>Student</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status:</label>
+                        <label for="status" class="form-label">Status<span class="text-danger">*</span></label>
                         <select class="form-control" id="status" name="status">
                             <option value="Active" <?php if ($row['status'] == 'Active') echo 'selected'; ?>>Active</option>
                             <option value="Inactive" <?php if ($row['status'] == 'Inactive') echo 'selected'; ?>>Inactive</option>
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-success" name="submit">Update</button>
+                    <div class="text-end mb-3">
+
                         <a href="adminPage.php" class="btn btn-danger">Cancel</a>
+                        <button type="submit" class="btn btn-success" name="submit">Update</button>
                     </div>
                 <?php endif; ?>
             </form>

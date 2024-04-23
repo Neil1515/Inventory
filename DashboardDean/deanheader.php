@@ -1,4 +1,44 @@
 <!-- deanheader.php -->
+<?php
+// Include necessary files
+$servername = 'localhost';
+$db_id = 'root';
+$db_password = '';
+$db_name = 'maininventorydb';
+
+// Attempt to connect to the database
+$con = mysqli_connect($servername, $db_id, $db_password, $db_name);
+
+// Check for connection errors
+if (!$con) {
+    die('Connection failed: ' . mysqli_connect_error());
+}
+
+
+
+// Retrieve user information based on the logged-in user ID
+$deanId = $_SESSION['dean_id'];
+$query = "SELECT * FROM tblusers WHERE id = ?";
+$stmt = mysqli_prepare($con, $query);
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "s", $deanId);
+    if (mysqli_stmt_execute($stmt)) {
+        $result = mysqli_stmt_get_result($stmt);
+        if ($result && mysqli_num_rows($result) > 0) {
+            // Valid user, retrieve user information
+            $row = mysqli_fetch_assoc($result);
+        } else {
+            // Handle the case when user information is not found
+            // You might want to redirect or display an error message
+        }
+    } else {
+        die('Statement execution failed: ' . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_close($stmt);
+} else {
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+?>
 <div class="container-fluid">
     <div class="header--wrapper py-3">
         <div class="header sad">
@@ -26,7 +66,7 @@
                 <!-- User Dropdown Menu -->
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="deanProfile.php?deanId=<?php echo $deanId; ?>">Profile</a></li>
                     <li><a class="dropdown-item" href="/Inventory/logout.php">Logout</a></li>
                 </ul>
             </div>
