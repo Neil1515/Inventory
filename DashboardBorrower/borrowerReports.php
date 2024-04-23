@@ -89,10 +89,10 @@ if ($stmt) {
                     <table id="example" class="table table-striped table-bordered">
                         <thead class="text-center table-dark">
                             <tr>
-                                <th>Serial Number</th>
+                                <th>Transaction Number</th>
                                 <th>Item Status</th>
                                 <th>Item</th>
-                                <th>Approved By</th>
+                                <th>Released By</th>
                                 <th>Date Time Released</th>
                                 <th>Approve Return By</th>
                                 <th>Date Time Return</th>

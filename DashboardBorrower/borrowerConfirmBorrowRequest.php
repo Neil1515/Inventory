@@ -1,4 +1,4 @@
-<!-- borrowerDashboardPage.php -->
+<!-- borrowerConfirmBorrowRequest.php -->
 <?php
 session_start();
 
@@ -42,7 +42,7 @@ if ($stmt) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>List of Borrowable Items</title>
+    <title>Confirm Borrow Request</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,8 +87,39 @@ if ($stmt) {
                     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                     echo '</div>';
                 }
-                include('bwerdashboardpage.php');
+                //include('bwerdashboardpage.php');
                 ?>
+                <!-- Modal HTML Structure -->
+                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="noteModalLabel">Note</h5>
+                                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                            </div>
+                            <div class="modal-body">
+                                <!-- Image -->
+                                <div class="text-center mb-3">
+                                    <img src="\Inventory\images\Itemsnotes.jpg" class="img-fluid" alt="Return of Damaged Goods">
+                                </div>  
+                                <!-- Checkbox for agreement -->
+                                <div class="form-check ">
+                                    <input class="form-check-input" type="checkbox" id="agreementCheckbox">
+                                    <label class="form-check-label" for="agreementCheckbox">
+                                        I agree to the terms and conditions
+                                    </label>
+                                </div>        
+                                <!-- Note -->
+                                <p class="text-danger">Any deformation or lost/damage of items borrowed are subject to replacement on your account.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <!-- Disabled Confirm button initially -->
+                                <button type="button" class="btn btn-success" id="confirmButton" data-bs-dismiss="modal" disabled>Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php include('bwerconfirmborrowrequest.php');?>        
             </div>
         </div>
     </div>
@@ -98,19 +129,26 @@ if ($stmt) {
     <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <script>
-        //function table(){
-            //const xhttp = new XMLHttpRequest();
-            //xhttp.onload = function(){
-                //document.getElementById("table").innerHTML = this.responseText;
-            //}
-            //xhttp.open ("GET", "bwerdashboardpage.php");
-            //xhttp.send();
-        //}
+    //$(document).ready(function() {
+        // Show the modal when the page loads
+        //$('#noteModal').modal('show');
+    //});
+     // Select the checkbox and Confirm button
+    var agreementCheckbox = document.getElementById('agreementCheckbox');
+    var confirmButton = document.getElementById('confirmButton');
 
-        //setInterval(function(){
-            //table();
-        //}, 10000); 
-    </script>
+    // Add event listener to the checkbox
+    agreementCheckbox.addEventListener('change', function () {
+        // Enable Confirm button if checkbox is checked, otherwise disable it
+        confirmButton.disabled = !this.checked;
+    });
+</script>
 </body>
 </html>

@@ -73,7 +73,7 @@ if ($stmtBorrowerDetails) {
 <div class="ccs-main-container">
     <div class="container">
         <div class="d-flex justify-content-between">
-            <h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Borrow Item</h3>
+            <h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Reserve Item</h3>
             <div class="text-end">
                 <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
             </div>
@@ -220,9 +220,9 @@ if ($stmtBorrowerDetails) {
                 <!-- Buttons for approve and reject actions (initially hidden) -->
                 <div class="text-end mb-2" id="actionButtons" style="display: none;">
                     <?php if ($reserveDatetime === $currentDate): ?>
-                        <button class="btn btn-primary" id="borrowBtn">Borrow Selected</button>
+                        <button class="btn btn-primary" id="borrowBtn">Release Selected</button>
                     <?php endif; ?>
-                    <button type="submit" class="btn btn-danger" id="rejectBtn">Cancel Borrow Selected</button>
+                    <button type="submit" class="btn btn-danger" id="rejectBtn">Cancel Selected</button>
                 </div>
             </div>
         </div>
@@ -478,7 +478,7 @@ $('#saveChangesBtn').click(function() {
                 // Reload the current page
                 window.location.reload();
                 // Show a success message
-                window.location.href = 'ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Successfuly update the date.';
+                window.location.href = 'ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Successfuly update the schedule.';
 
             } else {
                 // Show an error message
@@ -490,7 +490,7 @@ $('#saveChangesBtn').click(function() {
             console.error(xhr.responseText);
             // Optionally, display an error message to the user
             window.location.reload();
-            window.location.href = 'ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Successfuly update the date.';
+            window.location.href = 'ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>&msg_success=Successfuly update the schedule.';
         }
     });
 });

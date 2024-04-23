@@ -7,7 +7,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="borrowerDashboardPage.php">
                     <i class="fas fa-list me-2"></i>
-                    <span>Borrowable Items</span>
+                    <span>Available Items</span>
                 </a>
             </li>
             <li class="nav-item">

@@ -115,7 +115,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                  </div>
                          <div class='text-end me-1'>
                              <a href='#' class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Cancel All</a>
-                             <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Borrow All</a>
+                             <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Release All</a>
                              <a href='ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                          </div>
                      </div>
@@ -153,7 +153,7 @@ echo '</div>';
 
 <script>
  function approveAllItemsToThisBorrowerId(borrowerId) {
-     if (confirm('Are you sure you want to approve all items to this user?')) {
+     if (confirm('Are you sure you want to release all items to this user?')) {
          // Send an AJAX request to approve all items
          $.ajax({
              type: 'GET',

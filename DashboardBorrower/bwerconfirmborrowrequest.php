@@ -26,197 +26,131 @@ if ($stmtSelectUser) {
     error_log("Statement preparation failed for user data: " . mysqli_error($con));
 }
 
-if (isset($_POST['requestBorrow'])) {
-    // Assuming you have an active database connection stored in $con
-    if ($con) {
-        // Initialize variables
-        $itemreqstatus = "Pending Borrow";
-        // Set the timezone to Asia/Manila
-        date_default_timezone_set('Asia/Manila');
+// Initialize $itemsArray
+$itemsArray = array();
 
-        // Get the current date and time in the Philippines timezone
-        $datetimereqborrow = date("Y-m-d H:i:s");
+// Check if items are passed via URL parameters
+if(isset($_GET['items'])) {
+    // Decode the JSON data
+    $itemsJSON = urldecode($_GET['items']);
+    $itemsArray = json_decode($itemsJSON, true); // Convert JSON string to associative array
+}
 
-        // Use a prepared statement to prevent SQL injection
-        $sqlInsert = "INSERT INTO `tblborrowingreports` (itemid, borrowerid, itemreqstatus, datetimereqborrow) VALUES (?, ?, ?, ?)";
+if(isset($_POST['requestBorrow'])) {
+    // Initialize variables
+    $itemreqstatus = "Pending Borrow";
+    // Set the timezone to Asia/Manila
+    date_default_timezone_set('Asia/Manila');
 
-        // Use a prepared statement to prevent SQL injection
-        $stmtInsert = mysqli_prepare($con, $sqlInsert);
+    // Get the current date and time in the Philippines timezone
+    $datetimereqborrow = date("Y-m-d H:i:s");
+    
+// Iterate over the items in the $itemsArray
+foreach ($itemsArray as $item) {
+    // Check if the item exists in tblitembrand and is available for borrowing
+    $query = "SELECT id, subcategoryname, itembrand, borrowable, status FROM tblitembrand WHERE subcategoryname = ? AND itembrand = ? AND borrowable = 'Yes' AND status = 'Available'";
+    $stmt = mysqli_prepare($con, $query);
+    mysqli_stmt_bind_param($stmt, "ss", $item['subcategoryname'], $item['itembrand']);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
 
-        // Use a prepared statement to update the status in tblitembrand
-        $sqlUpdateItemStatus = "UPDATE `tblitembrand` SET status = ? WHERE id = ?";
-        $stmtUpdateItemStatus = mysqli_prepare($con, $sqlUpdateItemStatus);
+    // If matching items are found
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        mysqli_stmt_bind_result($stmt, $itemId, $subcategoryname, $itembrand, $borrowable, $status);
 
-        if ($stmtInsert && $stmtUpdateItemStatus) {
-            // Initialize $selectedItemIds array inside the condition
-            $selectedItemIds = isset($_POST['selectedItemIds']) ? $_POST['selectedItemIds'] : [];
+        // Initialize an array to store the IDs of available items
+        $availableItemIds = [];
 
-            // Loop through each selected item ID
-            foreach ($selectedItemIds as $itemid) {
-                // Bind parameters inside the loop for each item
-                mysqli_stmt_bind_param($stmtInsert, "iiss", $itemid, $borrowerId, $itemreqstatus, $datetimereqborrow);
+        // Loop through the results to store the IDs
+        while (mysqli_stmt_fetch($stmt)) {
+            // Add the ID to the array
+            $availableItemIds[] = $itemId;
+        }
 
-                // Execute the statement for inserting into tblborrowingreports
-                mysqli_stmt_execute($stmtInsert);
+        // Determine the quantity to borrow
+        $quantityToBorrow = $item['count'];
 
-                // Bind parameters for updating status in tblitembrand
-                mysqli_stmt_bind_param($stmtUpdateItemStatus, "si", $itemreqstatus, $itemid);
+        // Ensure there are enough available items to borrow
+        if ($quantityToBorrow <= count($availableItemIds)) {
+            // Select unique item IDs based on the quantity to borrow
+            $borrowItemIds = array_slice($availableItemIds, 0, $quantityToBorrow);
 
-                // Execute the statement for updating status in tblitembrand
-                mysqli_stmt_execute($stmtUpdateItemStatus);
+            // Insert records into tblborrowingreports and update status for each item based on the quantity to borrow
+            foreach ($borrowItemIds as $borrowItemId) {
+                // Insert a new record into tblborrowingreports
+                $query = "INSERT INTO tblborrowingreports (itemid, borrowerid, itemreqstatus, datetimereqborrow) VALUES (?, ?, ?, ?)";
+                $stmt_insert = mysqli_prepare($con, $query);
+                mysqli_stmt_bind_param($stmt_insert, "ssss", $borrowItemId, $borrowerId, $itemreqstatus, $datetimereqborrow);
+                mysqli_stmt_execute($stmt_insert);
+
+                // Update the status of the item to "Pending Borrow" in tblitembrand
+                $query = "UPDATE tblitembrand SET status = ? WHERE id = ?";
+                $stmt_update_status = mysqli_prepare($con, $query);
+                mysqli_stmt_bind_param($stmt_update_status, "ss", $itemreqstatus, $borrowItemId);
+                mysqli_stmt_execute($stmt_update_status);
             }
-
-            // Close the statements
-            mysqli_stmt_close($stmtInsert);
-            mysqli_stmt_close($stmtUpdateItemStatus);
-
-            // Optionally, you can redirect the user to a confirmation page
-            echo "<script>window.location.href='borrowerDashboardPage.php?msg_success=Successfully Requesting Borrow';</script>";
-            exit();
         } else {
-            // Log the error instead of displaying to users
-            error_log("Statement preparation failed for inserting into tblborrowingreports or updating tblitembrand: " . mysqli_error($con));
+            // Log an error or handle the case where there are not enough available items
+            error_log("Not enough available items to borrow for subcategory: " . $item['subcategoryname'] . " and itembrand: " . $item['itembrand']);
         }
     }
 }
-echo '<form action="" method="post" enctype="multipart/form-data" name="requestBorrowForm">';
-// Retrieve selected item IDs from the URL parameters
-if (isset($_GET['itemIds'])) {
-    $selectedItemIds = explode(',', $_GET['itemIds']);
 
-    // Display the selected item details
-    echo '<div class="container">';
-    echo '<div class="row mb-1">';
-    echo '<div class="col-md-6">';
-    echo '<h3 class="mb-0">Selected Item(s)</h3></div>';
-    echo '<div class="col-md-6 text-end">';
-    echo '<a href="borrowerDashboardPage.php" class="btn btn-danger">Cancel</a>';
-    echo ' <button type="submit" class="btn btn-success" name="requestBorrow">Request Borrow</button>';
-    echo '</div>';
-    echo '<h6 class="text-danger ">Note: Any deformation or lost/damage of items borrowed are subject to replacement on your account.</h6>';
-    echo '</div>';
-    echo '</div>';
 
-    echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-4 g-2">';
 
-    // Loop through each selected item ID
-    foreach ($selectedItemIds as $itemId) {
-        // Fetch item details from the database based on the item ID
-        $queryItemDetails = "SELECT * FROM tblitembrand WHERE id = ?";
-        $stmtItemDetails = mysqli_prepare($con, $queryItemDetails);
-
-        if ($stmtItemDetails) {
-            mysqli_stmt_bind_param($stmtItemDetails, "s", $itemId);
-
-            if (mysqli_stmt_execute($stmtItemDetails)) {
-                $resultItemDetails = mysqli_stmt_get_result($stmtItemDetails);
-
-                if ($resultItemDetails && mysqli_num_rows($resultItemDetails) > 0) {
-                    // Valid item details, fetch the item details and display them in a card
-                    $itemDetails = mysqli_fetch_assoc($resultItemDetails);
-
-                    // Fetch subcategory information for the current item
-                    $sqlSubcategory = "SELECT subcategoryname FROM `tblitembrand` WHERE id = ?";
-                    $stmtSubcategory = mysqli_prepare($con, $sqlSubcategory);
-
-                    if ($stmtSubcategory) {
-                        mysqli_stmt_bind_param($stmtSubcategory, "i", $itemId);
-                        mysqli_stmt_execute($stmtSubcategory);
-                        $resultSubcategory = mysqli_stmt_get_result($stmtSubcategory);
-
-                        if ($resultSubcategory) {
-                            // Fetch subcategory details
-                            $rowSubcategory = mysqli_fetch_assoc($resultSubcategory);
-
-                            // Construct the image path based on subcategory information
-                            $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $rowSubcategory['subcategoryname'] . '.png';
-                        } else {
-                            // If subcategory information is not found, use the default image
-                            $imagePath = 'inventory/SubcategoryItemsimages/defaultimageitem.png';
-                        }
-
-                        mysqli_stmt_close($stmtSubcategory);
-                    } else {
-                        // Log the error instead of displaying to users
-                        error_log("Statement preparation failed for subcategory: " . mysqli_error($con));
-                        $imagePath = 'inventory/SubcategoryItemsimages/defaultimageitem.png';
-                    }
-                    ?>
-                    <!-- Modal HTML Structure -->
-                    <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="noteModalLabel">Note</h5>
-                                    <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-                                </div>
-                                <div class="modal-body">
-                                <p class="text-danger ">Any deformation or lost/damage of items borrowed are subject to replacement on your account.</p>
-                                    <img src="\Inventory\images\Itemsnotes.jpg" class="img-fluid" alt="Return of Damaged Goods">
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Confirm</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title"><?php echo $itemDetails['categoryname']; ?></h6>                               
-                                <div class="mb-3 text-center">
-                                    <img src="<?php echo $imagePath; ?>" alt="Image" width="100">
-                                </div>
-                                <div class="mb-1 text-center">
-                                    <h5 class="card-text"><?php echo $itemDetails['subcategoryname']; ?></h5>
-                                </div>
-                                <div class="mb-1">
-                                    <h7 class="card-text">Item Description : <?php echo $itemDetails['itembrand']; ?></h7>
-                                </div>
-                                <div class="mb-1">
-                                    <h7 class="card-text">Model No: <?php echo $itemDetails['modelno']; ?></h7>
-                                </div>
-                                <div class="mb-1">
-                                    <h7 class="card-text">Serial No: <?php echo $itemDetails['serialno']; ?></h7>
-                                </div>
-                                <!-- Hidden input field for selected item IDs -->
-                                <input type="hidden" name="selectedItemIds[]" value="<?php echo $itemId; ?>">
-                            </div>
-                        </div>
-                    </div>
-
-                    <?php
-                } else {
-                    // Handle the case when item details are not found
-                    echo "<p class='alert alert-warning'>No details found for item ID: {$itemId}</p>";
-                }
-            } else {
-                die('Statement execution failed: ' . mysqli_stmt_error($stmtItemDetails));
-            }
-            mysqli_stmt_close($stmtItemDetails);
-        } else {
-            die('Statement preparation failed: ' . mysqli_error($con));
-        }
-    }
-    echo '</div>'; // Close the container
+    // Optionally, you can redirect the user to a confirmation page
+    echo "<script>window.location.href='borrowerDashboardPage.php?msg_success=Successfully Requesting Borrow';</script>";
+    exit();
 } else {
-    // Handle the case when item IDs are not present in the URL
-    echo '<p class="alert alert-warning">No item IDs selected.</p>';
+    error_log("Statement preparation failed for inserting into tblborrowingreports or updating tblitembrand: " . mysqli_error($con));
 }
-echo '</form>'; 
 ?>
-<!-- Bootstrap CSS and JS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-    rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-    crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"
-    integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Show the modal when the page loads
-        $('#noteModal').modal('show');
-    });
-</script>
+
+<main class="ccs-main-container">
+    <form action="" method="post" enctype="multipart/form-data" name="requestBorrowForm">
+        <div class="container mt-1">
+            <div class="row">
+                <div class="col-md-12"> <!-- Adjusted column size for the left side -->
+                    <div class="d-flex justify-content-between mb-1">
+                        <h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Confirmation of Borrowing Request</h3>
+                        <div class="text-end">
+                            <!--<input type="text" class="form-control search-input mb-1" placeholder="Search" name="search" id="searchInput">-->
+                            <a href="borrowerDashboardPage.php" class="btn btn-danger">Cancel</a>
+                            <button type="submit" class="btn btn-success" name="requestBorrow">Confirm Request</button>
+                        </div>
+                    </div>
+                    <h6 class="text-danger ">Note: Any deformation or lost/damage of items borrowed are subject to replacement on your account.</h6>
+                </div>
+                <?php
+                // Display each item in the same format as cards
+                foreach($itemsArray as $item) {
+                    // Check if an image exists
+                    $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $item['subcategoryname'] . '.png';
+                    if (!file_exists($imagePath)) {
+                        // Use a default image if no image is uploaded
+                        $imagePath = '/inventory/SubcategoryItemsimages/defaultimageitem.png';
+                    }
+                    // Output the item details in the card format
+                    echo '
+                    <div class="col-md-3 mb-1">
+                        <div class="card">
+                            <div class="text-center"> <!-- Center the image -->
+                                <img src="' . $imagePath . '" class="card-img-top" alt="Item Image" style="max-width: 80px; max-height: 80px;">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">' . $item['subcategoryname'] . '</h5>';
+                    // Check if item brand exists and is not empty before displaying
+                    if(isset($item['itembrand']) && !empty($item['itembrand'])) {
+                        echo '<p class="card-text">Item Description <br>' . $item['itembrand'] . '</p>';
+                    }
+                    
+                    echo '<p class="card-text">Quantity: ' . $item['count'] . '</p>
+                            </div>
+                        </div>
+                    </div>';
+                }
+                ?>
+            </div>
+        </div>
+    </form>
+</main>
