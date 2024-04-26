@@ -196,7 +196,7 @@ echo '</div>'; // Close the left column
 echo '<div class="col-md-3">';
 echo '<div class="card">';
 echo '<div class="card-body">';
-echo '<h3 class="card-title mb-3">Return Details</h3>';
+echo '<h3 class="card-title mb-3">Process of Return</h3>';
 // Add your return details form or input fields here
 echo '<form id="returnForm" method="post" action="ccssreturnsubmit_return.php" onsubmit="submitForm(); return false;">'; 
 //echo '<form method="post" action="ccssreturnsubmit_return.php">'; 

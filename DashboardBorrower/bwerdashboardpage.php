@@ -61,63 +61,61 @@ function decrementCount($subcategoryname) {
 <main class="ccs-main-container">
     <div class="container mt-1">
         <div class="row">
-            <div class="col-md-9"> <!-- Adjusted column size for the left side -->
+            <div class="col-md-9">
                 <div class="d-flex justify-content-between mb-1">
                     <h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>List of Available Items</h3>
                     <div class="text-end">
                         <input type="text" class="form-control search-input mb-1" placeholder="Search" name="search" id="searchInput">
                     </div>
                 </div>
-                <?php
-                if (mysqli_num_rows($resultitems) > 0) {
-                    // If there are borrowable items, display the list
-                    echo '
-                   
-                    <div class="row">';
-                    while ($row = mysqli_fetch_assoc($resultitems)) {
-                        // Check if an image exists
-                        $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
-                        if (!file_exists($imagePath)) {
-                            // Use a default image if no image is uploaded
-                            $imagePath = '/inventory/SubcategoryItemsimages/defaultimageitem.png';
-                        }
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <?php
+                    if (mysqli_num_rows($resultitems) > 0) {
+                        // If there are borrowable items, display the list
+                        while ($row = mysqli_fetch_assoc($resultitems)) {
+                            // Check if an image exists
+                            $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
+                            if (!file_exists($imagePath)) {
+                                // Use a default image if no image is uploaded
+                                $imagePath = '/inventory/SubcategoryItemsimages/defaultimageitem.png';
+                            }
 
-                        echo '<div class="col-md-3 mb-1">
-                        <div class="card">
-                            <div class="text-center"> <!-- Center the image -->
-                                <img src="' . $imagePath . '" class="card-img-top" alt="Item Image" style="max-width: 100px; max-height: 100px;">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">' . $row['subcategoryname'] . '</h5>
-                                <p class="card-text">Item Description <br>' . $row['itembrand'] . '</p>
-                                <p class="card-text">Available Stock: ' . $row['available_count'] . '</p>
-                                <div class="btn-group " role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-secondary" onclick="decrementCount(\'' . $row['subcategoryname'] . '\', \'' . $row['itembrand'] . '\')">-</button>
-                                    <button type="button" class="btn btn-light count-btn" id="count_' . $row['subcategoryname'] . '_' . $row['itembrand'] . '">0</button>
-                                    <button type="button" class="btn btn-secondary" onclick="incrementCount(\'' . $row['subcategoryname'] . '\', \'' . $row['itembrand'] . '\', ' . $row['available_count'] . ')">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>';
+                            echo '<div class="col">
+                                    <div class="card">
+                                        <div class="text-center">
+                                            <img src="' . $imagePath . '" class="card-img-top" alt="Item Image" style="max-width: 100px; max-height: 100px;">
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">' . $row['subcategoryname'] . '</h5>
+                                            <p class="card-text">Item Description <br>' . $row['itembrand'] . '</p>
+                                            <p class="card-text">Available Stock: ' . $row['available_count'] . '</p>
+                                            <div class="btn-group " role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-secondary" onclick="decrementCount(\'' . $row['subcategoryname'] . '\', \'' . $row['itembrand'] . '\')">-</button>
+                                                <button type="button" class="btn btn-light count-btn" id="count_' . $row['subcategoryname'] . '_' . $row['itembrand'] . '">0</button>
+                                                <button type="button" class="btn btn-secondary" onclick="incrementCount(\'' . $row['subcategoryname'] . '\', \'' . $row['itembrand'] . '\', ' . $row['available_count'] . ')">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>';
+                        }
+                    } else {
+                        // If there are no borrowable items, display a message
+                        echo '<div class="text-center">
+                                <h3>No borrowable items available at the moment.</h3>
+                              </div>';
                     }
-                    echo '</div>';
-                } else {
-                    // If there are no borrowable items, display a message
-                    echo '<div class="text-center">
-                            <h3>No borrowable items available at the moment.</h3>
-                          </div>';
-                }
-                ?>
+                    ?>
+                </div>
             </div>
-            <div class="col-md-3"> <!-- Column for the right side -->
+            <div class="col-md-3">
                 <!-- Right-side card for items added -->
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Chosen Items</h5>
-                            <div id="addedItems"></div>
+                        <div id="addedItems"></div>
                         <div class="text-end">
                             <button type="button" class="btn btn-danger btn-sm clear-btn" onclick="clearitem()" <?php echo empty($addedItemsArray) ? 'disabled' : ''; ?>>Clear All</button>
-                            <button type="button" class="btn btn-primary btn-sm reserve-btn" <?php echo empty($addedItemsArray) ? 'disabled' : ''; ?>>Reserve</button>
+                            <button type="button" id="reserve-btn" class="btn btn-primary btn-sm reserve-btn" <?php echo empty($addedItemsArray) ? 'disabled' : ''; ?>>Reserve</button>
                             <button type="button" id="borrow-btn" class="btn btn-success btn-sm borrow-btn" <?php echo empty($addedItemsArray) ? 'disabled' : ''; ?>>Borrow</button>
                         </div>
                     </div>
@@ -126,6 +124,7 @@ function decrementCount($subcategoryname) {
         </div>
     </div>
 </main>
+
 <style>
 
 </style>
@@ -249,6 +248,58 @@ document.getElementById('borrow-btn').addEventListener('click', function() {
     window.location.href = url;
 });
 
+document.getElementById('reserve-btn').addEventListener('click', function() {
+    // Get the added items
+    var addedItems = document.getElementById('addedItems').querySelectorAll('p');
+    var itemsArray = [];
 
+    // Iterate through added items and extract subcategory name, count, and item brand
+    addedItems.forEach(function(item) {
+        var subcategoryname = item.getAttribute('data-subcategory'); // Extract subcategory name
+        var count = parseInt(item.textContent.match(/\d+/)[0]); // Extract count
+        var itembrand = item.getAttribute('data-itembrand'); // Extract item brand
+
+        itemsArray.push({subcategoryname: subcategoryname, count: count, itembrand: itembrand}); // Include item brand in the array
+    });
+
+    // Convert the itemsArray to JSON
+    var itemsJSON = JSON.stringify(itemsArray);
+
+    // Encode the JSON data
+    var encodedItemsJSON = encodeURIComponent(itemsJSON);
+
+    // Construct the URL with the encoded itemsJSON
+    var url = 'borrowerConfirmReserveRequest.php?items=' + encodedItemsJSON;
+
+    // Redirect to the constructed URL
+    window.location.href = url;
+});
+
+$(document).ready(function() {
+    // Function to filter items based on search input
+    $('#searchInput').on('input', function() {
+        var searchText = $(this).val().toLowerCase(); // Get the value of the search input and convert it to lowercase
+
+        $('.card').each(function() {
+            var card = $(this);
+            var cardText = card.text().toLowerCase(); // Get the text content of the card and convert it to lowercase
+            // Check if the card text contains the search text
+            if (cardText.includes(searchText) || card.find('#addedItems').length > 0) {
+                card.show(); // Show the card if it matches the search criteria or if it contains the #addedItems div
+            } else {
+                card.hide(); // Hide the card if it does not match the search criteria and does not contain the #addedItems div
+            }
+        });
+
+        // Check if all cards are hidden
+        if ($('.card:visible').length === 0) {
+            // If all cards are hidden, hide the right-side card
+            $('.col-md-3').hide();
+        } else {
+            // Otherwise, show the right-side card
+            $('.col-md-3').show();
+        }
+    });
+});
 
 </script>

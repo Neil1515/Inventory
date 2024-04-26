@@ -168,7 +168,6 @@ echo '</div>';
          });
      }
  }
-
  function handleApprovalResponse(response) {
      console.log(response);
 

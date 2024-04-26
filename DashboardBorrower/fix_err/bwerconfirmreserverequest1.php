@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-md-3 mb-1">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h6 class="card-title"><?php echo $itemDetails['categoryname']; ?></h6>
@@ -248,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
                     </form>
                 </div>
             </div>
-        </div>
+            </div>
         </div>
     </div>
     </form>

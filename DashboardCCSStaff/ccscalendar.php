@@ -30,7 +30,6 @@ if ($events_result) {
             
             continue; // Skip to the next event
         }
-    
         // Format the date and time
         $formattedDateTime = date('h:iA F-d-Y', strtotime($datetime));
     

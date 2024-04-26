@@ -146,11 +146,11 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$itemStatus}</td>";
                                 
                                 // Similarly, check other fields and display --- if NULL
-                                $itemName = $row['subcategoryname'] ?? '---';
+                                $itemName = $row['subcategoryname'] ?? 'Item Not Found';
                                 echo "<td '>{$itemName}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
-                                $borrower = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : '---';
+                                $borrower = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : 'User Not Found';
                                 echo "<td class='text-center'>{$borrower}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---

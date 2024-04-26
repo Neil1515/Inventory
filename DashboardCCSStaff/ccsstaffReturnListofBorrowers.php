@@ -40,7 +40,7 @@ if ($stmt) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Return Items</title>
+    <title>Unreturn Items</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,9 +87,7 @@ if ($stmt) {
                     echo '</div>';
                 }
                 include('ccsreturnlistofborrowers.php');
-                
                 ?>
-            
             </div>
         </div>
     </div>

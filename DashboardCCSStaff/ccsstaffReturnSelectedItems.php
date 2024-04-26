@@ -1,4 +1,5 @@
-<!-- ccsstaffUsersPendingReserveItems.php -->
+<!-- ccsstaffReturnSelectedItems.php -->
+<!-- ccsstaffListofBorrowers.php -->
 <?php
 session_start();
 // Include necessary files
@@ -36,11 +37,11 @@ if ($stmt) {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Pending Reserve Items</title>
+    <title>Return Process</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,8 +86,8 @@ if ($stmt) {
                     echo $_GET["msg"];
                     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                     echo '</div>';
-                }             
-                include('ccsusersreserveitems.php');
+                }
+                //include('ccsreturnlistofborrowers.php');
                 ?>
             </div>
         </div>

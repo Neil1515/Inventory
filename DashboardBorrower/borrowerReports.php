@@ -94,7 +94,7 @@ if ($stmt) {
                                 <th>Item</th>
                                 <th>Released By</th>
                                 <th>Date Time Released</th>
-                                <th>Approve Return By</th>
+                                <th>Recieve Return By</th>
                                 <th>Date Time Return</th>
                                 <th>Return Condition</th> 
                             </tr>
@@ -150,7 +150,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$itemStatus}</td>";
                                 
                                 // Similarly, check other fields and display --- if NULL
-                                $itemName = $row['subcategoryname'] ?? '---';
+                                $itemName = $row['subcategoryname'] ?? 'Item Not Found';
                                 echo "<td>{$itemName}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---

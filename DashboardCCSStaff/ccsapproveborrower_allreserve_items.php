@@ -40,17 +40,16 @@ if (isset($_GET['borrowerId'])) {
     date_default_timezone_set('Asia/Manila');
 
     // Get the current date and time in the Philippines timezone
-    $datimeapproved = date("Y-m-d H:i:s");
+    $datetimeapprovereserved = date("Y-m-d H:i:s");
 
     // Use $approvebyid directly from $rowUser
     $approvebyid = $rowUser['id'];
-
-    // Update the itemreqstatus to 'Approved', approvebyid, and datimeapproved for the specified borrower
-    $queryUpdateStatus = "UPDATE tblborrowingreports SET itemreqstatus = 'Approve Reserve', approvebyid = ?, datimeapproved = ? WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve'";
+    // Update the itemreqstatus to 'Approved', approvebyid, and datetimeapprovereserved for the specified borrower
+    $queryUpdateStatus = "UPDATE tblborrowingreports SET itemreqstatus = 'Approve Reserve', approvereservebyid = ?, datetimeapprovereserved = ? WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve'";
     $stmtUpdateStatus = mysqli_prepare($con, $queryUpdateStatus);
 
     if ($stmtUpdateStatus) {
-        mysqli_stmt_bind_param($stmtUpdateStatus, "iss", $approvebyid, $datimeapproved, $borrowerId);
+        mysqli_stmt_bind_param($stmtUpdateStatus, "iss", $staffId, $datetimeapprovereserved, $borrowerId);
 
         if (mysqli_stmt_execute($stmtUpdateStatus)) {
             // Update the status in tblitembrand to 'Borrowed' for the approved items

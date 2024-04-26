@@ -37,7 +37,7 @@ echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
 echo '<div class="d-flex justify-content-between">';
-echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Return Item</h3>';
+echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Unreturn Items</h3>';
 echo '<div class="text-end">';
 echo '<input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">';
 echo '</div>';
@@ -140,7 +140,7 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
                             </div>
                             <div class='text-end me-1'>
                             <a href='ccsstaffReturnAll.php?borrower_id=<?php echo $borrowerDetails['id']; ?>' class='btn btn-primary mb-1'>Return All</a>
-                                <a href='#' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
+                                <a href='ccsstaffViewUnreturnItems.php?borrower_id=<?php echo $borrowerDetails['id']; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                             </div>
                         </div>
                             <?php
@@ -163,9 +163,8 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
         }
     }
 } else {
-    echo '<p class="alert alert-info">No borrowers with Approved Borrowed items found.</p>';
+    echo '<p class="alert alert-info">No borrowers with borrowed items found.</p>';
 }
-
 // Close the container div
 echo '</div>';
 echo '</div>';

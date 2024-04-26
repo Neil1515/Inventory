@@ -59,16 +59,16 @@ if ($stmt) {
                             echo '<div class="col-md-3 mb-3">';
                             echo '<div class="card">';
                             echo '<div class="card-body">';
-                            echo '<h5 class="card-title">' . $item_row['categoryname'] . '</h5>';
+                            echo '<h5 class="card-title">' . $item_row['subcategoryname'] . '</h5>';
                             echo '<div class="mb-3 text-center">';
                             echo '<img src="' . $imagePath . '" alt="Image" width="70">';
                             echo '</div>';  
-                            echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
+                            //echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
                             echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
-                            echo '<h7 class="card-text">Approved by: ' . $item_row['fname'] . ' ' . $item_row['lname'] . '<br></h7>';
+                            echo '<h7 class="card-text">Released by: ' . $item_row['fname'] . ' ' . $item_row['lname'] . '<br></h7>';
                             $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datimeapproved']));
-                            echo '<h7 class="card-text">Date Approved: <br> ' . $formattedDatetime . '</h7>';
+                            echo '<h7 class="card-text">Date Released: <br> ' . $formattedDatetime . '</h7>';
                             echo '<div class="card text-end">';
                             if (isset($item_row['itemreqstatus'])) {
                                 switch ($item_row['itemreqstatus']) {

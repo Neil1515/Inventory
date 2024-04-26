@@ -462,7 +462,6 @@ $('#saveChangesBtn').click(function() {
 
     // Combine date and time into a single string
     var updatedDateTime = updatedDate + ' ' + updatedTime;
-
     // Send AJAX request to update the datetimereserve in the database
     $.ajax({
         type: 'POST',
