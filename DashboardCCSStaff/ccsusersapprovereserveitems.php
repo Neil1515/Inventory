@@ -56,9 +56,9 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                              <div class="card me-2">
                                  <div class="card-body">
                                      <h5 class="card-title">Borrower ID: <?php echo $borrowerDetails['id']; ?></h5>
-                                     <p class="card-text">Name: <?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></p>
-                                     <p class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?></p>
-                                     <p class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></p>
+                                     <h6 class="card-text">Name: <?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?><br></h6>
+                                     <h6 class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?><br></h6>
+                                     <h6 class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></h6>
 
                                      <!-- Display the item IDs with pending status and their subcategories with quantity -->
                                      <?php
@@ -88,7 +88,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                                      }
                                                  }
 
-                                                 echo '<p class="card-text">Accepted reserve item(s): ';
+                                                 echo '<h6 class="card-text">Accepted reserve item(s): ';
                                                  foreach ($itemCounts as $subcategory => $count) {
                                                      echo $subcategory;
 
@@ -99,7 +99,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
 
                                                      echo ', ';
                                                  }
-                                                 echo '</p>';
+                                                 echo '</h6>';
                                              } else {
                                                  echo '<p class="card-text">No items with pending status.</p>';
                                              }
@@ -114,8 +114,8 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                      ?>
                                  </div>
                          <div class='text-end me-1'>
-                             <a href='#' class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Cancel All</a>
-                             <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Release All</a>
+                             <a href='#' class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Reject All</a>
+                            <!--<a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Release All</a>-->
                              <a href='ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $borrowerId; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                          </div>
                      </div>
@@ -187,7 +187,7 @@ echo '</div>';
          // Send an AJAX request to reject all items
          $.ajax({
              type: 'GET',
-             url: 'ccsrejectborrower_allreserve_items.php',
+             url: 'ccsrejectborrower_allapprovereserve_items.php',
              data: { borrowerId: borrowerId },
              success: function (response) {
                  handleRejectResponse(response);

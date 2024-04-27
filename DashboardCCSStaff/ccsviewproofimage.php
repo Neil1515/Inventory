@@ -68,7 +68,7 @@ if ($stmt) {
                 <?php include('ccssidebar.php'); ?>
             </div>
             <!-- Main container on the right -->
-            <div class="col-md-5">
+            <div class="col-md-10">
                 <?php
                 if (isset($_GET["msg_success"])) {
                     echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
@@ -122,7 +122,7 @@ if ($stmt) {
                             }
                         }
                     }
-                }
+                } 
                 $staffname = '';
 
                 $addedbyid = $_SESSION['staff_id'];
@@ -153,16 +153,16 @@ if ($stmt) {
                 <div class="card text">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <?php
                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . $proofImagePath)) {
-                                    echo "<img src='{$proofImagePath}' alt='Proof Image' class='img-fluid rounded'> ";
+                                    echo "<img src='{$proofImagePath}' alt='Proof Image' class='img-fluid rounded text-center'> ";
                                 } else {
                                     echo "<p class='text-center'>No proof image available.</p>";
                                 }
                                 ?>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <h5 class="card-title">User Details</h5>
                                 <span class="card-text mb-5">
                                     <strong><i class="fas fa-id-badge me-2"></i><?php echo $row['usertype']; ?> ID:</strong> <?php echo $row['id']; ?><br>
@@ -173,9 +173,9 @@ if ($stmt) {
                                     <strong><i class="fas fa-venus-mars me-2"></i>Gender:</strong> <?php echo $row['gender']; ?><br>
                                     <strong><i class="fas fa-building me-2"></i>Department:</strong> <?php echo $row['department']; ?>
                                     <div class='text-end mb-2'>
-                                        <a href='ccsstaffPendingAccounts.php' class='btn btn-success '>Cancel</a>
+                                        <a href='ccsstaffPendingAccounts.php' class='btn btn-primary '>Back</a>
                                         <a href='#' class='btn btn-danger '>Reject</a>
-                                        <a href="#" class='btn btn-primary' onclick="confirmApprove('<?php echo $row['id']; ?>', '<?php echo $approveby; ?>')">Approve</a>
+                                        <a href="#" class='btn btn-success ' onclick="confirmApprove('<?php echo $row['id']; ?>', '<?php echo $approveby; ?>')">Approve</a>
                                     </div>
                             </span>
 

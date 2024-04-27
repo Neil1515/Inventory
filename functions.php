@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } elseif ($status === 'Pending') {
                     $loginError = true;
-                    $inactiveMessage = "Your account is pending. Please await approval from CCS staff or the Dean.";
+                    $inactiveMessage = "Your account is pending. Please await approval from CCS staff.";
                 } else {
                     // Inactive status, set loginError to true and display a message
                     $loginError = true;

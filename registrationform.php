@@ -45,9 +45,13 @@
                     <div class="card-body">
                         <form action="process_registration.php" method="post" enctype="multipart/form-data">
                         <input type="hidden" id="department" name="department" value="">    
-                            <div class="mb-1">
+                            <!--<div class="mb-1">
                                 <span for="Id" class="form-label">Student/Employee ID<span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="Id" name="Id" required>
+                            </div>-->
+                            <div class="mb-1">
+                                <label for="Id" class="form-label">Student/Employee ID<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="Id" name="Id" required oninput="validateIdInput(event)">
                             </div>
                             <div class="mb-1">
                                 <label for="firstName" class="form-label">First Name<span class="text-danger">*</span></label>
@@ -60,7 +64,7 @@
                             <div class="mb-1">
                                 <label for="gender" class="form-label">Gender<span class="text-danger">*</span></label>
                                 <select class="form-select" id="gender" name="gender" required>
-                                <option value="" selected disabled>Select Gender</option>
+                                <option value=""selected disabled>Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                 </select>
@@ -185,6 +189,15 @@
             icon.classList.add("fa-eye");
         }
     });
+    function validateIdInput(event) {
+    const input = event.target;
+    const value = input.value;
+    const isValid = /^\d+$/.test(value); // Regex to match only digits
+
+    if (!isValid) {
+        input.value = value.replace(/\D/g, ''); // Remove non-numeric characters
+    }
+}
 </script>
 
 <style>  

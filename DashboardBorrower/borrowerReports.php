@@ -24,6 +24,7 @@ if ($stmt) {
         if ($result && mysqli_num_rows($result) > 0) {
             // Valid user, retrieve user information
             $row = mysqli_fetch_assoc($result);
+            $borrowerName = $row['fname'] . ' ' . $row['lname'];
         } else {
             // Handle the case when user information is not found
             // You might want to redirect or display an error message
@@ -40,7 +41,7 @@ if ($stmt) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Reports</title>
+    <title>Reports <?php echo $borrowerName?></title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,6 +89,8 @@ if ($stmt) {
                 <div class="table-responsive">
                     <table id="example" class="table table-striped table-bordered">
                         <thead class="text-center table-dark">
+                            <tr>
+                            </tr>
                             <tr>
                                 <th>Transaction Number</th>
                                 <th>Item Status</th>
@@ -176,7 +179,6 @@ if ($stmt) {
                                  // Similarly, check other fields and display --- if NULL
                                  $returncondition = $row['returnitemcondition'] ?? '---';
                                  echo "<td class='text-center'>{$returncondition}</td>";
-
                                 echo "</tr>";
                                 }
                                 } else {
@@ -209,25 +211,23 @@ if ($stmt) {
     <script src="assets/js/datatables.min.js"></script>
     <script src="assets/js/pdfmake.min.js"></script>
     <script src="assets/js/vfs_fonts.js"></script>
-<script>
-$(document).ready(function(){
-    var table = $('#example').DataTable({
-        buttons:['copy', 'csv', 'excel', 'pdf', 'print'],
-        "order": [[ 0   , "desc" ]],
-        "columnDefs": [
-            {
-                "targets": [0], // Index of the Date column
-                "visible": false, // Hide the column
-                "searchable": false // Exclude from search
-            }
-        ]
+    <script>
+    $(document).ready(function(){
+        var table = $('#example').DataTable({
+            buttons:['copy', 'csv', 'excel', 'pdf', 'print'],
+            "order": [[ 0   , "desc" ]],
+            "columnDefs": [
+                {
+                    "targets": [0], // Index of the Date column
+                    "visible": false, // Hide the column
+                    "searchable": false // Exclude from search
+                }
+            ]
+        });
+
+        // Move the DataTable buttons container to a more appropriate location
+        table.buttons().container().appendTo('#table-buttons-container');
     });
-
-    // Move the DataTable buttons container to a more appropriate location
-    //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
-    table.buttons().container().appendTo('#table-buttons-container');
-});
-
 </script>
 
 </body>
