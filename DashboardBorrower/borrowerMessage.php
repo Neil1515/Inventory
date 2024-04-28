@@ -103,6 +103,23 @@ if ($stmt_conversation) {
 } else {
     echo "Statement preparation failed: " . mysqli_error($con);
 }
+
+// Update the status of unread messages to "read"
+$updateQuery = "UPDATE tblmessage_recipients SET status = 'read' WHERE recipient_id = ? AND status = 'unread'";
+$updateStmt = mysqli_prepare($con, $updateQuery);
+if ($updateStmt) {
+    mysqli_stmt_bind_param($updateStmt, "i", $borrowerId);
+    if (mysqli_stmt_execute($updateStmt)) {
+        // Unread messages marked as read successfully
+    } else {
+        // Handle error
+        echo "Error updating unread messages: " . mysqli_error($con);
+    }
+    mysqli_stmt_close($updateStmt);
+} else {
+    // Handle error
+    echo "Statement preparation failed: " . mysqli_error($con);
+}
 ?>
 
 <!DOCTYPE html>

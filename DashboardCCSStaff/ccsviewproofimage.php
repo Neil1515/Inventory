@@ -174,8 +174,8 @@ if ($stmt) {
                                     <strong><i class="fas fa-building me-2"></i>Department:</strong> <?php echo $row['department']; ?>
                                     <div class='text-end mb-2'>
                                         <a href='ccsstaffPendingAccounts.php' class='btn btn-primary '>Back</a>
-                                        <a href='#' class='btn btn-danger '>Reject</a>
-                                        <a href="#" class='btn btn-success ' onclick="confirmApprove('<?php echo $row['id']; ?>', '<?php echo $approveby; ?>')">Approve</a>
+                                        <a  class='btn btn-danger'onclick="rejectUser('<?php echo $row['id'];?>', '<?php echo $row['fname'] .' '.$row['lname']; ?>')">Reject</a>                                
+                                        <a class='btn btn-success' onclick="confirmApprove('<?php echo $row['id']; ?>', '<?php echo $approveby; ?>', '<?php echo $row['fname'] . ' ' . $row['lname']; ?>')">Approve</a>
                                     </div>
                             </span>
 
@@ -186,25 +186,92 @@ if ($stmt) {
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap and Font Awesome -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VB
-
-KQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- Modal HTML Structure -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="confirmationModalLabel">Pending Approval</h4>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <!-- Image -->
+            <div class="text-center mt-3">
+                <img src="\Inventory\images\profile-user.png"  width='150' alt="User">
+            </div> 
+            <div class="modal-body">     
+                <!-- Note -->
+                <p class="text-center" id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <!-- Disabled Confirm button initially -->
+                <button type="button" class="btn btn-danger" id="" data-bs-dismiss="modal" >Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmButton" onclick="showSwal('success-message')">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <script>
-    function confirmApprove(userId, approveby) {
-        // Show a confirmation alert
-        var isConfirmed = confirm('Are you sure you want to approve this user?');
+    function confirmApprove(userId, approveby, userName) {
+    // Update the modal message with the user's name
+    $('#modalMessage').html('Are you sure you want to <strong class="text-success">APPROVE</strong> ' + userName + '?');
+    
+    // Show the confirmation modal
+    $('#confirmationModal').modal('show');
 
-        // If the user clicks "OK" in the alert, redirect to updateUserStatus.php
-        if (isConfirmed) {
-            window.location.href = 'updateUserStatus.php?userId=' + userId + '&approveby=' + approveby;
-        }
+    // Event listener for the Confirm button
+    $('#confirmButton').on('click', function() {
+        // Redirect to updateUserStatus.php with appropriate parameters
+        window.location.href = 'updateUserStatus.php?userId=' + userId + '&approveby=' + approveby;
+        });
     }
+
+    function rejectUser(userId, userName) {
+    // Update the modal message with the user's name
+    $('#modalMessage').html('Are you sure you want to <strong class="text-danger">REJECT</strong> ' + userName + '?');
+    
+    // Show the confirmation modal
+    $('#confirmationModal').modal('show');
+
+    // Event listener for the Confirm button
+    $('#confirmButton').on('click', function() {
+        // Redirect to updateUserStatus.php with appropriate parameters
+        window.location.href = 'updaterejectUserStatus.php?userId=' + userId;
+    });
+    }
+
+    (function($) {
+  showSwal = function(type) {
+    'use strict';
+     if (type === 'success-message') {
+      swal({
+        title: ' Successfully!',
+        text: 'Successfully',
+        type: 'success',
+        button: {
+          text: "Continue",
+          value: true,
+          visible: true,
+          className: "btn btn-primary"
+        }
+      })
+
+    }else{
+        swal("Error occured !");
+    } 
+  }
+})(jQuery);
 </script>
 

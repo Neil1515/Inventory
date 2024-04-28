@@ -2,31 +2,13 @@
 // deanDashboardPage.php
 // Start the session
 session_start();
-
-// Assuming you have a valid database connection here
-$servername = 'localhost';
-$db_id = 'root';
-$db_password = '';
-$db_name = 'maininventorydb';
-
-// Attempt to connect to the database
-$con = mysqli_connect($servername, $db_id, $db_password, $db_name);
-
-// Check for connection errors
-if (!$con) {
-    die('Connection failed: ' . mysqli_connect_error());
-}
-
-
-
+include('deanfunction.php');
 // Check if dean ID is set in the session
 if (!isset($_SESSION['dean_id'])) {
     // Redirect to the login page or display an error message
     header('Location: /inventory/logout.php'); // You may adjust the URL as needed
     exit();
 }
-
-
 
 // Retrieve user information based on the logged-in user ID
 $deanId = $_SESSION['dean_id'];

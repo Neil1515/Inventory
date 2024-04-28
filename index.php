@@ -18,7 +18,7 @@
         <div class="logo-container">
             <img src="images/imsicon.png" alt="Logo" class="logo">
         </div>
-        <h3>INVENTORY MANAGEMENT SYSTEM</h3>
+        <h3 class="mt-2">INVENTORY MANAGEMENT SYSTEM</h3>
         <div class="form-group">
             <label for="id">ID Number or Email</label>
             <input type="text" id="id" name="id">
@@ -27,8 +27,10 @@
             <label for="password">Password</label>
             <div class="input-container">
                 <input type="password" id="password" name="password">
-                <span class="show-password" onclick="togglePasswordVisibility()">👁️</span>
-                <label id="showPasswordLabel"> Show Password</label>
+            </div>
+            <div class="input-container mt-1">  
+                <a class="show-password" onclick="togglePasswordVisibility()">👁️ Show Password</a>
+                <!--<label id="showPasswordLabel"> Show Password</label>-->
             </div>
         </div>
 
@@ -38,9 +40,15 @@
 
         if ($loginError) {
             if (isset($inactiveMessage)) {
-                echo '<p style="color: red; text-align: center;">' . $inactiveMessage . '</p>';
+                echo '<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">';
+                echo '<h6>' . $inactiveMessage . '</h6>';
+                echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>';
+                echo '</div>';
             } else {
-                echo '<p style="color: red; text-align: center;">Invalid Login Credentials</p>';
+                echo '<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">';
+                echo '<h6">Invalid Login Credentials.</h6>';
+                echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>';
+                echo '</div>';
             }           
         } elseif (isset($loginError) && $loginError) {
             echo '<p style="color: red;">Login failed. Please check your credentials.</p>';
@@ -51,8 +59,14 @@
             echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
             echo '</div>';
         }
+        if (isset($_GET["msg_fail"])) {
+            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
+            echo $_GET["msg_fail"];
+            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+            echo '</div>';
+        }
         ?>
-        <input type="submit" value="Login">
+        <input type="submit" value="Login" class="mt-1">
     </form>
     <div class="register-label">
         <label>Don't have an account? <a href="/Inventory/registrationform.php">Register</a></label>
@@ -67,22 +81,28 @@
 
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            showPasswordButton.innerHTML = '👀'; 
-            showPasswordLabel.innerHTML = ' Hide Password';
+            showPasswordButton.innerHTML = '👀 Hide Password'; 
+            //showPasswordLabel.innerHTML = ' ';
         } else {
             passwordInput.type = 'password';
-            showPasswordButton.innerHTML = '👁️'; 
-            showPasswordLabel.innerHTML = ' Show Password';
+            showPasswordButton.innerHTML = '👁️ Show Password'; 
+            //showPasswordLabel.innerHTML = ' ';
         }
     }
 </script>
 <style>
-    
     .register-label {
     margin-top: 10px; /* Adjust the top margin as needed */
     text-align: center;
 }
-
+.show-password
+{
+    text-align: center;
+    font-size: 17px; /* Adjust the font size as needed */
+    color: black; 
+    color: #007bff; /* Adjust the link color as needed */
+    text-decoration: none;
+}
 .register-label label {
     font-size: 14px; /* Adjust the font size as needed */
     color: #333; /* Adjust the color as needed */

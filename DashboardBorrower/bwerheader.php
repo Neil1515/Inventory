@@ -2,6 +2,7 @@
 <?php
 // Include necessary files
 include('bwerfunctions.php');
+include('bwermessage_count.php');
 // Check if the user is logged in
 if (!isset($_SESSION['borrower_id'])) {
     // Redirect to the login page or handle accordingly
@@ -30,6 +31,7 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
+
 ?>
 
 <div class="container-fluid">
@@ -43,10 +45,10 @@ if ($stmt) {
         </div>
         <div class="user--info">
             <div class="dropdown">
-                <!-- Notification Icon and Counter -->
+                <!-- Message Icon and Counter -->
                 <a href="borrowerMessage.php" class="btn btn-secondary custom-dropdown-btn" type="button" id="messageDropdown" data-bs-toggle="messagedropdown" aria-expanded="false">
                     <i class="fas fa-envelope fs-5 me-1"></i> <!-- Message icon -->
-                    <sup class="badge bg-danger">0</sup> <!-- Notification counter -->
+                    <sup class="badge bg-danger"><?php echo $unreadMessages; ?></sup> <!-- Message counter -->
                 </a>
 
                 <!-- Notification Icon and Counter -->

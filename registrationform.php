@@ -10,7 +10,9 @@
     <!-- Bootstrap and Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="container-fluid">
@@ -124,7 +126,7 @@
 
                             <div class="text-end">
                                 <a href="index.php" class="btn btn-danger">Go to login</a>
-                                <button type="submit" id="registerButton" class="btn btn-primary" disabled>Register</button>
+                                <button type="submit" id="registerButton" class="btn btn-primary" onclick="showSwal('success-message')" disabled>Register</button>
                             </div>
                         </form>
                     </div>
@@ -132,6 +134,8 @@
             </div>
         </div>
     </div>
+
+
     <script>
     function showOtherInput() {
         var departmentSelect = document.getElementById("departmentSelect");

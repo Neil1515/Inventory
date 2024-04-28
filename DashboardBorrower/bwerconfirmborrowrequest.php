@@ -102,7 +102,6 @@ foreach ($itemsArray as $item) {
     error_log("Statement preparation failed for inserting into tblborrowingreports or updating tblitembrand: " . mysqli_error($con));
 }
 ?>
-
 <main class="ccs-main-container">
     <form action="" method="post" enctype="multipart/form-data" name="requestBorrowForm">
         <div class="container mt-1">
@@ -113,7 +112,7 @@ foreach ($itemsArray as $item) {
                         <div class="text-end">
                             <!--<input type="text" class="form-control search-input mb-1" placeholder="Search" name="search" id="searchInput">-->
                             <a href="borrowerDashboardPage.php" class="btn btn-danger">Cancel</a>
-                            <button type="submit" class="btn btn-success" name="requestBorrow">Confirm Request</button>
+                            <button type="submit" class="btn btn-success" name="requestBorrow" onclick="showSwal('success-message')">Confirm Request</button>
                         </div>
                     </div>
                     <h6 class="text-danger ">Note: Any deformation or lost/damage of items borrowed are subject to replacement on your account.</h6>
@@ -151,3 +150,4 @@ foreach ($itemsArray as $item) {
         </div>
     </form>
 </main>
+

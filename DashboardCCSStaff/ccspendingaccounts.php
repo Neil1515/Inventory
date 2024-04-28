@@ -38,10 +38,10 @@ $resultPendingAccounts = mysqli_query($con, $queryPendingAccounts);
 
 <div class="container">
     <div class="row align-items-center mb-1">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <h2><i class='fas fa-user-clock me-2'></i>List of Pending Accounts</h2>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <input type="text" class="form-control search-input" placeholder="Search by Name or ID" name="search" id="searchInput">
         </div>
     </div>
@@ -60,9 +60,9 @@ $resultPendingAccounts = mysqli_query($con, $queryPendingAccounts);
                             <h7 class='card-text'>Gender: {$rowPending['gender']}<br></h7>
                             <h7 class='card-text'>Department: {$rowPending['department']}<br></h7>
                             <div class='text-end'>
-                                <a href='#' class='btn btn-danger'>Reject</a>
-                                <a href='#' class='btn btn-primary' onclick=\"approveUser('{$rowPending['id']}', '{$approveby}')\">Approve</a>                                
-                                <a href='ccsviewproofimage.php?userId={$rowPending['id']}' class='btn btn-success'>View Proof</a>
+                                <a  class='btn btn-danger'onclick=\"rejectUser('{$rowPending['id']}', '{$rowPending['fname']} {$rowPending['lname']}')\">Reject</a>                                
+                                <a  class='btn btn-success ' onclick=\"approveUser('{$rowPending['id']}', '{$approveby}', '{$rowPending['fname']} {$rowPending['lname']}')\">Approve</a>                              
+                                <a href='ccsviewproofimage.php?userId={$rowPending['id']}' class='btn btn-primary'>View Proof</a>
                             </div>
                         </div>
                     </div>
@@ -78,6 +78,35 @@ $resultPendingAccounts = mysqli_query($con, $queryPendingAccounts);
         ?>
     </div> <!-- closing div for row -->
 </div> <!-- closing div for container -->
+
+<!-- Modal HTML Structure -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="confirmationModalLabel">Pending Approval</h4>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <!-- Image -->
+            <div class="text-center mt-3">
+                <img src="\Inventory\images\profile-user.png"  width='150' alt="User">
+            </div> 
+            <div class="modal-body">     
+                <!-- Note -->
+                <p class="text-center" id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <!-- Disabled Confirm button initially -->
+                <button type="button" class="btn btn-danger" id="" data-bs-dismiss="modal" >Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmButton" onclick="showSwal('success-message')">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <style>
     .card:hover {
@@ -105,13 +134,54 @@ $resultPendingAccounts = mysqli_query($con, $queryPendingAccounts);
         }
     });
 
-    function approveUser(userId, approveby) {
-        var confirmationMessage = 'Are you sure you want to approve this user?';
-        var isConfirmed = confirm(confirmationMessage);
+    function approveUser(userId, approveby, userName) {
+    // Update the modal message with the user's name
+    $('#modalMessage').html('Are you sure you want to <strong class="text-success">APPROVE</strong> ' + userName + '?');
+    
+    // Show the confirmation modal
+    $('#confirmationModal').modal('show');
 
-        if (isConfirmed) {
-            // Redirect to updateUserStatus.php with appropriate parameters
-            window.location.href = 'updateUserStatus.php?userId=' + userId + '&approveby=' + approveby;
-        }
+    // Event listener for the Confirm button
+    $('#confirmButton').on('click', function() {
+        // Redirect to updateUserStatus.php with appropriate parameters
+        window.location.href = 'updateUserStatus.php?userId=' + userId + '&approveby=' + approveby;
+        });
     }
+
+    function rejectUser(userId, userName) {
+    // Update the modal message with the user's name
+    $('#modalMessage').html('Are you sure you want to <strong class="text-danger">REJECT</strong> ' + userName + '?');
+    
+    // Show the confirmation modal
+    $('#confirmationModal').modal('show');
+
+    // Event listener for the Confirm button
+    $('#confirmButton').on('click', function() {
+        // Redirect to updateUserStatus.php with appropriate parameters
+        window.location.href = 'updaterejectUserStatus.php?userId=' + userId;
+    });
+    }
+
+    (function($) {
+  showSwal = function(type) {
+    'use strict';
+     if (type === 'success-message') {
+      swal({
+        title: ' Successfully!',
+        text: 'Successfully',
+        type: 'success',
+        button: {
+          text: "Continue",
+          value: true,
+          visible: true,
+          className: "btn btn-primary"
+        }
+      })
+
+    }else{
+        swal("Error occured !");
+    } 
+  }
+})(jQuery);
+
 </script>

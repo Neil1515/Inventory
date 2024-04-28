@@ -68,7 +68,7 @@ function decrementCount($subcategoryname) {
                         <input type="text" class="form-control search-input mb-1" placeholder="Search" name="search" id="searchInput">
                     </div>
                 </div>
-                <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="row row-cols-1 row-cols-md-4 g-1">
                     <?php
                     if (mysqli_num_rows($resultitems) > 0) {
                         // If there are borrowable items, display the list
@@ -82,7 +82,7 @@ function decrementCount($subcategoryname) {
 
                             echo '<div class="col">
                                     <div class="card">
-                                        <div class="text-center">
+                                        <div class="text-center mt-2">
                                             <img src="' . $imagePath . '" class="card-img-top" alt="Item Image" style="max-width: 100px; max-height: 100px;">
                                         </div>
                                         <div class="card-body">

@@ -100,7 +100,7 @@ if ($stmt) {
                             <div class="modal-body">
                                 <!-- Image -->
                                 <div class="text-center mb-3">
-                                    <img src="\Inventory\images\Itemsnotes.jpg" class="img-fluid" alt="Return of Damaged Goods">
+                                    <img src="\Inventory\images\sadItemsnotes3.jpg" class="img-fluid" alt="Return of Damaged Goods">
                                 </div>  
                                 <!-- Checkbox for agreement -->
                                 <div class="form-check ">
@@ -135,6 +135,8 @@ if ($stmt) {
         crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
     <script>
     $(document).ready(function() {
          //Show the modal when the page loads
@@ -143,12 +145,26 @@ if ($stmt) {
      // Select the checkbox and Confirm button
     var agreementCheckbox = document.getElementById('agreementCheckbox');
     var confirmButton = document.getElementById('confirmButton');
-
     // Add event listener to the checkbox
     agreementCheckbox.addEventListener('change', function () {
         // Enable Confirm button if checkbox is checked, otherwise disable it
         confirmButton.disabled = !this.checked;
     });
+    (function($) {
+        showSwal = function(type) {
+            'use strict';
+            if (type === 'success-message') {
+                swal({
+                    title: 'Successfully!',
+                    text: 'Successfully Requesting Borrow',
+                    type: 'success',
+                    })
+            } else {
+                swal("Error occurred!");
+            }
+        }
+    })(jQuery);
 </script>
+
 </body>
 </html>

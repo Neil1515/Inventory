@@ -137,8 +137,8 @@
                                         ?>
                                     </div>
                             <div class='text-end me-1'>
-                                <a href='#' class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Reject All</a>
-                                <a href='#' class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>)">Approve All</a>
+                                <a class='btn btn-danger mb-1' onclick="rejectAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>, '<?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?>')">Reject All</a>
+                                <a class='btn btn-primary mb-1' onclick="approveAllItemsToThisBorrowerId(<?php echo $borrowerId; ?>, '<?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?>')">Release All</a>
                                 <a href='ccsstaffViewBorrower_all_items.php?borrowerId=<?php echo $borrowerId; ?>' class='btn btn-success mb-1'>View <?php echo $rowItemCount['itemCount']; ?> Items</a>
                             </div>
                         </div>
@@ -172,67 +172,165 @@ echo '</div>';
 echo '</div>';
 echo '</div>';
 ?>
+<!-- Modalrelease HTML Structure -->
+<div class="modal fade" id="confirmationModalrelease" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="confirmationModalLabel">Pending Approval</h4>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <!-- Image -->
+            <div class="text-center mt-3">
+                <img src="\Inventory\images\hardware-tools.png"  width='430' alt="User">
+            </div> 
+            <div class="modal-body">     
+                <!-- Note -->
+                <p class="text-center" id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <!-- Disabled Confirm button initially -->
+                <button type="button" class="btn btn-danger" id="" data-bs-dismiss="modal" >Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmApproveButton">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modalreject HTML Structure -->
+<div class="modal fade" id="confirmationModalreject" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="confirmationModalLabel">Pending Approval</h4>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <!-- Image -->
+            <div class="text-center mt-3">
+                <img src="\Inventory\images\hardware-tools.png"  width='430' alt="User">
+            </div> 
+            <div class="modal-body">     
+                <!-- Note -->
+                <p class="text-center" id="modalMessages"></p>
+            </div>
+            <div class="modal-footer">
+                <!-- Disabled Confirm button initially -->
+                <button type="button" class="btn btn-danger" id="" data-bs-dismiss="modal" >Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmRejectButton">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 <script>
-    function approveAllItemsToThisBorrowerId(borrowerId) {
-        if (confirm('Are you sure you want to approve all items to this user?')) {
-            // Send an AJAX request to approve all items
-            $.ajax({
-                type: 'GET',
-                url: 'ccsapproveborrower_all_items.php',
-                data: { borrowerId: borrowerId },
-                success: function (response) {
-                    handleApprovalResponse(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX request failed. Status: ' + status + ', Error: ' + error);
-                }
-            });
+function approveAllItemsToThisBorrowerId(borrowerId, borrowerName) {
+     // Set the confirmation message
+     $('#modalMessage').html('Are you sure you want to <strong class="text-success">RELEASE</strong> all items to this user? <br><h5><strong class="text-danger">'+borrowerName+'</strong></h5>');
+    // Show the confirmation modal
+    $('#confirmationModalrelease').modal('show');
+
+    // Set the borrowerId as a data attribute in the confirm button
+    $('#confirmApproveButton').attr('data-borrower-id', borrowerId);
+}
+
+function rejectAllItemsToThisBorrowerId(borrowerId, borrowerName) {
+    // Set the confirmation message
+    $('#modalMessages').html('Are you sure you want to <strong class="text-danger">REJECT</strong> all items to this user? <strong class="text-danger"><br>' + borrowerName + '</strong>?');
+    // Show the confirmation modal
+    $('#confirmationModalreject').modal('show');
+
+    // Set the borrowerId as a data attribute in the confirm button
+    $('#confirmRejectButton').attr('data-borrower-id', borrowerId);
+}
+
+// Function to handle approval confirmation on modal confirm button click
+$('#confirmApproveButton').click(function() {
+    var borrowerId = $(this).attr('data-borrower-id');
+
+    // Send an AJAX request to approve all items
+    $.ajax({
+        type: 'GET',
+        url: 'ccsapproveborrower_all_items.php',
+        data: { borrowerId: borrowerId },
+        success: function (response) {
+            handleApprovalResponse(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX request failed. Status: ' + status + ', Error: ' + error);
         }
-    }
+    });
+});
 
-    function handleApprovalResponse(response) {
-        console.log(response);
+// Function to handle rejection confirmation on modal confirm button click
+$('#confirmRejectButton').click(function() {
+    var borrowerId = $(this).attr('data-borrower-id');
 
-        // Handle the response accordingly
-        if (response.includes('Items approved successfully')) {
-            //alert('Items approved successfully!');
-            // You can also update the UI dynamically if needed
-            window.location.href = 'ccsstaffListofPendingBorrowerusers.php?msg_success=Items approved successfully by ';
-        } else {
-            alert('Error: ' + response);
+    // Send an AJAX request to reject all items
+    $.ajax({
+        type: 'GET',
+        url: 'ccsrejectborrower_all_items.php',
+        data: { borrowerId: borrowerId },
+        success: function (response) {
+            handleRejectResponse(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('AJAX request failed. Status: ' + status + ', Error: ' + error);
         }
-    }
+    });
+});
 
-    function rejectAllItemsToThisBorrowerId(borrowerId) {
-        if (confirm('Are you sure you want to reject all items to this user?')) {
-            // Send an AJAX request to reject all items
-            $.ajax({
-                type: 'GET',
-                url: 'ccsrejectborrower_all_items.php',
-                data: { borrowerId: borrowerId },
-                success: function (response) {
-                    handleRejectResponse(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX request failed. Status: ' + status + ', Error: ' + error);
-                }
-            });
-        }
-    }
+// Function to handle response after approval
+function handleApprovalResponse(response) {
+    console.log(response);
 
-    function handleRejectResponse(response) {
-        console.log(response);
-
-        // Handle the response accordingly
-        if (response.includes('Items reject successfully')) {
-            //alert('Items reject successfully!');
-            // You can also update the UI dynamically if needed
-            window.location.href = 'ccsstaffListofPendingBorrowerusers.php?msg_success=Items reject successfully ';
-        } else {
-            alert('Error: ' + response);
-        }
+    // Handle the response accordingly
+    if (response.includes('Items approved successfully')) {
+        $('#confirmationModalrelease').modal('hide'); // Hide the modal
+        showSwal('success-message'); // Show success message
+        // You can also update the UI dynamically if needed
+        window.location.href = 'ccsstaffListofPendingBorrowerusers.php?msg_success=Items approved successfully by ';
+    } else {
+        // Handle error case
+        $('#confirmationModalrelease').modal('hide'); // Hide the modal
+        alert('Error: ' + response);
     }
+}
+
+// Function to handle response after rejection
+function handleRejectResponse(response) {
+    console.log(response);
+
+    // Handle the response accordingly
+    if (response.includes('Items reject successfully')) {
+        $('#confirmationModalreject').modal('hide'); // Hide the modal
+        showSwal('success-message'); // Show success message
+        // You can also update the UI dynamically if needed
+        window.location.href = 'ccsstaffListofPendingBorrowerusers.php?msg_success=Items reject successfully ';
+    } else {
+        // Handle error case
+        $('#confirmationModalreject').modal('hide'); // Hide the modal
+        alert('Error: ' + response);
+    }
+}
+
+(function($) {
+  showSwal = function(type) {
+    'use strict';
+     if (type === 'success-message') {
+      swal({
+        title: ' Successfully!',
+        text: 'Successfully',
+        type: 'success',
+      })
+
+    } else {
+        swal("Error occurred !");
+    } 
+  }
+})(jQuery);
 </script>
 <style>
     .card:hover {

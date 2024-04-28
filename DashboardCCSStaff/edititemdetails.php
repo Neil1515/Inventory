@@ -200,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <span class="form-label">Borrowable<span class="text-danger">*</span></span>
+                                        <span class="form-label">Allow to borrow<span class="text-danger">*</span></span>
 
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="borrowable" id="borrowableYes" value="Yes" <?php echo ($row['borrowable'] == 'Yes') ? 'checked' : ''; ?> required>

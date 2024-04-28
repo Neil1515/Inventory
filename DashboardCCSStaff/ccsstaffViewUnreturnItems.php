@@ -88,6 +88,7 @@ if ($stmt) {
                 }
                 include('ccsviewborrower_items_borrowed.php');
                 ?>
+                
             </div>
         </div>
     </div>
