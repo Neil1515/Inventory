@@ -32,20 +32,22 @@ if ($stmtSelectUser) {
 $queryBorrowers = "SELECT DISTINCT borrowerid FROM tblborrowingreports WHERE itemreqstatus = 'Approved' OR itemreqstatus = 'Request Return'";
 $resultBorrowers = mysqli_query($con, $queryBorrowers);
 
-// Output the container and search input
-echo '<div class="ccs-main-container">';
-echo '<div class="container">';
-echo '<div class="row">';
-echo '<div class="d-flex justify-content-between">';
-echo '<h3 class="text-start"><i class="fas fa-tachometer-alt me-2"></i>Unreturn Items</h3>';
-echo '<div class="text-end">';
-echo '<input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">';
-echo '</div>';
-echo '</div>';
-echo '<div class=" text-end">';
-//echo '<a href="ccsstaffRequestReturn.php"  class="btn btn-primary me-1">Request Return</a>';
-echo '<a href="ccsstaffDashboardPage.php"  class="btn btn-danger">Back</a>';
-echo '</div>';
+?>
+<div class="ccs-main-container">
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Unreturn Items</h3>
+        </div>
+        <div class="col-md-3 d-flex justify-content-end align-items-center">
+            <a href="ccsstaffDashboardPage.php" class="btn btn-danger me-2">Back</a>
+            <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
+        </div>
+    </div>
+</div>
+
+
+<?php
 echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-4 g-1">';
 
 if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {

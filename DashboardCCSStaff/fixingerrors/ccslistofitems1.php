@@ -38,19 +38,8 @@ body {
     .text-danger {
         color: red;
     }
-
-    .truncate-text {
-    max-width: 150px; /* Adjust as needed */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    }
-    .truncate-text:hover {
-    max-width: none;
-    overflow: visible;
-    white-space: normal;
-    }
 </style>
+
 
 <!-- Add this script to include jQuery before your custom script -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -79,12 +68,6 @@ body {
         // Trigger the change event initially to show the default number of entries
         $('#entriesDropdown').trigger('change');
     });
-    $(document).ready(function() {
-  // Toggle class on hover to show full text
-  $('.truncate-text').hover(function() {
-    $(this).toggleClass('show-full-text');
-  });
-});
 </script>
 
         <main class="ccs-main-container">
@@ -111,8 +94,11 @@ body {
                                 <th scope="col">Item Description</th>                                           
                                 <th scope="col">Model No</th>
                                 <th scope="col">Serial No</th>
+                                <th scope="col">Date Purchased</th>
+                                <th scope="col">Unit Cost</th>
+                                <th scope="col">Remarks</th> 
                                 <th scope="col">Assign to</th>                                
-                                <th scope="col">Allow to Borrow</th>
+                                <th scope="col">Borrowable</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -141,11 +127,14 @@ body {
                                     echo "<td><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
                                 }            
                                 echo "<td>{$row['subcategoryname']}</td>";       
-                                echo "<td class='truncate-text'>{$row['itembrand']}</td>";                                                      
-                                echo "<td class='truncate-text'>{$row['modelno']}</td>";
-                                echo "<td>{$row['serialno']}</td>";                   
-                                echo "<td class='truncate-text'>{$row['assignfor']}</td>";
-                                echo "<td class='text-center'>";
+                                echo "<td>{$row['itembrand']}</td>";                                                      
+                                echo "<td>{$row['modelno']}</td>";
+                                echo "<td>{$row['serialno']}</td>";   
+                                echo "<td>{$row['datepurchased']}</td>"; 
+                                echo "<td><a>₱</a>{$row['unitcost']}</td>";                  
+                                echo "<td>{$row['remarks']}</td>";
+                                echo "<td>{$row['assignfor']}</td>";
+                                echo "<td>";
                                 if ($row['borrowable'] == 'Yes') {
                                     // Display a checkmark icon for 'Yes' with bigger size
                                     echo "<i class='fas fa-check-circle fa-2x text-success'></i>";

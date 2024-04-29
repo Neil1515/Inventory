@@ -3,8 +3,8 @@
 // Query to fetch categories
 include('ccsfunctions.php');
 
-//$queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' ORDER BY categoryname, subcategoryname, itembrand";
-$queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname, modelno, serialno, itemcondition, status ORDER BY categoryname, subcategoryname, itembrand";
+//$queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' ORDER BY categoryname, subcategoryname, itembrand";  AND status <> 'Available'
+$queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname,  status ORDER BY categoryname, subcategoryname, itembrand";
 $resultitems = mysqli_query($con, $queryitems);
 
 
@@ -56,10 +56,12 @@ mysqli_data_seek($resultitems, 0);
         .card {
             margin-bottom: 2px;
         }
+        .searchbar {
+            font-size: 18px;
+        }
 
         .card-title {
-            font-weight: bold;
-            font-size: 13px;
+            font-size: 18px;
         }
         .category-row {
             cursor: pointer;
@@ -148,106 +150,98 @@ mysqli_data_seek($resultitems, 0);
     
 </script>
 <main class="ccs-main-container">
-        <div id="dashboard-container" class="container">
-            <div class="row">
-        <div class="col-md-6 ">
-            <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Dashboard</h3>
-        </div>
-        <div class="col-md-6 text-md-end">
-            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                <a href="ccsstaffReports.php" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
-                <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
-                <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
-                <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Unreturn Item</a>
+    <div id="dashboard-container" class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="text-start"><i class='fas fa-tachometer-alt me-2'></i>Dashboard</h3>
             </div>
-        </div>
-            <!-- Column for Available Items -->
-            <div class="col-md-2 mb-1">
-                <div class="card">
-                    <div class="card-body">
-                        <span class="card-title"><i class="fas fa-box-open"></i> Available Items: <?php echo $availableCount; ?></span>
-                    </div>
+            <div class="col-md-6 text-md-end mb-2">
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <a href="ccsstaffReports.php" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
+                    <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
+                    <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
+                    <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Unreturn Item</a>
                 </div>
             </div>
-            <!-- Column for Reserve Items -->
-            <div class="col-md-2 mb-1">
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-bookmark me-2"></i>Reserve Items: <?php echo $reserveCount; ?></span>
                     </div>
                 </div>
             </div>
-            <!-- Column for Borrowed Items -->
-            <div class="col-md-2 mb-1">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
                         <span class="card-title"><i class="fas fa-handshake"></i> Borrowed Items: <?php echo $borrowedCount; ?></span>
                     </div>
                 </div>
             </div>
-            <!-- Column for Damage\Lost Items -->
-            <div class="col-md-2 mb-1">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-times-circle"></i> Damage\Lost:  <?php echo $missingCount; ?></span>
+                        <span class="card-title"><i class="fas fa-exclamation-circle"></i> Damage: <?php echo $missingCount; ?></span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 mb-1">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-times-circle"></i> Pending Borrow:  <?php echo $pendingborrowCount; ?></span>
+                        <span class="card-title"><i class="fas fa-trash-alt"></i> Lost: <?php echo $missingCount; ?></span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 mb-1">
+        </div>
+        <div class="row mb-1">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-times-circle"></i> Pending Reserve:  <?php echo $pendingreserveCount; ?></span>
+                        <span class="card-title"><i class="fas fa-hourglass-half"></i> Pending Borrow: <?php echo $pendingborrowCount; ?></span>
                     </div>
                 </div>
-        </div>
-        </div>
-        <div class="col-md-12">
-        <div class="row">
-        <div class="col text-start">
-            <!--show  -->
-        </div>
-            <div class="col-3 text-end mb-2">
-             <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
             </div>
-        </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="card-title"><i class="fas fa-hourglass-half"></i> Pending Reserve: <?php echo $pendingreserveCount; ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="search col-md-6">
+                <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
+            </div>
         </div>
         <div class="row table-responsive">
-            <table  id="example" class="table table-bordered" >
-            <thead class="table-dark ">
-                    <tr class='text-center'>
-                        <th scope="col">Image</th>
-                        <th scope="col">Quantity</th> 
-                        <th scope="col">Item Name</th> 
-                        <th scope="col">Item Description</th>                                           
-                        <th scope="col">Model No</th>
-                        <th scope="col">Serial No</th>
-                        <th scope="col">Item Condition</th>              
-                        <th scope="col">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
+        <table id="example" class="table table-bordered">
+        <thead class="table-dark">
+        <tr class="text-center">
+        <th scope="col">Image</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Item Name</th>
+        <th scope="col">Item Description</th>
+        <!--<th scope="col">Model No</th>
+        <th scope="col">Serial No</th>
+        <th scope="col">Item Condition</th>-->
+        <th scope="col">Status</th>
+        </tr>
+        </thead>
+        <?php 
+         if (mysqli_num_rows($resultitems) > 0) {
+            echo '<tbody>';
                     $currentCategory = null;
                     while ($row = mysqli_fetch_assoc($resultitems)) {
                         // Check if the category has changed
                         if ($currentCategory != $row['categoryname']) {
                             // Display the category name row with a class for click event
                             echo "<tr class='category-row'>
-                                    <td colspan='9' style='background-color: azure;'><strong>{$row['categoryname']}</strong></td>       
+                                    <td colspan='8' style='background-color: azure;'><strong>{$row['categoryname']}</strong></td>
                                   </tr>";
                             $currentCategory = $row['categoryname'];
                         }
-                                                         
                         // Display the subcategory and other item details with a class for toggling
                         echo "<tr class='item-details-row";
-
                         // Add class for highlighting missing items
                         if ($row['status'] == 'Missing') {
                             echo " status-missing-row";
@@ -261,12 +255,12 @@ mysqli_data_seek($resultitems, 0);
                             // Use a default image if no image is uploaded
                             echo "<td class='text-center'><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
                         }
-                        echo "<td class='text-center'>{$row['quantity']}</td>";     
-                        echo "<td>{$row['subcategoryname']}</td>";           
-                        echo "<td>{$row['itembrand']}</td>";                    
-                        echo "<td class='text-center'>{$row['modelno']}</td>";
-                        echo "<td class='text-center'>{$row['serialno']}</td>";
-                        echo "<td class='text-center'>{$row['itemcondition']}</td>";                                            
+                        echo "<td class='text-center'>{$row['quantity']}</td>";
+                        echo "<td>{$row['subcategoryname']}</td>";
+                        echo "<td>{$row['itembrand']}</td>";
+                        //echo "<td class='text-center'>{$row['modelno']}</td>";
+                        //echo "<td class='text-center'>{$row['serialno']}</td>";
+                        //echo "<td class='text-center'>{$row['itemcondition']}</td>";
                         // Add class to status based on its value
                         $statusClass = '';
                         switch ($row['status']) {
@@ -287,17 +281,21 @@ mysqli_data_seek($resultitems, 0);
                                 break;
                             case 'Pending Reserve':
                                 $statusClass = 'status-pendingreserve';
-                                break;    
+                                break;
                         }
+                        echo "<td class='text-center {$statusClass}'>{$row['status']}</td>";
                         
-                        echo "<td class='{$statusClass}'>{$row['status']}</td>";
                         echo "</tr>";
+                        
                     }
-                    ?>
-                </tbody>
-            </table>
+                    echo '</tbody>';
+                } else {
+                    // Display message when no data is available
+                    echo '<div class="col text-center">No data available in table</div>';
+                }
+                    echo '</table>';
+                
+                ?>
         </div>
-
     </div>
 </main>
-

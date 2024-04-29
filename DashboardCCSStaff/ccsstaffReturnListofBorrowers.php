@@ -36,7 +36,6 @@ if ($stmt) {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

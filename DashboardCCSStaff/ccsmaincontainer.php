@@ -1,7 +1,7 @@
 <!-- ccsmaincontainer.php -->
 <?php
 // Query to fetch categories
-$queryitems = "SELECT id, itembrand, categoryname, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor, COUNT(*) as quantity FROM tblitembrand GROUP BY itembrand, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor ORDER BY categoryname, assignfor, subcategoryname, itembrand";
+$queryitems = "SELECT id, itembrand, categoryname, subcategoryname, modelno, serialno, datepurchased, unitcost, assignfor, COUNT(*) as quantity FROM tblitembrand GROUP BY itembrand, subcategoryname, assignfor ORDER BY categoryname, assignfor, subcategoryname, itembrand";
 $resultitems = mysqli_query($con, $queryitems);
 
 ?>
@@ -57,9 +57,7 @@ $resultitems = mysqli_query($con, $queryitems);
                         <th scope="col">Item Description</th>                                             
                         <th scope="col">Model No</th>
                         <th scope="col">Serial No</th> 
-                        <th scope="col">Date of Purchase</th>             
-                        <th scope="col">Per Unit Cost</th>
-                        <th scope="col">Remarks</th>
+                        <th scope="col" class="text-start">Action</th>
                     </tr>
             </thead>
             <?php
@@ -99,15 +97,11 @@ $resultitems = mysqli_query($con, $queryitems);
                         echo "<td class='text-center'>{$row['quantity']}</td>";
                         echo "<td>{$row['subcategoryname']}</td>";
                         echo "<td>{$row['itembrand']}</td>";
-                        echo "<td class='text-center'>{$row['modelno']}</td>";
-                        echo "<td class='text-center'>{$row['serialno']}</td>";
-                    
-                        $datepurchased = new DateTime($row['datepurchased']);
-                        echo "<td class='text-center'>{$datepurchased->format('m-d-Y')}</td>";
-                        echo "<td class='text-center'>{$row['unitcost']}</td>";
+                        echo "<td class='text-center'>---</td>";
+                        echo "<td class='text-center'>---</td>";
                         echo "<td>
                                 <a href='ccsstaffViewRemarksItem.php?itemId={$row['id']}' class='btn btn-outline-primary btn-sm'>
-                                    <i class='fa-solid fa-pen-to-square fs-7 me-2'></i>View Remarks
+                                    <i class='fa-solid fa-pen-to-square fs-7 me-2'></i>View info
                                 </a>
                               </td>";
                         echo "</tr>";
