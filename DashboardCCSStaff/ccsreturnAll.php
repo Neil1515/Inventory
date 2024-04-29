@@ -96,6 +96,7 @@ echo '<div class="text-end">';
 echo '</div>';
 echo '</div>';
 // Create a div to display the error message
+echo '<form id="returnForm" method="post" action="ccssreturnsubmit_return.php" onsubmit="submitForm(); return false;">'; 
 echo '<div id="errorMessage" class="alert alert-danger" style="display: none;">Proof of damage item is required.</div>';
 echo '<div class="row row-cols-1 row-cols-md-3 g-1">';
 
@@ -148,7 +149,7 @@ if ($stmt) {
                                 <i class="fas fa-times-circle text-danger" id="lostIcon<?php echo $index; ?>" data-bs-toggle="tooltip" data-bs-placement="top" style="display: none;" title="Item is lost"></i>
                             </h5>
                             <div class="text-center">
-                                <img src="<?php echo $imagePath; ?>" alt="Image" width="50">
+                                <img src="<?php echo $imagePath; ?>" alt="Image" width="100" height="100">
                             </div>
                             <h7 class="card-text"><?php echo $row['itembrand']; ?><br></h7>
                             <h7 class="card-text">Serial No: <?php echo $row['serialno']; ?><br></h7>
@@ -185,7 +186,6 @@ if ($stmt) {
     // Statement preparation failed
     echo '<p class="text-danger">Statement preparation failed: ' . mysqli_error($con) . '</p>';
 }
-
 // Close the items row
 echo '</div>'; // Close the items row
 
@@ -198,7 +198,6 @@ echo '<div class="card">';
 echo '<div class="card-body">';
 echo '<h3 class="card-title mb-3">Process of Return</h3>';
 // Add your return details form or input fields here
-echo '<form id="returnForm" method="post" action="ccssreturnsubmit_return.php" onsubmit="submitForm(); return false;">'; 
 //echo '<form method="post" action="ccssreturnsubmit_return.php">'; 
 //echo '<form method="post" action="ccssreturnsubmit_return.php">'; 
 echo '<div class="mb-1">';
@@ -239,6 +238,39 @@ echo '</div>';
 echo '</div>';
 ?>
 </div>
+<!-- Modal for Note -->
+<div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noteModalLabel">Note</h5>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <div class="modal-body">
+                <!-- Image -->
+                <div class="text-center mb-3">
+                    <img src="\Inventory\images\serialcheckpoint.png" class="img-fluid border border-danger" alt="Return of Damaged Goods" style="border-radius: 5px;">
+                </div>
+                <!-- Checkbox for agreement -->
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="agreementCheckbox">
+                    <label class="form-check-label" for="agreementCheckbox">
+                        I agree to the terms and conditions
+                    </label>
+                </div>
+                <!-- Note -->
+                <p class="text-danger">Please ensure that the serial number of the returned items match the original items.</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Disabled Confirm button initially -->
+                <button type="button" class="btn btn-success" id="confirmButton" data-bs-dismiss="modal" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 // Function to toggle damage icon and update item counts and return item condition
 function toggleDamageIcon(index) {
@@ -347,4 +379,20 @@ function toggleDamageIcon(index) {
             window.scrollTo(0, 0);
         }
     }
+   // Your JavaScript code here
+$(document).ready(function () {
+    // Show the modal when the page loads
+    $('#noteModal').modal('show');
+
+    // Select the checkbox and Confirm button
+    var agreementCheckbox = document.getElementById('agreementCheckbox');
+    var confirmButton = document.getElementById('confirmButton');
+
+    // Add event listener to the checkbox
+    agreementCheckbox.addEventListener('change', function () {
+        // Enable Confirm button if checkbox is checked, otherwise disable it
+        confirmButton.disabled = !this.checked;
+    });
+});
+        
 </script>

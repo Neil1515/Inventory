@@ -150,6 +150,7 @@ if ($stmt) {
         // Enable Confirm button if checkbox is checked, otherwise disable it
         confirmButton.disabled = !this.checked;
     });
+    
     (function($) {
         showSwal = function(type) {
             'use strict';

@@ -153,6 +153,9 @@ if ($result && mysqli_num_rows($result) > 0) {
         } elseif ($row['action'] === 'request to reserve') {
             $borrowerId = $row['borrowerid']; // Get borrower ID
             $href = 'ccsstaffViewBorrower_allreserve_items.php?borrowerId=' . $borrowerId; // Set appropriate URL for Request to borrow
+        } elseif ($row['action'] === 'request to returned') {
+            $borrowerId = $row['borrowerid']; // Get borrower ID
+            $href = 'ccsstaffViewUnreturnItems.php?borrower_id='. $borrowerId; // Change to appropriate URL for Return
         } elseif ($row['action'] === 'Returned') {
             $href = 'return.php'; // Change to appropriate URL for Return
         }

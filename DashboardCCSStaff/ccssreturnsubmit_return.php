@@ -1,4 +1,4 @@
-    <!-- ccsreturnsubmit_return.php -->
+<!-- ccsreturnsubmit_return.php -->
     <?php
     // Include necessary files
     include('ccsfunctions.php');
@@ -35,9 +35,6 @@
                 $returnItemConditionStr = implode(', ', $damagedItems);
             }
         }
-
-
-
         // Set timezone
         date_default_timezone_set('Asia/Manila');
         $datetimereturn = date("Y-m-d H:i:s");

@@ -72,7 +72,7 @@ if ($stmt) {
 }
 
 // Fetch items borrowed by the borrower where itemreqstatus is 'Approved'
-$query = "SELECT br.id, br.itemid, ib.itembrand, ib.subcategoryname, ib.serialno, ib.itemcondition 
+$query = "SELECT br.id, br.itemid, br.itemreqstatus, ib.itembrand, ib.subcategoryname, ib.serialno, ib.itemcondition 
           FROM tblborrowingreports br 
           INNER JOIN tblitembrand ib ON br.itemid = ib.id 
           WHERE br.borrowerid = ? AND (br.itemreqstatus = 'Approved' OR br.itemreqstatus = 'Request return')";
@@ -105,107 +105,182 @@ if ($stmt) {
 }
 
 ?>
+<!-- Load jQuery in the head section -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<style>
+    .text-start img {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 50%;
+        align-items: center;
+        margin-left: 5px;
+    }
+</style>
+
 <div class="ccs-main-container">
+    <!-- Your PHP code for fetching borrower information and items -->
+
+    <!-- Borrower Details Section -->
     <div class="container">
+        <!-- Borrower header with profile image -->
         <div class="row">
             <div class="col-md-12">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <h3 class="text-start"> 
-                    <?php
-                    // Check if the user has a profile image
-                        if (!empty($borrowerId)) {
-                                // Check if the profile image exists
-                                $profileImagePath = "/inventory/images/imageofusers/" . $borrowerId . ".png";
-                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
-                                // If the user has a profile image, display it with a timestamp
+                    <h3 class="text-start">
+                        <?php
+                        // Reusable function to render profile image
+                        function renderProfileImage($borrowerId)
+                        {
+                            $profileImagePath = "/inventory/images/imageofusers/" . $borrowerId . ".png";
+                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
                                 echo '<img src="' . $profileImagePath . '?' . time() . '" width="50">';
-                                } else {
-                                // If the profile image does not exist, display the default image with a timestamp
-                                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
-                                }
                             } else {
-                                // If senderId is empty, display the default image with a timestamp
-                                    echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
-                                }
-                                ?> 
-                    </i><?php echo $borrowerName; ?></h3>
+                                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
+                            }
+                        }
+
+                        // Render profile image for borrower
+                        renderProfileImage($borrowerId);
+                        ?>
+                        <?php echo $borrowerName; ?>
+                    </h3>
                     <div class="text-end">
                         <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-danger me-2">Back</a>
-                        <button href="#" type="button" class="btn btn-success clear-btn" id="returnSelectedItemsBtn" disabled onclick="returnSelectedItems()">Return Selected Items</button>
-
+                        <button type="button" class="btn btn-success clear-btn" id="returnSelectedItemsBtn"  onclick="returnSelectedItems()">Return Selected Items</button>
                     </div>
                 </div>
 
-                <table class="table">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">Image</th>
-                            <th scope="col">Item Name</th>
-                            <th scope="col">Item Description</th>
-                            <th scope="col">Serial number</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($items as $item) { ?>
-                            <tr> 
-                                <?php
-                                $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $item['subcategoryname'] . '.png';
-                                if (file_exists($imagePath)) {
-                                    echo "<td class='text-center'><img src='{$imagePath}' alt='Subcategory Image' width='50'></td>";
-                                } else {
-                                    echo "<td class='text-center'><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
-                                }
-                                ?>
-                                <td><?php echo $item['subcategoryname']; ?></td>
-                                <td><?php echo $item['itembrand']; ?></td>
-                                <td><?php echo $item['serialno']; ?></td>
-                                <td><input type="checkbox" value="<?php echo $item['id']; ?>"></td>
+                <!-- Table displaying borrower's items -->
+                <?php if (!empty($items)) { ?>
+                    <table class="table">
+                        <!-- Table header -->
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Item Name</th>
+                                <th scope="col">Item Description</th>
+                                <th scope="col">Serial number</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <!-- Table body -->
+                        <tbody>
+                            <?php foreach ($items as $item) { ?>
+                                <tr>
+                                    <!-- Render item details -->
+                                    <td class='text-center'>
+                                        <?php
+                                        $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $item['subcategoryname'] . '.png';
+                                        if (file_exists($imagePath)) {
+                                            echo "<img src='{$imagePath}' alt='Subcategory Image' width='50'>";
+                                        } else {
+                                            echo "<img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'>";
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?php echo $item['subcategoryname']; ?></td>
+                                    <td><?php echo $item['itembrand']; ?></td>
+                                    <td><?php echo $item['serialno']; ?></td>
+                                    <td><?php echo $item['itemreqstatus'] === 'Approved' ? '---' : $item['itemreqstatus']; ?></td>
+                                    <!-- Automatically check the checkbox if itemreqstatus is 'Request Return' -->
+                                    <td><input type="checkbox" value="<?php echo $item['itemid']; ?>" <?php echo $item['itemreqstatus'] === 'Request Return' ? 'checked' : ''; ?>></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+
+                    </table>
+                <?php } else { ?>
+                    <p class="text-center mt-2">No borrowed items found for <?php echo $borrowerName; ?></p>
+                <?php } ?>
+
             </div>
         </div>
     </div>
 </div>
-<style>
-.text-start img {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    border-radius: 50%;
-    align-items: center;
-    margin-left: 5px;
-    }
-</style>
-<!-- Add this script after including jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Modal for Note -->
+<div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noteModalLabel">Note</h5>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <div class="modal-body">
+                <!-- Image -->
+                <div class="text-center mb-3">
+                    <img src="\Inventory\images\serialcheckpoint.png" class="img-fluid border border-danger" alt="Return of Damaged Goods" style="border-radius: 5px;">
+                </div>
+                <!-- Checkbox for agreement -->
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="agreementCheckbox">
+                    <label class="form-check-label" for="agreementCheckbox">
+                        I agree to the terms and conditions
+                    </label>
+                </div>
+                <!-- Note -->
+                <p class="text-danger">Please ensure that the serial number of the returned items match the original items.</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Disabled Confirm button initially -->
+                <button type="button" class="btn btn-success" id="confirmButton" data-bs-dismiss="modal" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript code for modal interaction -->
 <script>
     $(document).ready(function () {
-        // Listen for changes in the checkboxes
-        $('.table').on('change', 'input[type="checkbox"]', function () {
-            // Check if any checkbox is checked
-            if ($('input[type="checkbox"]:checked').length > 0) {
-                // Enable the button if at least one checkbox is checked
-                $('#returnSelectedItemsBtn').prop('disabled', false);
-            } else {
-                // Disable the button if no checkbox is checked
-                $('#returnSelectedItemsBtn').prop('disabled', true);
-            }
-        });
+    // Show the modal when the page loads
+    $('#noteModal').modal('show');
+
+    // Select the checkbox and Confirm button
+    var agreementCheckbox = document.getElementById('agreementCheckbox');
+    var confirmButton = document.getElementById('confirmButton');
+
+    // Add event listener to the checkbox
+    agreementCheckbox.addEventListener('change', function () {
+        // Enable Confirm button if checkbox is checked, otherwise disable it
+        confirmButton.disabled = !this.checked;
     });
 
-    function returnSelectedItems() {
+    // Check if there are items with status 'Request Return'
+    var itemsWithRequestReturn = $('.table input[type="checkbox"][value!="on"][checked]').length;
+
+    // Disable the button if no items have status 'Request Return'
+    if (itemsWithRequestReturn === 0) {
+        $('#returnSelectedItemsBtn').prop('disabled', true);
+    }
+
+    // Listen for changes in the checkboxes
+    $('.table').on('change', 'input[type="checkbox"]', function () {
+        // Check if any checkbox is checked
+        if ($('.table input[type="checkbox"]:checked').length > 0) {
+            // Enable the button if at least one checkbox is checked
+            $('#returnSelectedItemsBtn').prop('disabled', false);
+        } else {
+            // Disable the button if no checkbox is checked
+            $('#returnSelectedItemsBtn').prop('disabled', true);
+        }
+    });
+});
+
+   // Function to handle returning selected items
+function returnSelectedItems() {
     var selectedItems = [];
-    $('input[type="checkbox"]:checked').each(function() {
-        selectedItems.push($(this).val());
+    $('input[type="checkbox"]:checked').each(function () {
+        var itemId = $(this).val();
+        // Check if the value is not equal to "on" (or any other invalid value)
+        if (itemId !== "on") {
+            selectedItems.push(itemId);
+        }
     });
     var borrowerId = "<?php echo $borrowerId; ?>";
     var url = 'ccsstaffReturnSelectedItems.php?borrower_id=' + borrowerId + '&selected_itemsid=' + selectedItems.join(',');
     window.location.href = url;
 }
-
-
 
 </script>
