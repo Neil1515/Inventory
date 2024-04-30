@@ -162,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '"  width="30" height="30">';
         }
         ?>
-        <?php echo $senderName; ?></h3>
+        <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $senderId; ?>"><?php echo $senderName; ?></a></h3>
     <!-- Display conversation messages -->
     <div class="message-box" id="message-box">
         <!-- Inside the div with class="message-box" -->
@@ -227,6 +227,9 @@ if ($stmt_messages) {
     <style>
         body {
             background-color: #f8f9fa;
+        }
+        a {
+        text-decoration: none;
         }
         .message-container {
             max-width: auto;

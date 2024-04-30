@@ -98,6 +98,157 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
         exit();
     }
 }
+// Query to count total borrowed items where approvebyid is not null and the count is greater than 0
+$queryBorrowedItems = "SELECT COUNT(*) AS total_borrowed FROM tblborrowingreports WHERE borrowerid = ? AND approvebyid IS NOT NULL AND approvebyid != ''";
+$stmtBorrowedItems = mysqli_prepare($con, $queryBorrowedItems);
+
+if ($stmtBorrowedItems) {
+    mysqli_stmt_bind_param($stmtBorrowedItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtBorrowedItems)) {
+        $resultBorrowedItems = mysqli_stmt_get_result($stmtBorrowedItems);
+        $rowBorrowedItems = mysqli_fetch_assoc($resultBorrowedItems);
+        $totalBorrowedItems = $rowBorrowedItems['total_borrowed'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtBorrowedItems));
+    }
+
+    mysqli_stmt_close($stmtBorrowedItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+// Query to count total returned items
+$queryReturnedItems = "SELECT COUNT(*) AS total_returned FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Returned'";
+$stmtReturnedItems = mysqli_prepare($con, $queryReturnedItems);
+
+if ($stmtReturnedItems) {
+    mysqli_stmt_bind_param($stmtReturnedItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtReturnedItems)) {
+        $resultReturnedItems = mysqli_stmt_get_result($stmtReturnedItems);
+        $rowReturnedItems = mysqli_fetch_assoc($resultReturnedItems);
+        $totalReturnedItems = $rowReturnedItems['total_returned'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtReturnedItems));
+    }
+
+    mysqli_stmt_close($stmtReturnedItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+// Query to count total approved items and request returns for the borrower
+$queryApprovedItems = "SELECT COUNT(*) AS total_approved FROM tblborrowingreports WHERE borrowerid = ? AND (itemreqstatus = 'Approved' OR itemreqstatus = 'Request Return')";
+$stmtApprovedItems = mysqli_prepare($con, $queryApprovedItems);
+
+if ($stmtApprovedItems) {
+    mysqli_stmt_bind_param($stmtApprovedItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtApprovedItems)) {
+        $resultApprovedItems = mysqli_stmt_get_result($stmtApprovedItems);
+        $rowApprovedItems = mysqli_fetch_assoc($resultApprovedItems);
+        $totalApprovedItems = $rowApprovedItems['total_approved'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtApprovedItems));
+    }
+
+    mysqli_stmt_close($stmtApprovedItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
+// Query to count total pending borrow items for the borrower
+$queryPendingBorrowItems = "SELECT COUNT(*) AS total_pending_borrow FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Pending Borrow'";
+$stmtPendingBorrowItems = mysqli_prepare($con, $queryPendingBorrowItems);
+
+if ($stmtPendingBorrowItems) {
+    mysqli_stmt_bind_param($stmtPendingBorrowItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtPendingBorrowItems)) {
+        $resultPendingBorrowItems = mysqli_stmt_get_result($stmtPendingBorrowItems);
+        $rowPendingBorrowItems = mysqli_fetch_assoc($resultPendingBorrowItems);
+        $totalPendingBorrowItems = $rowPendingBorrowItems['total_pending_borrow'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtPendingBorrowItems));
+    }
+
+    mysqli_stmt_close($stmtPendingBorrowItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
+// Query to count total pending reserve items for the borrower
+$queryPendingReserveItems = "SELECT COUNT(*) AS total_pending_reserve FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Pending Reserve'";
+$stmtPendingReserveItems = mysqli_prepare($con, $queryPendingReserveItems);
+
+if ($stmtPendingReserveItems) {
+    mysqli_stmt_bind_param($stmtPendingReserveItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtPendingReserveItems)) {
+        $resultPendingReserveItems = mysqli_stmt_get_result($stmtPendingReserveItems);
+        $rowPendingReserveItems = mysqli_fetch_assoc($resultPendingReserveItems);
+        $totalPendingReserveItems = $rowPendingReserveItems['total_pending_reserve'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtPendingReserveItems));
+    }
+
+    mysqli_stmt_close($stmtPendingReserveItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
+// Query to count total damage or lost items for the borrower
+$queryDamageLostItems = "SELECT COUNT(*) AS total_damage_lost FROM tblborrowingreports WHERE borrowerid = ? AND returnitemcondition IN ('Damage', 'Lost')";
+$stmtDamageLostItems = mysqli_prepare($con, $queryDamageLostItems);
+
+if ($stmtDamageLostItems) {
+    mysqli_stmt_bind_param($stmtDamageLostItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtDamageLostItems)) {
+        $resultDamageLostItems = mysqli_stmt_get_result($stmtDamageLostItems);
+        $rowDamageLostItems = mysqli_fetch_assoc($resultDamageLostItems);
+        $totalDamageLostItems = $rowDamageLostItems['total_damage_lost'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtDamageLostItems));
+    }
+
+    mysqli_stmt_close($stmtDamageLostItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
+// Query to count total approved reserve items for the borrower
+$queryApprovedReserveItems = "SELECT COUNT(*) AS total_approved_reserve FROM tblborrowingreports WHERE borrowerid = ? AND itemreqstatus = 'Approve Reserve'";
+$stmtApprovedReserveItems = mysqli_prepare($con, $queryApprovedReserveItems);
+
+if ($stmtApprovedReserveItems) {
+    mysqli_stmt_bind_param($stmtApprovedReserveItems, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmtApprovedReserveItems)) {
+        $resultApprovedReserveItems = mysqli_stmt_get_result($stmtApprovedReserveItems);
+        $rowApprovedReserveItems = mysqli_fetch_assoc($resultApprovedReserveItems);
+        $totalApprovedReserveItems = $rowApprovedReserveItems['total_approved_reserve'];
+    } else {
+        // Handle query execution failure
+        die('Statement execution failed: ' . mysqli_stmt_error($stmtApprovedReserveItems));
+    }
+
+    mysqli_stmt_close($stmtApprovedReserveItems);
+} else {
+    // Handle statement preparation failure
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
 ?>
 
 <!DOCTYPE html>
@@ -180,7 +331,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
             </div>
         </div>
     </div>
-
                 <!-- Change Image Modal -->
                 <div class="modal fade" id="changeimageModal" tabindex="-1" aria-labelledby="changeimageModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -206,16 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                         </div>
                     </div>
                 </div>
-
-               <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">User Profile</h5>
-                            </div>
-                            <div class="card-body">
-                            <?php 
+                <?php 
                             // Fetch user information based on the provided user ID
                             $query = "SELECT * FROM tblusers WHERE id = $borrowerId";
                             $result = mysqli_query($con, $query);
@@ -236,71 +377,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                             }
 
                             if (!empty($row)) : ?>
-                            <div class="row">
+               <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">User Profile</h5>
+                                <div>
+                                    <a href="javascript:history.back()" class="btn btn-danger mx-1"><i class="fas fa-arrow-left"></i> Back</a>
+                                    <a class="btn btn-primary mx-1" onclick="editImage('<?php echo $row['id']; ?>')"><i class="fas fa-image"></i> Change Profile Picture</a>
+                                    <a class="btn btn-success mx-1" onclick="editPass('<?php echo $row['id']; ?>')"><i class="fas fa-key"></i> Change Password</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                            
+                            <div class="row align-items-center">
                             <!-- Main container on the left -->
-                            <div class="col-md-6">
-                            <div class="row">
+                            
                                     <!-- Main container on the right -->
                                     <div class="col-md-4 text-center">
-                                    <div class="mb-3">
+                                    <div>
                                     <?php
-                                        // Check if the user has a profile image
-                                        if (!empty($row['id'])) {
-                                            // Check if the profile image exists
-                                            $profileImagePath = "/inventory/images/imageofusers/" . $row['id'] . ".png";
-                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
-                                                // If the user has a profile image, display it with a timestamp
-                                                echo '<img src="' . $profileImagePath . '?' . time() . '" width="160" height="160">';
-                                            } else {
-                                                // If the profile image does not exist, display the default image with a timestamp
-                                                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="160" height="160">';
-                                            }
+                                    // Display profile picture
+                                    if (!empty($borrowerId)) {
+                                        $profileImagePath = "/inventory/images/imageofusers/{$borrowerId}.png";
+                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                                            echo '<img src="' . $profileImagePath . '?' . time() . '" class="img-fluid rounded-circle " width="250" height="250">';
                                         } else {
-                                            // If senderId is empty, display the default image with a timestamp
-                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="160" height="160">';
+                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="150" height="150">';
                                         }
+                                    } else {
+                                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="150" height="150">';
+                                    }
                                     ?>
                                     </div>
                                     </div>
-                                    <!-- Main container on the left -->
-                                    <div class="col-md-8 align-items-center d-flex">
-                                        <div class="mb-3">
-                                            <a class="btn btn-danger mb-1" onclick="editImage('<?php echo $row['id']; ?>')">Change Profile Picture</a>
-                                            <a class="btn btn-success mb-1" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
-                                        </div>
+                                    
+                            <!-- Main container on the right -->
+                            <div class="col-md-8">
+                            <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><h6>Name: <?php echo $row['fname'] .' '. $row['lname']; ?></li></h6>
+                                    <li class="list-group-item">Email: <?php echo $row['email']; ?></li>
+                                    <li class="list-group-item">User Type: <?php echo $row['usertype']; ?></li>
+                                    <li class="list-group-item">Department: <?php echo $row['department']; ?></li>
+                                    <li class="list-group-item">Gender: <?php echo $row['gender']; ?></li>
+                                    <li class="list-group-item">Total Item Borrowed: <?php echo $totalBorrowedItems ?></li>
+                                    <li class="list-group-item">Total Item Returned: <?php echo $totalReturnedItems ?></li>
+                                    <li class="list-group-item">Total Item (Damage/Lost): <?php echo $totalDamageLostItems ?></li>
+                                </ul>
+                            </div>
+                             <!-- Circular cards -->
+                        <div class="row mt-4">
+                            <div class="col-md-3 mt-2">
+                                <div class="card bg-success text-white text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Borrowed Items</h5>
+                                        <h3 class="card-text"><?php echo $totalApprovedItems ?></h3>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">First Name:</label>
-                                    <p class="form-control"><?php echo $row['fname']; ?></p>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Last Name:</label>
-                                    <p class="form-control"><?php echo $row['lname']; ?></p>
-                                </div>
-                                
                             </div>
-                            <!-- Main container on the right -->
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Email:</label>
-                                    <p class="form-control"><?php echo $row['email']; ?></p>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">User Type:</label>
-                                    <p class="form-control"><?php echo $row['usertype']; ?></p>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Department:</label>
-                                    <p class="form-control"><?php echo $row['department']; ?></p>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Gender:</label>
-                                    <p class="form-control"><?php echo $row['gender']; ?></p>
+                            <div class="col-md-3 mt-2">
+                                <div class="card bg-success text-white text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pending Borrow</h5>
+                                        <h3 class="card-text"><?php echo $totalPendingBorrowItems ?></h3>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                            <div class="col-md-3 mt-2">
+                                <div class="card bg-success text-white text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Accepted Reserve</h5>
+                                        <h3 class="card-text"><?php echo $totalApprovedReserveItems ?></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mt-2">
+                                <div class="card bg-success text-white text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pending Reserve</h5>
+                                        <h3 class="card-text"><?php echo $totalPendingReserveItems  ?></h3>
+                                    </div>
+                                </div>
+                            </div>
                             <?php else : ?>
                                 <p>No user information found.</p>
                             <?php endif; ?>
@@ -308,7 +467,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>

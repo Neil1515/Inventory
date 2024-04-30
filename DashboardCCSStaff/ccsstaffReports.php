@@ -111,6 +111,7 @@ if ($stmt) {
 
                             // Prepare the SQL query with placeholders for the date range
                             $query = "SELECT br.itemreqstatus, br.itemid, ib.subcategoryname,
+                                        br.borrowerid,
                                         u1.fname AS borrower_fname, u1.lname AS borrower_lname, 
                                         u2.fname AS approve_fname, u2.lname AS approve_lname, 
                                         br.id, br.datimeapproved, 
@@ -150,8 +151,13 @@ if ($stmt) {
                                 echo "<td '>{$itemName}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
-                                $borrower = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : 'User Not Found';
-                                echo "<td class='text-center'>{$borrower}</td>";
+                                //$borrower = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : 'User Not Found';
+                                //echo "<td class='text-center'>{$borrower}</td>";
+                                // Concatenate first and last name if both are not NULL, otherwise display ---
+                                $borrowerId = $row['borrowerid'] ?? '';
+                                $borrowerName = ($row['borrower_fname'] && $row['borrower_lname']) ? "{$row['borrower_fname']} {$row['borrower_lname']}" : 'User Not Found';
+                                echo "<td class='text-center'><a href='ccstaffBorrowerProfile.php?borrower_id={$borrowerId}' style='text-decoration: none;'>{$borrowerName}</a></td>";
+
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
                                 $approvedBy = ($row['approve_fname'] && $row['approve_lname']) ? "{$row['approve_fname']} {$row['approve_lname']}" : '---';
@@ -213,8 +219,5 @@ $(document).ready(function(){
     table.buttons().container().appendTo('#table-buttons-container');
 });
 </script>
-
-
-    
 </body>
 </html>
