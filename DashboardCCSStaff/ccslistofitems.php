@@ -7,6 +7,7 @@
     // Define CSS classes for different statuses
     $statusClasses = array(
         'Available' => 'text-success',
+        'Standby' => 'text-secondary',
         'Reserve' => 'text-warning',
         'Borrowed' => 'text-primary',
         'Missing' => 'text-danger',
@@ -45,6 +46,7 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     }
+    
     .truncate-text:hover {
     max-width: none;
     overflow: visible;
@@ -85,6 +87,32 @@ body {
     $(this).toggleClass('show-full-text');
   });
 });
+$(document).ready(function() {
+ // Event listener for the search input
+ $('#searchInput').on('input', function() {
+            // Get the search query value
+            var searchQuery = $(this).val().toLowerCase();
+
+            // Iterate through each row in the table body
+            $('.item-details-row').each(function() {
+                var rowContent = $(this).text().toLowerCase();
+
+                // Check if any column contains the search query
+                if (rowContent.includes(searchQuery)) {
+                    // Show the row if it contains the search query
+                    $(this).show();
+                } else {
+                    // Hide the row if it doesn't contain the search query
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Use event delegation for the click event on a parent container
+        $('.table').on('click', '.category-row', function() {
+            $(this).nextUntil('.category-row').toggle();
+        });
+    });
 </script>
 
         <main class="ccs-main-container">
@@ -112,7 +140,6 @@ body {
                                 <th scope="col">Model No</th>
                                 <th scope="col">Serial No</th>
                                 <th scope="col">Assign to</th>                                
-                                <th scope="col">Allow to Borrow</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -145,14 +172,14 @@ body {
                                 echo "<td class='truncate-text'>{$row['modelno']}</td>";
                                 echo "<td>{$row['serialno']}</td>";                   
                                 echo "<td class='truncate-text'>{$row['assignfor']}</td>";
-                                echo "<td class='text-center'>";
-                                if ($row['borrowable'] == 'Yes') {
+                                //echo "<td class='text-center'>";
+                                //if ($row['borrowable'] == 'Yes') {
                                     // Display a checkmark icon for 'Yes' with bigger size
-                                    echo "<i class='fas fa-check-circle fa-2x text-success'></i>";
-                                } else {
+                                    //echo "<i class='fas fa-check-circle fa-2x text-success'></i>";
+                                //} else {
                                     // Display a times (X) icon for 'No' with bigger size
-                                    echo "<i class='fas fa-times-circle fa-2x text-danger'></i>";
-                                }
+                                    //echo "<i class='fas fa-times-circle fa-2x text-danger'></i>";
+                                //}
                                 $status = $row['status'];
                                 $statusClass = isset($statusClasses[$status]) ? $statusClasses[$status] : '';
                                 echo "<td class='{$statusClass}'>{$status}</td>";                             

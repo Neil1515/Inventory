@@ -267,10 +267,10 @@ if ($result && mysqli_num_rows($result) > 0) {
                 if ($result && mysqli_num_rows($result) > 0) {
                     $user_row = mysqli_fetch_assoc($result);
                     echo $user_row['fname'] . ' ' . $user_row['lname'];
+                    $profileImagePath = "/inventory/images/imageofusers/" . $user_row['id'] . ".png";
                     if (!empty($user_row['id'])) {
                         // If the user has a profile image, display it
-                        $profileImagePath = "/inventory/images/imageofusers/" . $user_row['id'] . ".png";
-                        echo '<img src="' . $profileImagePath . '?' . time() . '" alt="userpicture" class="userpicture" width="50">';
+                        echo '<img src="' . $profileImagePath . '?' . time() . '" alt="" class="userpicture" width="50">';
                         //echo '<img src="/inventory/images/imageofusers/' . $user_row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
                     } else {
                         // If the user does not have a profile image, display the default image

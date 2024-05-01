@@ -55,6 +55,36 @@ function decrementCount($subcategoryname) {
         cursor: pointer;
         color: black;
     }
+
+    .truncate-hover {
+    /* Set maximum width */
+    max-width: 100%;
+    /* Add ellipsis for overflow text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Enable hover to display full text */
+    display: inline-block;
+    /* Add tooltip effect on hover */
+    position: relative;
+    }
+
+    .truncate-hover:hover {
+        /* Show full text on hover */
+        white-space: normal;
+        /* Ensure full text is displayed */
+        z-index: 999;
+        /* Increase text wrapping width */
+        max-width: none;
+        /* Add padding for better readability */
+        padding: 2px;
+        cursor: pointer;
+    }
+    .card:hover {
+         background-color: azure;
+         transition: background-color 0.3s ease-in-out;
+         cursor: pointer;
+        }
 </style>
 
 
@@ -79,7 +109,6 @@ function decrementCount($subcategoryname) {
                                 // Use a default image if no image is uploaded
                                 $imagePath = '/inventory/SubcategoryItemsimages/defaultimageitem.png';
                             }
-
                             echo '<div class="col">
                                     <div class="card">
                                         <div class="text-center mt-2">
@@ -87,7 +116,7 @@ function decrementCount($subcategoryname) {
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">' . $row['subcategoryname'] . '</h5>
-                                            <p class="card-text">Item Description <br>' . $row['itembrand'] . '</p>
+                                            <p class="card-text truncate-hover">Item Description <br>' . $row['itembrand'] . '</p>
                                             <p class="card-text">Available Stock: ' . $row['available_count'] . '</p>
                                             <div class="btn-group " role="group" aria-label="Basic example">
                                                 <button type="button" class="btn btn-secondary" onclick="decrementCount(\'' . $row['subcategoryname'] . '\', \'' . $row['itembrand'] . '\')">-</button>

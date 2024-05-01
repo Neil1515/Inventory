@@ -231,8 +231,8 @@ if ($stmtApprovedReserveItems) {
                             <div class="col-md-8">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
-                                    <h6>
-                                        Name: <?php echo $row['fname'] .' '. $row['lname']; ?>
+                                    <h6> <span class="report-icon" title="Report this account"><i class="fas fa-flag"></i>
+                                        Name: <?php echo $row['fname'] .' '. $row['lname']; ?>  </span>
                                         <?php
                                         // Check the online status and display the appropriate icon
                                         if ($row['online_status'] == 'online') {
@@ -315,5 +315,24 @@ if ($stmtApprovedReserveItems) {
             transform: scale(1.05);
             transition: transform 0.3s ease;
         }
+        .report-icon:hover {
+    color: #dc3545; /* Change to desired danger color */
+    cursor: pointer;
+}
+.report-icon::after {
+    content: "Report this account?";
+    position: absolute;
+    left: 20px; /* Adjust as needed */
+    top: -20px; /* Adjust as needed */
+    display: none;
+    background-color: #dc3545; /* Change to desired danger color */
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+.report-icon:hover::after {
+    display: inline-block;
+}
 
     </style>

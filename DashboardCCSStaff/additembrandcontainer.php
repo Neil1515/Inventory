@@ -30,8 +30,7 @@ if ($stmtSelectUser) {
     error_log("Statement preparation failed for user data: " . mysqli_error($con));
 }
 
-// Assuming $con is your database connection variable
-
+// Retrieve form data
 if (isset($_POST["addItemBrand"])) {
     $itemBrand = $_POST['itemBrand'];
     $categoryName = $_POST['categoryName'];
@@ -40,24 +39,29 @@ if (isset($_POST["addItemBrand"])) {
     $modelNo = $_POST['modelNo'];
     $serialNo = $_POST['serialNo'];
     $unitCost = $_POST['unitCost'];
-    $status = "Available";
     $datepurchased = $_POST['datePurchased'];
     $borrowable = $_POST['borrowable'];
     $quantity = $_POST['quantity'];
-    $itemcondition = $_POST['itemcondition'];
 
+    // Determine item condition based on purchase date
     date_default_timezone_set('Asia/Manila');
     $datetimeadded = date("Y-m-d H:i:s");
+    $purchaseDate = new DateTime($datepurchased);
+    $currentDate = new DateTime();
+    $interval = $currentDate->diff($purchaseDate);
+    $monthsDifference = $interval->y * 12 + $interval->m;
+    $itemcondition = ($monthsDifference >= 6) ? 'Old' : 'New';
 
-    // Use prepared statement to avoid SQL injection
-    $sql = "INSERT INTO `tblitembrand` (`itembrand`, `staffid`, `staffname`, `categoryname`, `subcategoryname`, `remarks`, `modelno`, `serialno`, `unitcost`, `datetimeadded`, `datepurchased`, `borrowable`, `status`, `itemcondition`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Set status based on borrowable option
+    $status = ($borrowable === "Yes") ? "Available" : "Standby";
 
-    // Prepare the statement
-    $stmt = mysqli_prepare($con, $sql);
+    // Loop to insert rows based on quantity
+    for ($i = 0; $i < $quantity; $i++) {
+        // Prepare the statement
+        $sql = "INSERT INTO `tblitembrand` (`itembrand`, `staffid`, `staffname`, `categoryname`, `subcategoryname`, `remarks`, `modelno`, `serialno`, `unitcost`, `datetimeadded`, `datepurchased`, `borrowable`, `status`, `itemcondition`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($con, $sql);
 
-    if ($stmt) {
-        // Loop to insert rows based on quantity
-        for ($i = 0; $i < $quantity; $i++) {
+        if ($stmt) {
             // Add 's' for string and 'd' for double (decimal) placeholders for each parameter
             mysqli_stmt_bind_param($stmt, "ssssssssdsssss", $itemBrand, $staffid, $staffname, $categoryName, $subcategoryName, $remarks, $modelNo, $serialNo, $unitCost, $datetimeadded, $datepurchased, $borrowable, $status, $itemcondition);
 
@@ -66,13 +70,15 @@ if (isset($_POST["addItemBrand"])) {
             } else {
                 echo "Failed: " . mysqli_error($con);
             }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo "Failed to prepare statement: " . mysqli_error($con);
         }
-        mysqli_stmt_close($stmt);
-        echo "<script>window.location.href='ccstaffAddItemBrand.php?msg_success=New {$subcategoryName} {$itemBrand} Items created successfully';</script>";
-        exit();
-    } else {
-        echo "Failed to prepare statement: " . mysqli_error($con);
     }
+    
+    // Redirect after processing form data
+    echo "<script>window.location.href='ccstaffAddItemBrand.php?msg_success=New {$subcategoryName} {$itemBrand} Items created successfully';</script>";
+    exit();
 }
 ?>
 
@@ -119,19 +125,6 @@ if (isset($_POST["addItemBrand"])) {
                     <label for="datePurchased" class="form-label">Date Purchased<span class="text-danger">*</span></label>
                     <input type="date" class="form-control" id="datePurchased" name="datePurchased" required>
                 </div>
-                <div class="mb-3">
-                    <label for="quantity" class="form-label">Item Quantity<span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" required>
-                </div>
-                <div class="mb-3">
-                    <label for="itemcondition" class="form-label">Item Condition<span class="text-danger">*</span></label>
-                    <select class="form-select" id="itemcondition" name="itemcondition" required>
-                        <option value="" selected disabled>Select Item Condition</option>
-                        <option value="New">New: The item is brand new and has never been used.</option>
-                        <option value="Like New">Like New: The item is in excellent condition, almost indistinguishable from new.</option>
-                        <option value="Good">Good: The item is in good condition with minor signs of wear or use.</option>
-                    </select>
-                </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
@@ -139,19 +132,19 @@ if (isset($_POST["addItemBrand"])) {
                     <input type="text" class="form-control" id="modelNo"  name="modelNo">
                 </div>
                 <div class="mb-3">
-                    <label for="serialNo" class="form-label">Serial No<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="serialNo"  name="serialNo" required>
+                    <label for="quantity" class="form-label">Item Quantity<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" required oninput="validateIdInput(event)">
+                </div>
+                <div class="mb-3">
+                    <label for="serialNo" class="form-label">Serial No<span class="text-danger"></span></label>
+                    <input type="text" class="form-control" id="serialNo"  name="serialNo" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="unitCost" class="form-label">Unit Cost</label>
                     <input type="number" class="form-control" id="unitCost" name="unitCost" placeholder="₱" step="0.01">
                 </div>
                 <div class="mb-3">
-                    <label for="remarks" class="form-label">Remarks</label>
-                    <textarea class="form-control" id="remarks"  name="remarks"></textarea>
-                </div>
-                <div class="mb-3">
-                    <span class="form-label">Borrowable<span class="text-danger">*</span></span>
+                    <span class="form-label">Allow to borrow?<span class="text-danger">* </span></span>
 
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="borrowable" id="borrowableYes" value="Yes" required>
@@ -177,34 +170,61 @@ if (isset($_POST["addItemBrand"])) {
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Your Custom Script -->
 <script>
-    $(document).ready(function()
-    {
+    $(document).ready(function() {
         // Event listener for the category dropdown
-        $("#categoryName").change(function()
-        {
+        $("#categoryName").change(function() {
             var selectedCategory = $(this).val();
 
             // Fetch subcategories from tblsubcategory based on the selected category
-            $.ajax(
-            {
+            $.ajax({
                 url: "getSubcategories.php",
                 type: "POST",
                 data: { category: selectedCategory },
-                success: function(data)
-                {
+                success: function(data) {
                     // Update the subcategory dropdown with the fetched data
                     $("#subcategoryName").html(data);
 
                     // Trigger change event on subcategory dropdown to handle image display
                     $("#subcategoryName").trigger("change");
                 },
-                error: function(xhr, status, error) 
-                {
+                error: function(xhr, status, error) {
                     console.error("AJAX Error:", status, error);
                 }
             });
         });
+
+        // Event listener for the quantity input
+        $("#quantity").change(function() {
+            var quantity = $(this).val();
+            var serialInput = $("#serialNo");
+
+            // Disable Serial Number input if quantity is more than 1
+            if (quantity > 1) {
+                serialInput.prop("disabled", true);
+            } else {
+                serialInput.prop("disabled", false);
+            }
+        });
     });
+
+    function validateIdInput(event) {
+    const input = event.target;
+    let value = input.value;
+
+    // Remove leading zeros
+    value = value.replace(/^0+/, '');
+
+    // Remove non-numeric characters
+    value = value.replace(/\D/g, '');
+
+    // Ensure the value is a positive integer
+    const intValue = parseInt(value);
+    if (isNaN(intValue) || intValue <= 0) {
+        input.value = '';
+    } else {
+        input.value = intValue;
+    }
+}
+
 </script>

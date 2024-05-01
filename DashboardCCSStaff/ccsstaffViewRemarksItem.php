@@ -69,10 +69,10 @@ if ($stmt) {
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-md">
-                        <h4 class="text-start"><i class="fas fa-plus-circle me-2"></i>View Remarks</h4>
+                        <h4 class="text-start"><i class="fas fa-plus-circle me-2"></i>Items</h4>
                     </div>
                     <div class="col-md-10 text-end">
-                        <a href="ccsstaffBorrowableitems.php" class="btn btn-danger">Back</a>
+                        <a href="ccsstaffInventoryProperties.php" class="btn btn-danger">Back</a>
                     </div>
                 </div>
                 <?php
@@ -124,6 +124,7 @@ if ($stmt) {
                             echo '<th scope="col">Date of Purchase</th>';
                             echo '<th scope="col">Unit Cost</th>';
                             echo '<th scope="col">Status</th>';
+                            echo '<th scope="col">Item Condition</th>';
                             echo '<th scope="col">Remarks</th>';
                             echo '</tr>';
                             echo '</thead>';
@@ -139,6 +140,7 @@ if ($stmt) {
                             echo '<td>' . $rowItemDetails['datepurchased'] . '</td>';
                             echo '<td>' . $rowItemDetails['unitcost'] . '</td>';
                             echo '<td>' . $rowItemDetails['status'] . '</td>';
+                            echo '<td>' . $rowItemDetails['itemcondition'] . '</td>';
                             echo '<td>' . $rowItemDetails['remarks'] . '</td>';
                             echo '</tr>';
                             

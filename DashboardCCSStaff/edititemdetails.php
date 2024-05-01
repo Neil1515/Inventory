@@ -38,6 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
     $remarks = $_POST["remarks"];
     $borrowable = $_POST['borrowable'];
 
+    // Determine the status based on the value of "borrowable"
+    $status = ($borrowable == 'Yes') ? 'Available' : 'Standby';
+
     // Update query
     $sqlUpdate = "UPDATE `tblitembrand` SET
         itembrand = ?,
@@ -49,7 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
         unitcost = ?,
         assignfor = ?,
         remarks = ?,
-        borrowable = ?
+        borrowable = ?,
+        status = ?
         WHERE id = ?";
 
     $stmtUpdate = mysqli_prepare($con, $sqlUpdate);
@@ -58,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
         // Bind parameters
         mysqli_stmt_bind_param(
             $stmtUpdate,
-            "ssssssdsssi",
+            "ssssssdssssi",
             $itembrand,
             $categoryname,
             $subcategoryname,
@@ -69,8 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
             $assignfor,
             $remarks,
             $borrowable,
+            $status, // Status parameter added here
             $id
-            
         );
 
         // Execute the statement
@@ -95,16 +99,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
     }
 }
 ?>
-
+<form action="" method="post" enctype="multipart/form-data" name="updateitemForm">
 <div class="container mt-1">
         <div class="row">
             <div class="col-md-7">
                 <!-- Form to add a new item Product -->
                 <h4 class="col-md text-start">Item Details</h4>
             </div>
-            <div class="col-md-5 text-end">
-                <form action="" method="post" enctype="multipart/form-data" name="updateitemForm">
-                <button type="submit" class="btn btn-success" name="overviewitem">Overview</button>
+            <div class="col-md-5 text-end">          
+                <button type="submit" class="btn btn-danger" name="deleteitem"><i class="fas fa-trash-alt"></i> Delete Item</button>
+                <button type="submit" class="btn btn-success" name="overviewitem"><i class="fas fa-history"></i> View History Transaction</button>
             </div>
         </div>
         <div class="row mt-1">
@@ -200,7 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <span class="form-label">Allow to borrow<span class="text-danger">*</span></span>
+                                        <span class="form-label">Allow to borrow?<span class="text-danger"> *</span></span>
 
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="borrowable" id="borrowableYes" value="Yes" <?php echo ($row['borrowable'] == 'Yes') ? 'checked' : ''; ?> required>
@@ -208,20 +212,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                                         </div>
 
                                         <?php
-                                        // Check if the status is "Available"; if not, hide the "No" radio button
-                                        $hideNoRadio = ($row['status'] != 'Available') ? 'style="display: none;"' : '';
+                                        // Check if the status is not "Available" or "Standby"; if not, hide the "No" radio button
+                                        $hideNoRadio = ($row['status'] != 'Available' && $row['status'] != 'Standby') ? 'style="display: none;"' : '';
                                         ?>
                                         <div class="form-check form-check-inline" <?php echo $hideNoRadio; ?>>
                                             <input class="form-check-input" type="radio" name="borrowable" id="borrowableNo" value="No" <?php echo ($row['borrowable'] == 'No') ? 'checked' : ''; ?> required>
                                             <label class="form-check-label" for="borrowableNo">No</label>
                                         </div>
-                                    </div>
 
-                                    <div class="mb-3 text-end">
-                                        
-                                        <a href="ccstaffListofItems.php" class="btn btn-danger">Cancel</a>
-                                        <button type="submit" class="btn btn-success" name="updateitem">Update</button>
                                     </div>
+                                    <div class="mb-3 text-end">                                       
+                                    <a href="ccstaffListofItems.php" class="btn btn-danger"><i class="fas fa-times-circle"></i> Cancel</a>
+                                    <button type="submit" class="btn btn-success" name="updateitem"><i class="fas fa-save"></i> Save Changes</button>                                    </div>
                                 </div>
                             </div>
                         </div>

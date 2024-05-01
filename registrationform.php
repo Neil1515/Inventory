@@ -195,11 +195,20 @@
     });
     function validateIdInput(event) {
     const input = event.target;
-    const value = input.value;
-    const isValid = /^\d+$/.test(value); // Regex to match only digits
+    let value = input.value;
 
-    if (!isValid) {
-        input.value = value.replace(/\D/g, ''); // Remove non-numeric characters
+    // Remove leading zeros
+    value = value.replace(/^0+/, '');
+
+    // Remove non-numeric characters
+    value = value.replace(/\D/g, '');
+
+    // Ensure the value is a positive integer
+    const intValue = parseInt(value);
+    if (isNaN(intValue) || intValue <= 0) {
+        input.value = '';
+    } else {
+        input.value = intValue;
     }
 }
 </script>
