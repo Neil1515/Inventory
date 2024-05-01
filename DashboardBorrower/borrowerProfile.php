@@ -264,6 +264,16 @@ if ($stmtApprovedReserveItems) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        a {
+            text-decoration: none;
+        }
+        .hoverable-card:hover .card {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -427,37 +437,46 @@ if ($stmtApprovedReserveItems) {
                                 </ul>
                             </div>
                              <!-- Circular cards -->
-                        <div class="row mt-4">
-                            <div class="col-md-3 mt-2">
-                                <div class="card bg-success text-white text-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Borrowed Items</h5>
-                                        <h3 class="card-text"><?php echo $totalApprovedItems ?></h3>
-                                    </div>
+                            <div class="row mt-4">
+                                <div class="col-md-3 mt-2">
+                                    <a href="borrowerItemsBorrowed.php" class="hoverable-card">
+                                        <div class="card bg-success text-white text-center">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Borrowed Items</h5>
+                                                <h3 class="card-text"><?php echo $totalApprovedItems ?></h3>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="col-md-3 mt-2">
-                                <div class="card bg-success text-white text-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Pending Borrow</h5>
-                                        <h3 class="card-text"><?php echo $totalPendingBorrowItems ?></h3>
-                                    </div>
+                                <div class="col-md-3 mt-2">
+                                    <a href="borrowerPendingborrowItems.php" class="hoverable-card">
+                                        <div class="card bg-success text-white text-center">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Pending Borrow</h5>
+                                                <h3 class="card-text"><?php echo $totalPendingBorrowItems ?></h3>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="col-md-3 mt-2">
-                                <div class="card bg-success text-white text-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Accepted Reserve</h5>
-                                        <h3 class="card-text"><?php echo $totalApprovedReserveItems ?></h3>
-                                    </div>
+                                <div class="col-md-3 mt-2">
+                                    <a href="borrowerAcceptedReserve.php" class="hoverable-card">
+                                        <div class="card bg-success text-white text-center">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Accepted Reserve</h5>
+                                                <h3 class="card-text"><?php echo $totalApprovedReserveItems ?></h3>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="col-md-3 mt-2">
-                                <div class="card bg-success text-white text-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Pending Reserve</h5>
-                                        <h3 class="card-text"><?php echo $totalPendingReserveItems  ?></h3>
-                                    </div>
+                                <div class="col-md-3 mt-2">
+                                    <a href="borrowerPendingReserve.php" class="hoverable-card">
+                                        <div class="card bg-success text-white text-center">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Pending Reserve</h5>
+                                                <h3 class="card-text"><?php echo $totalPendingReserveItems  ?></h3>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                             <?php else : ?>

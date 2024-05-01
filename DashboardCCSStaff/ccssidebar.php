@@ -11,7 +11,7 @@
                 </a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link " href="ccsstaffBorrowableitems.php">
+                <a class="nav-link " href="ccsstaffInventoryProperties.php">
                     <i class=" fas fa-box-open me-2"></i>
                     <span>All Items</span>
                 </a>

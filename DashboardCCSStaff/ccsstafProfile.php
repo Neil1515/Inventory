@@ -61,6 +61,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
         exit();
     }
 }
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateImageBtn'])) {
+    // Handle file upload
+    if (isset($_FILES['image'])) {
+        $file = $_FILES['image'];
+        $fileName = $file['name'];
+        $fileTmpName = $file['tmp_name'];
+        $fileError = $file['error'];
+
+        // Check for upload errors
+        if ($fileError === 0) {
+            // Move the uploaded file to the desired directory with the desired name
+            $uploadDir = '/Inventory/images/imageofusers/';
+            $newFileName = $staffId.'.png'; // Name the file as borrower ID with .png extension
+            $destination = $_SERVER['DOCUMENT_ROOT'] . $uploadDir . $newFileName;
+
+            if (move_uploaded_file($fileTmpName, $destination)) {
+                // Image uploaded successfully
+                $msg_success = "Image updated successfully.";
+                header("Location: ccsstafProfile.php?msg_success=" . urlencode($msg_success));
+                exit();
+            } else {
+                $msg_fail = "Error occurred while uploading image.";
+                header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+                exit();
+            }
+        } else {
+            $msg_fail = "Error occurred while uploading image: " . $fileError;
+            header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+            exit();
+        }
+    } else {
+        $msg_fail = "No image uploaded.";
+        header("Location: ccsstafProfile.php?msg_fail=" . urlencode($msg_fail));
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -145,36 +182,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
         </div>
     </div>
 
-    <!-- Modal HTML Structure -->
+<!-- Change Image Modal -->
 <div class="modal fade" id="changeimageModal" tabindex="-1" aria-labelledby="changeimageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changeimageModalLabel">Change Password</h5>
-                </div>
-                <form method="post" action="">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                        
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="changeimageModalLabel">Update Image</h5>
+                            </div>
+                            <form method="post" action="" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="text-center mb-3">
+                                        <img src="" alt="Image" id="userImage" style="max-width: 150px;">
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="image" class="form-label">Upload New Image<span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" name="updateImageBtn">Update Image</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" name="saveChangesBtn">Update Image</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-               <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">User Profile</h5>
-                            </div>
-                            <div class="card-body">
-                            <?php 
+                </div>
+    <?php 
                             // Fetch user information based on the provided user ID
                             $query = "SELECT * FROM tblusers WHERE id = $staffId";
                             $result = mysqli_query($con, $query);
@@ -195,25 +228,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
                             }
 
                             if (!empty($row)) : ?>
+               <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">User Profile</h5>
+                                <div>
+                                    <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
+                                    <a class="btn btn-primary mx-1" onclick="editImage('<?php echo $row['id']; ?>')"><i class="fas fa-image"></i> Change Profile Picture</a>
+
+                                    <a class="btn btn-success" onclick="editPass('<?php echo $row['id']; ?>')"><i class="fas fa-key"></i> Change Password</a>
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                           
                                 <div class="row">
                             <!-- Main container on the left -->
                             <div class="col-md-12">
                             <div class="row">
                                     <!-- Main container on the right -->
                                     <div class="col-md-12 text-center">
-                                        <div class="mb-1">
-                                            <img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width='150'>
-                                        </div>
-                                    </div>
-                                    <!-- Main container on the left -->
-                                    <div class="col-md-4 align-items-center d-flex">
-                                        <div class="mb-1">
-                                            <!-- <a  class="btn btn-danger mb-1">Change Image</a>-->
-                                            <a class="btn btn-success" onclick="editPass('<?php echo $row['id']; ?>')">Change Password</a>
-                                        </div>
+                                    <?php
+                                    // Display profile picture
+                                    if (!empty($staffId)) {
+                                        $profileImagePath = "/inventory/images/imageofusers/{$staffId}.png";
+                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                                            echo '<img src="' . $profileImagePath . '?' . time() . '" class="img-fluid rounded-circle " width="250" height="200">';
+                                        } else {
+                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="250" height="250">';
+                                        }
+                                    } else {
+                                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="250" height="250">';
+                                    }
+                                    ?>
                                     </div>
                                 </div>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-md-6">
                                 <div class="mb-1">
                                     <label class="form-label">First Name:</label>
@@ -248,6 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChangesBtn'])) {
             </div>
         </div>
     </div>
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -261,9 +314,29 @@ function editPass() {
     $('#changepassModal').modal('show');
 }
 function editImage() {
-    // Populate the modal with the subcategory ID and name
-    $('#changepassModal').modal('show');
-}
+        // Populate the modal with the subcategory ID and name
+        $('#changeimageModal').modal('show');
+
+        // Function to handle file input change
+        $("#image").change(function () {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#userImage').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+
+        // Get the URL of the current image
+        var currentImageUrl = '<?php echo !empty($row['id']) ? "/inventory/images/imageofusers/" . $row['id'] . ".png" . "?" . time() : "/inventory/images/profile-user.png" . "?" . time(); ?>';
+
+        // Set the src attribute of the userImage to the current image URL
+        $('#userImage').attr('src', currentImageUrl);
+
+    }
+
 </script>
 </body>
 </html>

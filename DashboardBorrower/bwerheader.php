@@ -249,8 +249,6 @@ if ($stmt) {
     }
     ?>
 </button>
-
-
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
                     <li><a class="dropdown-item" href="borrowerProfile.php?borrowerId=<?php echo $BorrowerId; ?>">Profile</a></li>

@@ -47,13 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             header('Location: DashboardAdmin/adminPage.php');
                             exit();
                         case 'CCS Staff':
+                        case 'Dean':
                             $_SESSION['staff_id'] = $row['id'];
                             header('Location: DashboardCCSStaff/ccsstaffDashboardPage.php');
                             exit();
-                        case 'Dean':
-                            $_SESSION['dean_id'] = $row['id'];
-                            header('Location: DashboardDean/deanDashboardPage.php');
-                            exit();
+                        
+                            //$_SESSION['dean_id'] = $row['id'];
+                           // header('Location: DashboardDean/deanDashboardPage.php');
+                            //exit();
                         case 'Student':
                         case 'Employee':
                             $_SESSION['borrower_id'] = $row['id'];
@@ -61,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             exit();
                         default:
                             // Redirect to a default location or show an error
-                            header('Location: defaultDashboard.php');
+                            header('Location: index.php');
                             exit();
                     }
                 } elseif ($status === 'Pending') {

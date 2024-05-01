@@ -198,8 +198,9 @@ if ($stmtApprovedReserveItems) {
             <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title">Borrower Profile</h5>
                     <div>
-                        <a href="javascript:history.back()" class="btn btn-danger mx-2"><i class="fas fa-arrow-left"></i> Back</a>
+                        <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
                         <a  class="btn btn-primary"><i class="fas fa-file-alt"></i> Reports</a>
+                        <a href="ccsstaffConversation.php?sender_id=<?php echo $row['id']; ?>" class="btn btn-success"><i class='fas fa-envelope'></i> Message</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -218,10 +219,10 @@ if ($stmtApprovedReserveItems) {
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
                                             echo '<img src="' . $profileImagePath . '?' . time() . '" class="img-fluid rounded-circle " width="250" height="250">';
                                         } else {
-                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="150" height="150">';
+                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="250" height="250">';
                                         }
                                     } else {
-                                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="150" height="150">';
+                                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="250" height="250">';
                                     }
                                     ?>
                                 </div>
@@ -229,7 +230,19 @@ if ($stmtApprovedReserveItems) {
                             <!-- Profile details -->
                             <div class="col-md-8">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><h6>Name: <?php echo $row['fname'] .' '. $row['lname']; ?></li></h6>
+                                    <li class="list-group-item">
+                                    <h6>
+                                        Name: <?php echo $row['fname'] .' '. $row['lname']; ?>
+                                        <?php
+                                        // Check the online status and display the appropriate icon
+                                        if ($row['online_status'] == 'online') {
+                                            echo '<span class="text-success small-dot"><i class="fas fa-check-circle"></i> Online</span>'; // Checkmark icon for online
+                                        } else {
+                                            echo '<span class="text-danger small-dot"><i class="fas fa-times-circle"></i> Offline</span>'; // Times icon for offline
+                                        }
+                                        ?>
+                                    </h6>
+                                    </li>
                                     <li class="list-group-item">Email: <?php echo $row['email']; ?></li>
                                     <li class="list-group-item">User Type: <?php echo $row['usertype']; ?></li>
                                     <li class="list-group-item">Department: <?php echo $row['department']; ?></li>
@@ -243,42 +256,50 @@ if ($stmtApprovedReserveItems) {
                         <!-- Circular cards -->
                         <div class="row mt-4">
                             <div class="col-md-3 mt-2">
+                            <a href="ccsstaffViewUnreturnItems.php?borrower_id=<?php echo $row['id']; ?>" class="hoverable-card">
                                 <div class="card bg-success text-white text-center">
                                     <div class="card-body">
                                         <h5 class="card-title">Borrowed Items</h5>
                                         <h3 class="card-text"><?php echo $totalApprovedItems ?></h3>
                                     </div>
                                 </div>
+                            </a>
                             </div>
                             <div class="col-md-3 mt-2">
+                            <a href="ccsstaffViewBorrower_all_items.php?borrowerId=<?php echo $row['id']; ?>" class="hoverable-card">
                                 <div class="card bg-success text-white text-center">
                                     <div class="card-body">
                                         <h5 class="card-title">Pending Borrow</h5>
                                         <h3 class="card-text"><?php echo $totalPendingBorrowItems ?></h3>
                                     </div>
                                 </div>
+                            </a>
                             </div>
                             <div class="col-md-3 mt-2">
+                            <a href="ccsstaffViewBorrower_allapprovereserve_items.php?borrowerId=<?php echo $row['id']; ?>" class="hoverable-card">
                                 <div class="card bg-success text-white text-center">
                                     <div class="card-body">
                                         <h5 class="card-title">Accepted Reserve</h5>
                                         <h3 class="card-text"><?php echo $totalApprovedReserveItems ?></h3>
                                     </div>
                                 </div>
+                            </a>
                             </div>
                             <div class="col-md-3 mt-2">
+                            <a href="ccsstaffViewBorrower_allreserve_items.php?borrowerId=<?php echo $row['id']; ?>" class="hoverable-card">
                                 <div class="card bg-success text-white text-center">
                                     <div class="card-body">
                                         <h5 class="card-title">Pending Reserve</h5>
                                         <h3 class="card-text"><?php echo $totalPendingReserveItems  ?></h3>
                                     </div>
                                 </div>
+                            </a>
                             </div>
                         </div>
                     <?php 
                     } else {
                         // Display error message if no borrower details found
-                        echo '<p>No borrower information found.</p>';
+                        echo '<p>No borrower information found. </p>';
                     }
                     ?>
                 </div>
@@ -286,3 +307,13 @@ if ($stmtApprovedReserveItems) {
         </div>
     </div>
 </div>
+<style>
+        a {
+            text-decoration: none !important;;
+        }
+        .hoverable-card:hover .card {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+    </style>

@@ -62,6 +62,35 @@ if ($stmt) {
         font-size: 14px;
         color: #212529;
     }
+    .header--wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    }
+
+    .user--info {
+        display: flex;
+        align-items: center;
+        background-color: transparent !important;
+    }
+    .custom-dropdown-btn {
+        background-color: transparent !important; /* Set background to transparent */
+        border: none !important; /* Remove border */
+        color: #000 !important; /* Set text color */
+    }
+
+    .custom-dropdown-btn:hover {
+        background-color: transparent !important; /* Set background to transparent on hover */
+    }
+
+    .dropdown img {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        border-radius: 50%;
+        margin-left: 5px;
+    }
 
 </style>
 <div class="container-fluid">
@@ -207,29 +236,54 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 ?>
 </ul>
-                <button class="btn btn-secondary dropdown-toggle custom-dropdown-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <?php 
-                    if (isset($row)) {
-                        echo $row['fname'] . ' ' . $row['lname'];
+<button class="btn btn-secondary dropdown-toggle custom-dropdown-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <?php 
+    if (isset($row)) {
+        echo $row['fname'] . ' ' . $row['lname'];
+        // Check if the user has a profile image
+        if (!empty($row['id'])) {
+            // Check if the profile image exists
+            $profileImagePath = "/inventory/images/imageofusers/" . $row['id'] . ".png";
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
+                // If the user has a profile image, display it with a timestamp
+                echo '<img src="' . $profileImagePath . '?' . time() . '" width="30px" height="30px">';
+            } else {
+                // If the profile image does not exist, display the default image with a timestamp
+                echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="30px" height="30px">';
+            }
+        } else {
+            // If senderId is empty, display the default image with a timestamp
+            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="30px" height="30px">';
+        }
+        
+    } else {
+        // Retrieve user information based on the logged-in user ID
+        $query = "SELECT fname, lname, id FROM tblusers WHERE id = ?";
+        $stmt = mysqli_prepare($con, $query);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $_SESSION['staff_id']);
+            if (mysqli_stmt_execute($stmt)) {
+                $result = mysqli_stmt_get_result($stmt);
+                if ($result && mysqli_num_rows($result) > 0) {
+                    $user_row = mysqli_fetch_assoc($result);
+                    echo $user_row['fname'] . ' ' . $user_row['lname'];
+                    if (!empty($user_row['id'])) {
+                        // If the user has a profile image, display it
+                        $profileImagePath = "/inventory/images/imageofusers/" . $user_row['id'] . ".png";
+                        echo '<img src="' . $profileImagePath . '?' . time() . '" alt="userpicture" class="userpicture" width="50">';
+                        //echo '<img src="/inventory/images/imageofusers/' . $user_row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
                     } else {
-                        // Retrieve user information based on the logged-in user ID
-                        $query = "SELECT fname, lname FROM tblusers WHERE id = ?";
-                        $stmt = mysqli_prepare($con, $query);
-                        if ($stmt) {
-                            mysqli_stmt_bind_param($stmt, "s", $_SESSION['staff_id']);
-                            if (mysqli_stmt_execute($stmt)) {
-                                $result = mysqli_stmt_get_result($stmt);
-                                if ($result && mysqli_num_rows($result) > 0) {
-                                    $user_row = mysqli_fetch_assoc($result);
-                                    echo $user_row['fname'] . ' ' . $user_row['lname'];
-                                }
-                            }
-                            mysqli_stmt_close($stmt);
-                        }
+                        // If the user does not have a profile image, display the default image
+                        //echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
+                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" alt="userpicture" class="userpicture" width="50">';
                     }
-                    ?>
-                    <img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture">
-                </button>
+                }
+            }
+            mysqli_stmt_close($stmt);
+        }
+    }
+    ?>
+</button>
 
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->

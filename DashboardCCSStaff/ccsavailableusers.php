@@ -25,7 +25,7 @@
     }
 
     // Query to fetch users with offline status
-    $offline_query = "SELECT * FROM tblusers WHERE usertype <> 'CCS Staff' AND usertype <> 'Admin' AND status = 'Active' AND online_status <> 'online'";
+    $offline_query = "SELECT * FROM tblusers WHERE usertype <> 'CCS Staff' AND usertype <> 'Admin'  AND usertype <> 'Dean' AND status = 'Active' AND online_status <> 'online'";
     $offline_result = mysqli_query($con, $offline_query);
 
     if ($offline_result && mysqli_num_rows($offline_result) > 0) {

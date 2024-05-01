@@ -42,7 +42,9 @@ if ($stmtBorrowerDetails) {
     align-items: center;
     margin-left: 5px;
     }
-
+a {
+    text-decoration: none !important;
+    }
 </style>
 <div class="ccs-main-container">
     <div class="container">
@@ -62,7 +64,7 @@ if ($stmtBorrowerDetails) {
                                 $profileImagePath = "/inventory/images/imageofusers/" . $borrowerId . ".png";
                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
                                 // If the user has a profile image, display it with a timestamp
-                                echo '<img src="' . $profileImagePath . '?' . time() . '" width="50">';
+                                echo '<img src="' . $profileImagePath . '?' . time() . '" width="50" class="me-1">';
                                 } else {
                                 // If the profile image does not exist, display the default image with a timestamp
                                 echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
@@ -71,7 +73,9 @@ if ($stmtBorrowerDetails) {
                                 // If senderId is empty, display the default image with a timestamp
                                     echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
                                 }
-                                ?> <?= $borrowerName ?></h5>
+                                ?> 
+                                <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId; ?>"><?php echo $borrowerName?></a></h5>
+                                
                 <div class="text-end">
                 <a href="ccsstaffListofPendingBorrowerusers.php" id="back" class="btn btn-danger mb-1">Back</a>
                 </div>
