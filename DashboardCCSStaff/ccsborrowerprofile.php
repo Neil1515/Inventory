@@ -157,11 +157,8 @@ if ($stmtApprovedReserveItems) {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
 
-
-
-
     // Query to retrieve borrower details
-    $queryBorrowerDetails = "SELECT * FROM tblusers WHERE id = ?";
+    $queryBorrowerDetails = "SELECT * FROM tblusers WHERE (usertype='Student' OR usertype='Employee') AND id = ?";
     $stmtBorrowerDetails = mysqli_prepare($con, $queryBorrowerDetails);
 
     if ($stmtBorrowerDetails) {
@@ -174,8 +171,9 @@ if ($stmtApprovedReserveItems) {
                 // Borrower information found, fetch the row
                 $row = mysqli_fetch_assoc($resultBorrowerDetails);
             } else {
-                // No borrower information found for the provided ID
+                echo '<div class="text-center">';
                 die("No borrower information found for ID: $borrowerId");
+                echo '</div>';
             }
         } else {
             // Handle query execution failure
@@ -188,7 +186,113 @@ if ($stmtApprovedReserveItems) {
         die('Statement preparation failed: ' . mysqli_error($con));
     }
 }
+
+// Check if the form is submitted
+if(isset($_POST['reportuserBtn'])) {
+    // Check if all required fields are filled
+    if(isset($_POST['reportReason']) && !empty($_POST['reportReason'])) {
+        // Get the report reason
+        $reportReason = $_POST['reportReason'];
+        
+        // If the reason is "Other", get the other reason text
+        if($reportReason == 'Other' && isset($_POST['otherReason']) && !empty($_POST['otherReason'])) {
+            $otherReason = $_POST['otherReason'];
+            // Set the report reason to the other reason text
+            $reportReason = $otherReason;
+        }
+
+        // Check if the borrower has already been reported
+        $queryCheckReport = "SELECT * FROM tblreportborroweracc WHERE staffid = ? AND borrowerid = ? AND status = 'Pending' OR status = 'Approved'";
+        $stmtCheckReport = mysqli_prepare($con, $queryCheckReport);
+        if($stmtCheckReport) {
+            // Bind parameters and execute the statement
+            mysqli_stmt_bind_param($stmtCheckReport, "ss", $staffId, $borrowerId);
+            if(mysqli_stmt_execute($stmtCheckReport)) {
+                // Fetch the result
+                $resultCheckReport = mysqli_stmt_get_result($stmtCheckReport);
+                if(mysqli_num_rows($resultCheckReport) > 0) {
+                    // Borrower already reported
+                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+                    echo '<div>This borrower has already been reported.</div>';
+                    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                    echo '</div>';
+                } else {
+                    // Insert the reported user data into the database
+                    $queryInsertReport = "INSERT INTO tblreportborroweracc (staffid, borrowerid, reason, status) VALUES (?, ?, ?, 'Pending')";
+                    $stmtInsertReport = mysqli_prepare($con, $queryInsertReport);
+                    if($stmtInsertReport) {
+                        // Bind parameters and execute the statement
+                        mysqli_stmt_bind_param($stmtInsertReport, "sss", $staffId, $borrowerId, $reportReason);
+                        if(mysqli_stmt_execute($stmtInsertReport)) {
+                            // Report inserted successfully
+                            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
+                            echo '<div>Report submitted successfully. Please await approval from Admin.</div>';
+                            echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                            echo '</div>';
+                        } else {
+                            // Handle query execution failure
+                            echo '<div class="alert alert-danger" role="alert">Error: Unable to submit report.</div>';
+                        }
+                        mysqli_stmt_close($stmtInsertReport);
+                    } else {
+                        // Handle statement preparation failure
+                        echo '<div class="alert alert-danger" role="alert">Error: Unable to prepare statement.</div>';
+                    }
+                }
+            } else {
+                // Handle query execution failure
+                echo '<div class="alert alert-danger" role="alert">Error: Unable to execute query.</div>';
+            }
+            mysqli_stmt_close($stmtCheckReport);
+        } else {
+            // Handle statement preparation failure
+            echo '<div class="alert alert-danger" role="alert">Error: Unable to prepare statement.</div>';
+        }
+    } else {
+        // If report reason is not selected
+        echo '<div class="alert alert-danger" role="alert">Please select a reason for reporting.</div>';
+    }
+}
 ?>
+<!-- Report user Modal -->
+<div class="modal fade" id="reportuserModal" tabindex="-1" aria-labelledby="reportuserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportuserModalLabel">Report User Account </h5>
+            </div>
+            <form method="post" action="" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <img src="/inventory/images/UAC.png" alt="Image" id="userImage" style="max-width: 150px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="reportReason">Reason for Reporting<span class="text-danger">*</span></label>
+                        <select class="form-control" id="reportReason" name="reportReason" required>
+                            <option  value="" selected disabled>Select Reason</option>
+                            <option value="Spamming borrow/reserve requests">Spamming borrow/reserve requests</option>
+                            <option value="Suspicious behavior">Suspicious behavior</option>
+                            <option value="Damaging borrowed items intentionally">Damaging borrowed items intentionally</option>
+                            <option value="Not returning borrowed items">Not returning borrowed items</option>
+                            <option value="Violating terms and conditions">Violating terms and conditions</option>
+                            <option value="Other">Other (please specify)</option> <!-- Change value to "Other" -->
+                        </select>
+
+                    </div>
+                    <div class="form-group mt-3" id="otherReasonGroup" style="display: none;">
+                        <label for="otherReason">Other Reason<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="otherReason" name="otherReason">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="reportuserBtn">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- Display borrower details in a card form -->
 <div class="container">
@@ -196,7 +300,7 @@ if ($stmtApprovedReserveItems) {
         <div class="col-md-12 mx-auto">
             <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title">Borrower Profile</h5>
+                <h5> Borrower Profile</h5>
                     <div>
                         <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
                         <a  class="btn btn-primary"><i class="fas fa-file-alt"></i> Reports</a>
@@ -231,7 +335,7 @@ if ($stmtApprovedReserveItems) {
                             <div class="col-md-8">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
-                                    <h6> <span class="report-icon" title="Report this account"><i class="fas fa-flag"></i>
+                                    <h6 > <span class="report-icon" id="borrowerName"><i class="fas fa-flag"></i>
                                         Name: <?php echo $row['fname'] .' '. $row['lname']; ?>  </span>
                                         <?php
                                         // Check the online status and display the appropriate icon
@@ -240,7 +344,44 @@ if ($stmtApprovedReserveItems) {
                                         } else {
                                             echo '<span class="text-danger small-dot"><i class="fas fa-times-circle"></i> Offline</span>'; // Times icon for offline
                                         }
-                                        ?>
+                                        ?> <?php
+                                
+
+                                        // Check if the borrower has already been reported
+                                        $queryCheckReport = "SELECT * FROM tblreportborroweracc WHERE (staffid = ? AND borrowerid = ?) OR status IN ('Pending', 'Approved', 'Unblock', 'Declined')";
+                                        $stmtCheckReport = mysqli_prepare($con, $queryCheckReport);
+                                        if ($stmtCheckReport) {
+                                            // Bind parameters and execute the statement
+                                            mysqli_stmt_bind_param($stmtCheckReport, "ss", $staffId, $borrowerId);
+                                            if (mysqli_stmt_execute($stmtCheckReport)) {
+                                                // Fetch the result
+                                                $resultCheckReport = mysqli_stmt_get_result($stmtCheckReport);
+                                                if (mysqli_num_rows($resultCheckReport) > 0) {
+                                                    // Borrower already reported
+                                                    while ($rowReport = mysqli_fetch_assoc($resultCheckReport)) {
+                                                        if ($rowReport['status'] === 'Pending') {
+                                                            // Borrower reported as pending
+                                                            echo '<h5 class="card-title"><span class="text-danger"> <i class="fas fa-exclamation-triangle"></i> Reported Pending</span></h5>';
+                                                        } else if ($rowReport['status'] === 'Approved') {
+                                                            // Borrower reported as Approved
+                                                            echo '<h5 class="card-title"><span class="text-danger"> <i class="fas fa-exclamation-triangle"></i> Blocked</span></h5>';
+                                                        } else  if ($rowReport['status'] === 'Unblock') {
+                                                            // Borrower reported as Declined or Unblock
+                                                            echo '<h5 class="card-title"></h5>';
+                                                        }else  if ($rowReport['status'] === 'Declined') {
+                                                            // Borrower reported as Declined or Unblock
+                                                            echo '<h5 class="card-title"></h5>';
+                                                        }
+                                                    }            
+                                                } else {
+                                                    // Borrower not reported
+                                                    echo '<h5 class="card-title"></h5>';
+                                                }
+                                            }
+                                            mysqli_stmt_close($stmtCheckReport);
+                                        }
+                                        
+                                                            ?>
                                     </h6>
                                     </li>
                                     <li class="list-group-item">Email: <?php echo $row['email']; ?></li>
@@ -316,23 +457,72 @@ if ($stmtApprovedReserveItems) {
             transition: transform 0.3s ease;
         }
         .report-icon:hover {
-    color: #dc3545; /* Change to desired danger color */
-    cursor: pointer;
-}
-.report-icon::after {
-    content: "Report this account?";
-    position: absolute;
-    left: 20px; /* Adjust as needed */
-    top: -20px; /* Adjust as needed */
-    display: none;
-    background-color: #dc3545; /* Change to desired danger color */
-    color: #fff;
-    padding: 3px 6px;
-    border-radius: 5px;
-    font-size: 12px;
-}
-.report-icon:hover::after {
-    display: inline-block;
-}
+        color: #dc3545; /* Change to desired danger color */
+        cursor: pointer;
+        }
+        .report-icon::after {
+            content: "Report this account?";
+            position: absolute;
+            left: 20px; /* Adjust as needed */
+            top: -20px; /* Adjust as needed */
+            display: none;
+            background-color: #dc3545; /* Change to desired danger color */
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .report-icon:hover::after {
+            display: inline-block;
+        }
+</style>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    </style>
+<!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+ <!-- Bootstrap and Font Awesome -->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.getElementById('borrowerName').addEventListener('click', function() {
+        $('#reportuserModal').modal('show'); // Show the modal
+    });
+    document.getElementById('reportReason').addEventListener('change', function() {
+        var otherReasonGroup = document.getElementById('otherReasonGroup');
+        var otherReasonInput = document.getElementById('otherReason');
+
+        if (this.value === 'Other') { // Update this condition
+            otherReasonGroup.style.display = 'block';
+            otherReasonInput.required = true;
+            otherReasonInput.placeholder = 'Enter other reason here'; // Set placeholder text
+        } else {
+            otherReasonGroup.style.display = 'none';
+            otherReasonInput.required = false;
+            otherReasonInput.placeholder = ''; // Clear placeholder text
+        }
+    });
+
+    // Ensure that the "Other Reason" field is properly shown/hidden on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        var reportReasonSelect = document.getElementById('reportReason');
+        var otherReasonGroup = document.getElementById('otherReasonGroup');
+        var otherReasonInput = document.getElementById('otherReason');
+
+        if (reportReasonSelect.value === 'Other') { // Update this condition
+            otherReasonGroup.style.display = 'block';
+            otherReasonInput.required = true;
+            otherReasonInput.placeholder = 'Enter other reason here'; // Set placeholder text
+        } else {
+            otherReasonGroup.style.display = 'none';
+            otherReasonInput.required = false;
+            otherReasonInput.placeholder = ''; // Clear placeholder text
+        }
+    });
+</script>
+

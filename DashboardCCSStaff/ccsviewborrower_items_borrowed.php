@@ -143,10 +143,10 @@ if ($stmt) {
                         // Render profile image for borrower
                         renderProfileImage($borrowerId);
                         ?>
-                        <?php echo $borrowerName; ?>
+                        <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId ?>" style='text-decoration: none;'><?php echo $borrowerName; ?></a>
                     </h3>
                     <div class="text-end">
-                        <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-danger me-2">Back</a>
+                    <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
                         <button type="button" class="btn btn-success clear-btn" id="returnSelectedItemsBtn"  onclick="returnSelectedItems()">Return Selected Items</button>
                     </div>
                 </div>

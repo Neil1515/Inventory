@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     // Inactive status, set loginError to true and display a message
                     $loginError = true;
-                    $inactiveMessage = "Your account is inactive. Please contact the admin for access.";
+                    $inactiveMessage = "Your account is blocked. Please contact the admin for access.";
                 }
             } else {
                 // Invalid credentials, set loginError to true

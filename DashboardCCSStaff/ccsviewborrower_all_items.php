@@ -77,7 +77,7 @@ a {
                                 <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId; ?>"><?php echo $borrowerName?></a></h5>
                                 
                 <div class="text-end">
-                <a href="ccsstaffListofPendingBorrowerusers.php" id="back" class="btn btn-danger mb-1">Back</a>
+                <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
                 </div>
             </div>
             <div class="row row-cols-1 row-cols-md-1 row-cols-lg-5 g-1">

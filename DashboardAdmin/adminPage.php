@@ -1,6 +1,5 @@
 <?php
 // adminPage.php
-// Start the session
 session_start();
 // Check if admin ID is set in the session
 if (!isset($_SESSION['admin_id'])) {
@@ -52,6 +51,18 @@ include('adminfunctions.php');
 $search = isset($_GET["search"]) ? $_GET["search"] : '';
 $sql = "SELECT * FROM `tblusers` WHERE usertype NOT IN ('Admin') AND status NOT IN ('Pending') AND (id LIKE '%$search%' OR lname LIKE '%$search%' OR usertype LIKE '%$search%')";
 $result = mysqli_query($conn, $sql);
+
+// Query to count the number of pending reports
+$queryCountPendingReports = "SELECT COUNT(*) AS pending_count FROM tblreportborroweracc WHERE status = 'Pending'";
+$resultCountPendingReports = mysqli_query($con, $queryCountPendingReports);
+if($resultCountPendingReports) {
+    $row = mysqli_fetch_assoc($resultCountPendingReports);
+    $pendingCount = $row['pending_count'];
+} else {
+    // Handle query execution failure
+    $pendingCount = 0; // Default value if query fails
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -124,7 +135,8 @@ $result = mysqli_query($conn, $sql);
         }
         echo '<div class="row mb-2">';
         echo '<div class="col-md-9 mb-1">';
-        echo '<a href="addusers.php" class="btn btn-dark btn-block btn-add-new">Add Staff</a>';
+        echo '<a href="addusers.php" class="btn btn-primary btn-block btn-add-new me-2">Add Staff</a>';
+        echo '<a href="adminreportedborrower.php" class="btn btn-success btn-block btn-add-new">Reported Account ('. $pendingCount .' pending)</a>';
         echo '</div>';
         echo '<div class="col-md-3 text-end">';
         echo '<form action="" method="GET" class="input-group">';

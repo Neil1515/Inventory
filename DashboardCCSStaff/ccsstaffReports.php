@@ -144,7 +144,7 @@ if ($stmt) {
 
                                 // Check if the value is NULL, if so, display ---
                                 $itemStatus = $row['itemreqstatus'] ?? '---';
-                                echo "<td class='text-center'>{$itemStatus}</td>";
+                                echo "<td>{$itemStatus}</td>";
                                 
                                 // Similarly, check other fields and display --- if NULL
                                 $itemName = $row['subcategoryname'] ?? 'Item Not Found';

@@ -82,8 +82,8 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
 
                         <div class="card me-2">
                             <div class="card-body">
-                                <h5 class="card-title">Borrower ID: <?php echo $borrowerDetails['id']; ?></h5>
-                                <p class="card-text">Name: <?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></p>
+                                <h5 class="card-title">Name: <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId ?>" style='text-decoration: none;'><?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></a> </h5>
+                                <p class="card-text">Borrower ID: <?php echo $borrowerDetails['id']; ?></p>
                                 <p class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?></p>
                                 <p class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></p>
 
@@ -92,7 +92,7 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
                                 $queryPendingItems = "SELECT br.itemid, ib.subcategoryname
                                                     FROM tblborrowingreports br
                                                     INNER JOIN tblitembrand ib ON br.itemid = ib.id
-                                                    WHERE br.borrowerid = ? AND br.itemreqstatus = 'Approved'";
+                                                    WHERE br.borrowerid = ? AND br.itemreqstatus = 'Approved' OR itemreqstatus = 'Request Return'";
                                 $stmtPendingItems = mysqli_prepare($con, $queryPendingItems);
 
                                 if ($stmtPendingItems) {

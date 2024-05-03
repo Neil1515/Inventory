@@ -95,10 +95,11 @@ if ($stmtBorrowerDetails) {
                                 // If senderId is empty, display the default image with a timestamp
                                     echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" width="50">';
                                 }
-                                ?> <?= $borrowerName ?></h5>
+                                ?>  <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId ?>" style='text-decoration: none;'><?= $borrowerName ?></a></h5>
             <div class="text-end mb-1">
+            <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
+
                 <button class="btn btn-primary" id="selectAllBtn">Select All</button>
-                <a href="ccsstaffUsersApproveReserveItems.php" id="back" class="btn btn-danger">Back</a>
             </div>
         </div>
         <div class="row">

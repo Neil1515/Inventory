@@ -1,5 +1,4 @@
 <!-- ccsrejectborrower_allreserve_items.php -->
-<!-- ccsrejectborrower_all_items.php -->
 <?php
 // Include your database connection file
 include 'ccsfunctions.php';
