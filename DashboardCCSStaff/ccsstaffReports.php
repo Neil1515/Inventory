@@ -100,7 +100,7 @@ if ($stmt) {
                                 <th>Date Time Released</th>
                                 <th>Recieved By</th>
                                 <th>Date Time Return</th>
-                                
+                                <th>Condition</th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -110,7 +110,7 @@ if ($stmt) {
                             $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
                             // Prepare the SQL query with placeholders for the date range
-                            $query = "SELECT br.itemreqstatus, br.itemid, ib.subcategoryname,
+                            $query = "SELECT br.itemreqstatus, br.itemid, br.returnitemcondition, ib.subcategoryname,
                                         br.borrowerid,
                                         u1.fname AS borrower_fname, u1.lname AS borrower_lname, 
                                         u2.fname AS approve_fname, u2.lname AS approve_lname, 
@@ -174,7 +174,9 @@ if ($stmt) {
                                 // Check if the value is NULL, if so, display ---
                                 $dateTimeReturn = $row['datetimereturn'] ? date("Y-m-d h:i A", strtotime($row['datetimereturn'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeReturn}</td>";
-                                
+
+                                $returncondition = $row['returnitemcondition'] ?? '---';
+                                 echo "<td class='text-center'>{$returncondition}</td>";
                                 echo "</tr>";
                             }
                             ?>

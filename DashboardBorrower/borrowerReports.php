@@ -41,7 +41,7 @@ if ($stmt) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Reports <?php echo $borrowerName?></title>
+    <title>Reports</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,8 +89,6 @@ if ($stmt) {
                 <div class="table-responsive">
                     <table id="example" class="table table-striped table-bordered">
                         <thead class="text-center table-dark">
-                            <tr>
-                            </tr>
                             <tr>
                                 <th>Transaction Number</th>
                                 <th>Item Status</th>

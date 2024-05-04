@@ -364,7 +364,7 @@ if(isset($_POST['reportuserBtn'])) {
                                                             echo '<h5 class="card-title"><span class="text-danger"> <i class="fas fa-exclamation-triangle"></i> Reported Pending</span></h5>';
                                                         } else if ($rowReport['status'] === 'Approved') {
                                                             // Borrower reported as Approved
-                                                            echo '<h5 class="card-title"><span class="text-danger"> <i class="fas fa-exclamation-triangle"></i> Blocked</span></h5>';
+                                                            echo '<h5 class="card-title"><span class="text-danger"> <i class="fas fa-exclamation-triangle"></i> Account Blocked</span></h5>';
                                                         } else  if ($rowReport['status'] === 'Unblock') {
                                                             // Borrower reported as Declined or Unblock
                                                             echo '<h5 class="card-title"></h5>';
