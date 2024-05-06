@@ -163,7 +163,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approvedBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeApproved = $row['datimeapproved'] ? date("m-d-Y h:i A", strtotime($row['datimeapproved'])) : '---';
+                                $dateTimeApproved = $row['datimeapproved'] ? date("F d, Y g:i A", strtotime($row['datimeapproved'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeApproved}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
@@ -171,7 +171,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approveReturnBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeReturn = $row['datetimereturn'] ? date("m-d-Y h:i A", strtotime($row['datetimereturn'])) : '---';
+                                $dateTimeReturn = $row['datetimereturn'] ? date("F d, Y g:i A", strtotime($row['datetimereturn'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeReturn}</td>";
 
                                  // Similarly, check other fields and display --- if NULL
@@ -209,12 +209,10 @@ if ($stmt) {
     <script src="assets/js/datatables.min.js"></script>
     <script src="assets/js/pdfmake.min.js"></script>
     <script src="assets/js/vfs_fonts.js"></script>
-
-
 <script>
 $(document).ready(function(){
     var table = $('#example').DataTable({
-        buttons:['copy', 'csv', 'excel', 'pdf', 'print'],
+        buttons:['copy', 'csv', 'excel'],
         "order": [[ 0   , "desc" ]],
         "columnDefs": [
             {
@@ -224,10 +222,13 @@ $(document).ready(function(){
             }
         ]
     });
-
     // Move the DataTable buttons container to a more appropriate location
     //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
     table.buttons().container().appendTo('#table-buttons-container');
+     // Append the PDF link to the buttons container
+     var pdfLink = '<a href="3print_pdf.php?start_date=<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>&end_date=<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>&search=<?php echo isset($_GET['search']) ? urlencode($_GET['search']) : ''; ?>&borrower_id=<?php echo $borrowerId; ?>" class="btn btn-secondary">PDF</a>';
+
+     $('#table-buttons-container').append(pdfLink);
 });
 </script>
 </body>

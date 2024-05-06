@@ -41,17 +41,17 @@
         if ($loginError) {
             if (isset($inactiveMessage)) {
                 echo '<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">';
-                echo '<h6>' . $inactiveMessage . '</h6>';
+                echo '<h6><i class="fas fa-exclamation-triangle"></i> ' . $inactiveMessage . '</h6>';
                 echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>';
                 echo '</div>';
             } else {
                 echo '<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">';
-                echo '<h6">Invalid Login Credentials.</h6>';
+                echo '<h6"><i class="fas fa-exclamation-triangle"></i> Invalid Login Credentials.</h6>';
                 echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>';
                 echo '</div>';
             }           
         } elseif (isset($loginError) && $loginError) {
-            echo '<p style="color: red;">Login failed. Please check your credentials.</p>';
+            echo '<p style="color: red;"><i class="fas fa-exclamation-triangle"></i> Login failed. Please check your credentials.</p>';
         }
         if (isset($_GET["msg_success"])) {
             echo '<div class="alert alert-success alert-dismissible fade show text-center" role="alert">';

@@ -164,7 +164,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approvedBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeApproved = $row['datimeapproved'] ? date("m-d-Y h:i A", strtotime($row['datimeapproved'])) : '---';
+                                $dateTimeApproved = $row['datimeapproved'] ? date("F d, Y g:i A", strtotime($row['datimeapproved'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeApproved}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
@@ -172,7 +172,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approveReturnBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeReturn = $row['datetimereturn'] ? date("m-d-Y h:i A", strtotime($row['datetimereturn'])) : '---';
+                                $dateTimeReturn = $row['datetimereturn'] ? date("F d, Y g:i A", strtotime($row['datetimereturn'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeReturn}</td>";
 
                                 $returncondition = $row['returnitemcondition'] ?? '---';

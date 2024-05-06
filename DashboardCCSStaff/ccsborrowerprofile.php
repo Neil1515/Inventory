@@ -263,9 +263,10 @@ if(isset($_POST['reportuserBtn'])) {
             </div>
             <form method="post" action="" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <div class="text-center mb-3">
-                        <img src="/inventory/images/UAC.png" alt="Image" id="userImage" style="max-width: 150px;">
-                    </div>
+                <div class="text-center mb-3">
+                    <img src="/inventory/images/account1.png" alt="Image" id="userImage" style="width: 200px; height: 200px;">
+                </div>
+
                     <div class="form-group">
                         <label for="reportReason">Reason for Reporting<span class="text-danger">*</span></label>
                         <select class="form-control" id="reportReason" name="reportReason" required>
@@ -303,7 +304,7 @@ if(isset($_POST['reportuserBtn'])) {
                 <h5> Borrower Profile</h5>
                     <div>
                         <a href="javascript:history.back()" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
-                        <a  class="btn btn-primary"><i class="fas fa-file-alt"></i> Reports</a>
+                        <a  href="ccsstaffborrowerreports.php?borrower_id=<?php echo $row['id']; ?>" class="btn btn-primary"><i class="fas fa-file-alt"></i> Reports</a>
                         <a href="ccsstaffConversation.php?sender_id=<?php echo $row['id']; ?>" class="btn btn-success"><i class='fas fa-envelope'></i> Message</a>
                     </div>
                 </div>

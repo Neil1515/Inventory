@@ -90,6 +90,7 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
             LEFT JOIN tblusers AS u3 ON br.approvereturnbyid = u3.id
             LEFT JOIN tblitembrand AS ib ON br.itemid = ib.id
             WHERE (br.itemreqstatus LIKE '%$search_query%' OR
+                   br.returnitemcondition LIKE '%$search_query%' OR
                    ib.subcategoryname LIKE '%$search_query%' OR
                    CONCAT(u1.fname, ' ', u1.lname) LIKE '%$search_query%' OR
                    CONCAT(u2.fname, ' ', u2.lname) LIKE '%$search_query%' OR
@@ -203,9 +204,8 @@ $content .= '
     <h2 style="margin: 20; text-align: center;">CCS-IMS Inventory Management System</h2>
     <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandue</p>
     <p style="margin: 0; text-align: center;">As of ' . $current_date . '</p>
-    <h4 style="margin-top: 2px;">Borrowers Report</h4>
-    <p style="margin-bottom: 5px;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .'</p>
-    <p style="margin-bottom: 5px;">Search: ' . ($_GET['search'] ?? 'none') . '</p>
+    <p style="margin-bottom: 1px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
+    <h3 style="margin-top: 2px;">Borrowers Report</h3>
     <table border="1" cellspacing="0" cellpadding="3">
         <tr align="center">
             <th>Status</th>
@@ -222,11 +222,9 @@ $content .= '
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '');
 $content .= '</table>';
 $content .= '<br>';
-// Append Dean's name with salutation to the PDF content
-$content .= '<h3 style="margin-top: 25px; margin-bottom: 10px; margin-right: 25px;">CCS Dean: <u>' . $deanSalutation . ' ' . $deanName . '</u></h3><br><br>';
+$content .= '<br><br><h3 style="margin-top: 20px;">Printed by: <u>' . $staffSalutation . ' ' . $staffName . '</u></h3>';
 $content .= '<br>';
-$content .= '<br>';
-$content .= '<br><br><h3 style="margin-top: 100px;">Printed by: <u>' . $staffSalutation . ' ' . $staffName . '</u></h3>';
+$content .= '<h3 style="margin-top: 25px; margin-bottom: 10px; margin-right: 25px;  text-align: right;">CCS Dean: <u>' . $deanSalutation . ' ' . $deanName . '</u></h3><br><br>';
 
 // Write the HTML content to the PDF and output it
 $pdf->writeHTML($content);
