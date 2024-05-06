@@ -258,7 +258,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         
     } else {
         // Retrieve user information based on the logged-in user ID
-        $query = "SELECT fname, lname, id FROM tblusers WHERE id = ?";
+        $query = "SELECT fname, lname, id, gender FROM tblusers WHERE id = ?";
         $stmt = mysqli_prepare($con, $query);
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "s", $_SESSION['staff_id']);
@@ -266,15 +266,24 @@ if ($result && mysqli_num_rows($result) > 0) {
                 $result = mysqli_stmt_get_result($stmt);
                 if ($result && mysqli_num_rows($result) > 0) {
                     $user_row = mysqli_fetch_assoc($result);
-                    echo $user_row['fname'] . ' ' . $user_row['lname'];
+
+                    // Determine salutation based on gender
+                    if ($user_row['gender'] == 'Male') {
+                        $staffSalutation = 'Mr.';
+                    } else {
+                        $staffSalutation = 'Ms.';
+                    }
+
+                    // Display salutation, first name, and last name
+                    echo $staffSalutation . ' ' . $user_row['fname'] . ' ' . $user_row['lname'];
+
+                    // Display profile image
                     $profileImagePath = "/inventory/images/imageofusers/" . $user_row['id'] . ".png";
                     if (!empty($user_row['id'])) {
                         // If the user has a profile image, display it
                         echo '<img src="' . $profileImagePath . '?' . time() . '" alt="" class="userpicture" width="50">';
-                        //echo '<img src="/inventory/images/imageofusers/' . $user_row['id'] . '.png" alt="userpicture" class="userpicture" width="50">';
                     } else {
                         // If the user does not have a profile image, display the default image
-                        //echo '<img src="/inventory/images/profile-user.png" alt="userpicture" class="userpicture" width="50">';
                         echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" alt="userpicture" class="userpicture" width="50">';
                     }
                 }
@@ -284,7 +293,6 @@ if ($result && mysqli_num_rows($result) > 0) {
     }
     ?>
 </button>
-
                 <ul class="dropdown-menu" aria-labelledby="userDropdown">
                     <!-- Add your dropdown items here -->
                     <li><a class="dropdown-item" href="ccsstafProfile.php?staffId=<?php echo $staffId; ?>">Profile</a></li>

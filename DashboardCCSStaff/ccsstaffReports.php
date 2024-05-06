@@ -82,7 +82,7 @@ if ($stmt) {
                                 <label for="endDate" class="ms-2 me-2">End Date:</label>
                                 <input type="date" class="form-control" id="endDate" name="end_date" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
                                 <button type="submit" class="btn btn-primary me-1">Filter</button>
-                                <label id="table-buttons-container" class="ms-2"></label>
+                                <label id="table-buttons-container"></label>    
                             </div>
                         </form>
                     </div>
@@ -126,11 +126,11 @@ if ($stmt) {
                             // Add WHERE clause if both start date and end date are provided
                             if (!empty($start_date) && !empty($end_date)) {
                                 // Add a WHERE clause to filter the data based on the date range
-                                $query .= " WHERE DATE(br.datetimereqborrow) BETWEEN '$start_date' AND '$end_date'";
+                                $query .= " WHERE DATE(br.datimeapproved) BETWEEN '$start_date' AND '$end_date'";
                             }
 
                             // Add ORDER BY clause to order by datetimereqborrow in descending order
-                            $query .= " ORDER BY br.datetimereqborrow DESC"; 
+                            $query .= " ORDER BY br.datimeapproved DESC"; 
                                                     
                             $result = mysqli_query($con, $query);
                             while ($row = mysqli_fetch_assoc($result)) {
@@ -164,7 +164,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approvedBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeApproved = $row['datimeapproved'] ? date("Y-m-d h:i A", strtotime($row['datimeapproved'])) : '---';
+                                $dateTimeApproved = $row['datimeapproved'] ? date("m-d-Y h:i A", strtotime($row['datimeapproved'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeApproved}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
@@ -172,7 +172,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approveReturnBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeReturn = $row['datetimereturn'] ? date("Y-m-d h:i A", strtotime($row['datetimereturn'])) : '---';
+                                $dateTimeReturn = $row['datetimereturn'] ? date("m-d-Y h:i A", strtotime($row['datetimereturn'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeReturn}</td>";
 
                                 $returncondition = $row['returnitemcondition'] ?? '---';
@@ -205,7 +205,7 @@ if ($stmt) {
 <script>
 $(document).ready(function(){
     var table = $('#example').DataTable({
-        buttons:['copy', 'csv', 'excel', 'pdf', 'print'],
+        buttons:['copy', 'csv', 'excel'],
         "order": [[ 0   , "desc" ]],
         "columnDefs": [
             {
@@ -215,10 +215,12 @@ $(document).ready(function(){
             }
         ]
     });
-
     // Move the DataTable buttons container to a more appropriate location
     //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
     table.buttons().container().appendTo('#table-buttons-container');
+     // Append the PDF link to the buttons container
+     var pdfLink = '<a href="1print_pdf.php?start_date=<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>&end_date=<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>&search=<?php echo isset($_GET['search']) ? urlencode($_GET['search']) : ''; ?>" class="btn btn-secondary">PDF</a>';
+    $('#table-buttons-container').append(pdfLink);
 });
 </script>
 </body>

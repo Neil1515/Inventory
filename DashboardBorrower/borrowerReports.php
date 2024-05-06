@@ -49,11 +49,11 @@ if ($stmt) {
     <!-- Bootstrap and Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 </head>
 <body>
 <div class="container-fluid">
         <!-- Header at the top -->
+        
         <div class="row">      
                 <?php include('bwerheader.php'); ?>
         </div>
@@ -80,7 +80,7 @@ if ($stmt) {
                                 <label for="endDate" class="ms-2 me-2">End Date:</label>
                                 <input type="date" class="form-control" id="endDate" name="end_date" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
                                 <button type="submit" class="btn btn-primary me-1">Filter</button>
-                                <label id="table-buttons-container" class="ms-2"></label>
+                                <label id="table-buttons-container" class="ms-2"></label>             
                             </div>
                         </form>
                     </div>
@@ -123,7 +123,7 @@ if ($stmt) {
                             // Add WHERE clause if both start date and end date are provided
                             if (!empty($start_date) && !empty($end_date)) {
                             // Add a WHERE clause to filter the data based on the date range
-                            $query .= " AND DATE(br.datetimereqborrow) BETWEEN ? AND ?";
+                            $query .= " AND DATE(br.datimeapproved) BETWEEN ? AND ?";
                             }
 
                             $stmt = mysqli_prepare($con, $query);
@@ -148,7 +148,7 @@ if ($stmt) {
 
                                 // Check if the value is NULL, if so, display ---
                                 $itemStatus = $row['itemreqstatus'] ?? '---';
-                                echo "<td class='text-center'>{$itemStatus}</td>";
+                                echo "<td>{$itemStatus}</td>";
                                 
                                 // Similarly, check other fields and display --- if NULL
                                 $itemName = $row['subcategoryname'] ?? 'Item Not Found';
@@ -163,7 +163,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approvedBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeApproved = $row['datimeapproved'] ? date("Y-m-d h:i A", strtotime($row['datimeapproved'])) : '---';
+                                $dateTimeApproved = $row['datimeapproved'] ? date("m-d-Y h:i A", strtotime($row['datimeapproved'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeApproved}</td>";
                                 
                                 // Concatenate first and last name if both are not NULL, otherwise display ---
@@ -171,7 +171,7 @@ if ($stmt) {
                                 echo "<td class='text-center'>{$approveReturnBy}</td>";
                                 
                                 // Check if the value is NULL, if so, display ---
-                                $dateTimeReturn = $row['datetimereturn'] ? date("Y-m-d h:i A", strtotime($row['datetimereturn'])) : '---';
+                                $dateTimeReturn = $row['datetimereturn'] ? date("m-d-Y h:i A", strtotime($row['datetimereturn'])) : '---';
                                 echo "<td class='text-center'>{$dateTimeReturn}</td>";
 
                                  // Similarly, check other fields and display --- if NULL
@@ -209,24 +209,26 @@ if ($stmt) {
     <script src="assets/js/datatables.min.js"></script>
     <script src="assets/js/pdfmake.min.js"></script>
     <script src="assets/js/vfs_fonts.js"></script>
-    <script>
-    $(document).ready(function(){
-        var table = $('#example').DataTable({
-            buttons:['copy', 'csv', 'excel', 'pdf', 'print'],
-            "order": [[ 0   , "desc" ]],
-            "columnDefs": [
-                {
-                    "targets": [0], // Index of the Date column
-                    "visible": false, // Hide the column
-                    "searchable": false // Exclude from search
-                }
-            ]
-        });
 
-        // Move the DataTable buttons container to a more appropriate location
-        table.buttons().container().appendTo('#table-buttons-container');
+
+<script>
+$(document).ready(function(){
+    var table = $('#example').DataTable({
+        buttons:['copy', 'csv', 'excel', 'pdf', 'print'],
+        "order": [[ 0   , "desc" ]],
+        "columnDefs": [
+            {
+                "targets": [0], // Index of the Date column
+                "visible": false, // Hide the column
+                "searchable": false // Exclude from search
+            }
+        ]
     });
-</script>
 
+    // Move the DataTable buttons container to a more appropriate location
+    //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
+    table.buttons().container().appendTo('#table-buttons-container');
+});
+</script>
 </body>
 </html>
