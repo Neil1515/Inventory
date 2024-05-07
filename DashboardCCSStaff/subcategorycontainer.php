@@ -75,7 +75,6 @@ if (isset($_POST["addSubcategory"])) {
                         echo "Failed: " . mysqli_error($con);
                         exit();
                     }
-
                     mysqli_stmt_close($stmtInsert);
                 } else {
                     echo "Failed to prepare statement: " . mysqli_error($con);
@@ -219,7 +218,8 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
                 </div>
                 <div class="mb-3">
                     <label for="subcategoryName" class="form-label">Item Name<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" required>
+                    <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" pattern="^[^\d]+$" title="Please enter a valid item name (cannot contain numbers)" required>
+
                 </div>
                 <div class="mb-2">
                     <label for="image" class="form-label">Upload New Image</label>
@@ -256,7 +256,7 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
                 </div>
                 <div class="mb-3">
                     <label for="subcategoryName" class="form-label">Item Name:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" required>
+                    <input type="text" class="form-control" id="subcategoryName" name="subcategoryName" pattern="^[^\d]+$" title="Please enter a valid item name (cannot contain numbers)" required>
                 </div>
                 <div class="mb-2">
                     <label for="image" class="form-label">Upload Image:</label>
@@ -325,10 +325,16 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
         </div>
     </div>
 </div>
-
+<!-- Add this script to include jQuery before your custom script -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Bootstrap and Font Awesome -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-
-      
+  
      function confirmDeleteSubcategory(subcategoryId, sameSubcategoryCount) {
         if (sameSubcategoryCount >= 1) {
             alert("Cannot delete subcategory with items associated.");
@@ -427,4 +433,18 @@ $resultSubcategories = mysqli_query($con, $querySubcategories);
         }
     });
 });
+$(document).ready(function() {
+        // Function to validate input and prevent typing numbers and special characters
+        $('#subcategoryName').on('input', function() {
+            // Get the input value
+            var inputValue = $(this).val();
+            // Regular expression to allow only letters
+            var regex = /^[a-zA-Z\s]*$/;
+            // Test the input value against the regular expression
+            if (!regex.test(inputValue)) {
+                // If special characters are found, replace them with an empty string
+                $(this).val(inputValue.replace(/[^a-zA-Z\s]/g, ''));
+            }
+        });
+    });
 </script>

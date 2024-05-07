@@ -79,9 +79,9 @@ if ($stmt) {
 
 
 // Function to generate table rows based on filtered data
-function generateRows($con, $start_date, $end_date, $search_query, $borrowerIdFromDB) {
+function generateRows($con, $start_date, $end_date, $searchValue, $borrowerIdFromDB) {
     // Retrieve search query from GET parameter
-    $search_query = isset($_GET['search']) ? $_GET['search'] : '';
+    $searchValue = isset($_GET['search']) ? $_GET['search'] : '';
 
     // Modify the SQL query to include search functionality
     $query = "SELECT br.itemreqstatus, br.itemid, br.returnitemcondition, ib.subcategoryname,
@@ -96,13 +96,13 @@ function generateRows($con, $start_date, $end_date, $search_query, $borrowerIdFr
             LEFT JOIN tblusers AS u2 ON br.approvebyid = u2.id
             LEFT JOIN tblusers AS u3 ON br.approvereturnbyid = u3.id
             LEFT JOIN tblitembrand AS ib ON br.itemid = ib.id
-            WHERE (br.itemreqstatus LIKE '%$search_query%' OR
-                   br.returnitemcondition LIKE '%$search_query%' OR
-                   ib.subcategoryname LIKE '%$search_query%' OR
-                   CONCAT(u1.fname, ' ', u1.lname) LIKE '%$search_query%' OR
-                   CONCAT(u2.fname, ' ', u2.lname) LIKE '%$search_query%' OR
-                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')
-                   AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
+            WHERE (br.itemreqstatus LIKE '%$searchValue%' OR
+                   br.returnitemcondition LIKE '%$searchValue%' OR
+                   ib.subcategoryname LIKE '%$searchValue%' OR
+                   CONCAT(u1.fname, ' ', u1.lname) LIKE '%$searchValue%' OR
+                   CONCAT(u2.fname, ' ', u2.lname) LIKE '%$searchValue%' OR
+                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$searchValue%')
+                   AND br.itemreqstatus NOT IN ('Rejected', 'Canceled', 'Expired Reservation')";
 
     // Add WHERE clause if borrower ID is provided
     if (!empty($borrowerIdFromDB)) {

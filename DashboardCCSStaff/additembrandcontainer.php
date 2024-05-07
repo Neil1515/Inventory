@@ -194,12 +194,12 @@ if (isset($_POST["addItemBrand"])) {
         });
 
         // Event listener for the quantity input
-        $("#quantity").change(function() {
+        $("#quantity").on("input", function() {
             var quantity = $(this).val();
             var serialInput = $("#serialNo");
-
-            // Disable Serial Number input if quantity is more than 1
-            if (quantity > 1) {
+            serialInput.val("");
+            // Disable Serial Number input if quantity is 0 or 2 or more
+            if (quantity == 0 || quantity >= 2) {
                 serialInput.prop("disabled", true);
             } else {
                 serialInput.prop("disabled", false);

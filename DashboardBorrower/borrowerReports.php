@@ -80,7 +80,8 @@ if ($stmt) {
                                 <label for="endDate" class="ms-2 me-2">End Date:</label>
                                 <input type="date" class="form-control" id="endDate" name="end_date" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
                                 <button type="submit" class="btn btn-primary me-1">Filter</button>
-                                <label id="table-buttons-container" class="ms-2"></label>             
+                                <label id="table-buttons-container" class="ms-2"></label>   
+                                <button id="generatePdfBtn" class="btn btn-secondary">PDF</button>          
                             </div>
                         </form>
                     </div>
@@ -209,11 +210,11 @@ if ($stmt) {
     <script src="assets/js/datatables.min.js"></script>
     <script src="assets/js/pdfmake.min.js"></script>
     <script src="assets/js/vfs_fonts.js"></script>
-<script>
+    <script>
 $(document).ready(function(){
     var table = $('#example').DataTable({
         buttons:['copy', 'csv', 'excel'],
-        "order": [[ 0   , "desc" ]],
+        "order": [[ 0, "desc" ]],
         "columnDefs": [
             {
                 "targets": [0], // Index of the Date column
@@ -223,13 +224,26 @@ $(document).ready(function(){
         ]
     });
     // Move the DataTable buttons container to a more appropriate location
-    //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
     table.buttons().container().appendTo('#table-buttons-container');
-     // Append the PDF link to the buttons container
-     var pdfLink = '<a href="3print_pdf.php?start_date=<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>&end_date=<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>&search=<?php echo isset($_GET['search']) ? urlencode($_GET['search']) : ''; ?>&borrower_id=<?php echo $borrowerId; ?>" class="btn btn-secondary">PDF</a>';
+    
 
-     $('#table-buttons-container').append(pdfLink);
+    // Bind click event handler to the PDF generation button
+    $('#generatePdfBtn').click(function() {
+        // Retrieve the search input value
+        var searchValue = $('#example_filter input[type="search"]').val();
+        // Retrieve other parameters from the URL
+        var startDate = '<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>';
+        var endDate = '<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>';
+        var borrowerId = '<?php echo $borrowerId; ?>';
+        // Construct the PDF link with all parameters
+        var pdfLink = '3print_pdf.php?start_date=' + startDate + '&end_date=' + endDate + '&borrower_id=' + borrowerId + '&search=' + encodeURIComponent(searchValue);
+        // Open the PDF link in a new tab
+        window.open(pdfLink);
+    });
 });
 </script>
+
+
+
 </body>
 </html>

@@ -34,6 +34,48 @@ if ($stmt) {
     // You might want to log the error or display an error message
     die('Statement preparation failed: ' . mysqli_error($con));
 }
+
+
+// Retrieve current date and time
+date_default_timezone_set('Asia/Manila');
+$currentDateTime = date("Y-m-d H:i:s");
+
+// Update expired reservations in tblborrowingreports
+$queryUpdateExpiredReservations = "UPDATE tblborrowingreports SET itemreqstatus = 'Expired Reservation'  WHERE (itemreqstatus = 'Approve Reserve' OR itemreqstatus = 'Pending Reserve') AND datetimereserve < ?";
+$stmtUpdateExpiredReservations = mysqli_prepare($con, $queryUpdateExpiredReservations);
+
+if ($stmtUpdateExpiredReservations) {
+    mysqli_stmt_bind_param($stmtUpdateExpiredReservations, "s", $currentDateTime);
+    if (!mysqli_stmt_execute($stmtUpdateExpiredReservations)) {
+        // Handle the case when update fails
+        // You might want to log the error or display an error message
+        die('Failed to update expired reservations in tblborrowingreports: ' . mysqli_error($con));
+    }
+    mysqli_stmt_close($stmtUpdateExpiredReservations);
+} else {
+    // Handle the case when statement preparation fails
+    // You might want to log the error or display an error message
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
+// Update status to 'Available' in tblitembrand
+$queryUpdateItemStatus = "UPDATE tblitembrand SET status = 'Available' WHERE id IN (SELECT itemid FROM tblborrowingreports WHERE itemreqstatus = 'Expired Reservation' AND datetimereserve < ?)";
+$stmtUpdateItemStatus = mysqli_prepare($con, $queryUpdateItemStatus);
+
+if ($stmtUpdateItemStatus) {
+    mysqli_stmt_bind_param($stmtUpdateItemStatus, "s", $currentDateTime);
+    if (!mysqli_stmt_execute($stmtUpdateItemStatus)) {
+        // Handle the case when update fails
+        // You might want to log the error or display an error message
+        die('Failed to update item status in tblitembrand: ' . mysqli_error($con));
+    }
+    mysqli_stmt_close($stmtUpdateItemStatus);
+} else {
+    // Handle the case when statement preparation fails
+    // You might want to log the error or display an error message
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+
 ?>
 
 <script>

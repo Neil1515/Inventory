@@ -126,7 +126,8 @@ if ($stmt) {
                                 <!-- Add a hidden input field to store the borrower's ID -->
                                 <input type="hidden" name="borrower_id" value="<?php echo $borrowerId; ?>">
                                 <button type="submit" class="btn btn-primary me-1">Filter</button> 
-                                <label id="table-buttons-container" class="ms-2"></label>                      
+                                <label id="table-buttons-container" class="ms-2"></label>   
+                                <button id="generatePdfBtn" class="btn btn-secondary">PDF</button>                   
                             </div>
                         </form>
                     </div>
@@ -165,7 +166,7 @@ if ($stmt) {
                             LEFT JOIN tblusers AS u3 ON br.approvereturnbyid = u3.id
                             LEFT JOIN tblitembrand AS ib ON br.itemid = ib.id
                             WHERE br.borrowerid = ?
-                            AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
+                            AND br.itemreqstatus NOT IN ('Rejected', 'Canceled', 'Expired Reservation')";
 
 
                             // Add WHERE clause if both start date and end date are provided
@@ -281,12 +282,26 @@ $(document).ready(function(){
         ]
     });
     // Move the DataTable buttons container to a more appropriate location
-    //table.buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
     table.buttons().container().appendTo('#table-buttons-container');
-     // Append the PDF link to the buttons container
-     var pdfLink = '<a href="2print_pdf.php?start_date=<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>&end_date=<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>&search=<?php echo isset($_GET['search']) ? urlencode($_GET['search']) : ''; ?>&borrower_id=<?php echo $borrowerIdFromDB; ?>" class="btn btn-secondary">PDF</a>';
 
-     $('#table-buttons-container').append(pdfLink);
+     // Bind click event handler to the PDF generation button
+     $('#generatePdfBtn').click(function() {
+        // Retrieve the search input value
+        var searchValue = $('#example_filter input[type="search"]').val();
+        // Retrieve other parameters from the URL
+        var startDate = '<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>';
+        var endDate = '<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>';
+        var borrowerIdFromDB = '<?php echo $borrowerIdFromDB; ?>';
+        // Construct the PDF link with all parameters
+        var pdfLink = '2print_pdf.php?start_date=' + startDate + '&end_date=' + endDate + '&borrower_id=' + borrowerIdFromDB + '&search=' + encodeURIComponent(searchValue);
+        // Open the PDF link in a new tab
+        window.open(pdfLink);
+    });
+
+     // Append the PDF link to the buttons container
+     //var pdfLink = '<a href="2print_pdf.php?start_date=<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>&end_date=<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>&search=<?php echo isset($_GET['search']) ? urlencode($_GET['search']) : ''; ?>&borrower_id=<?php echo $borrowerIdFromDB; ?>" class="btn btn-secondary">PDF</a>';
+
+     //$('#table-buttons-container').append(pdfLink);
 });
 </script>
 </body>

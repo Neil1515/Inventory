@@ -159,7 +159,6 @@ function decrementCount($subcategoryname) {
 </style>
 <!-- Add this script to include jQuery before your custom script -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <!-- Your custom script -->
 <script>
 function decrementCount(subcategoryname, itembrand) {

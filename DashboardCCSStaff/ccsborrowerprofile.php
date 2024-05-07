@@ -172,9 +172,8 @@ if (isset($_GET['borrower_id'])) {
                 $row = mysqli_fetch_assoc($resultBorrowerDetails);
                 $userBorrowerId = $row['id'];
             } else {
-                echo '<div class="text-center">';
+                echo '<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">';
                 die("No borrower information found for ID: $borrowerId");
-                echo '</div>';
             }
         } else {
             // Handle query execution failure
@@ -514,6 +513,7 @@ if (isset($_POST['reportuserBtn'])) {
 <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
     document.getElementById('borrowerName').addEventListener('click', function () {

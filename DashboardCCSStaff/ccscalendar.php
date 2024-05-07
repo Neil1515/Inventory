@@ -17,19 +17,6 @@ if ($events_result) {
         // Get the datetime requested to borrow
         $datetime = $row['datetimereserve'];
     
-        // Check if the reservation is expired (more than 1 hours)
-        $expiry_time = strtotime($datetime) + (1 * 60 * 60); // Add 1 hours to the reservation time
-        if (time() > $expiry_time) {
-            // Update the status to 'Expire' in tblborrowingreports
-            $update_query = "UPDATE tblborrowingreports SET itemreqstatus='Expired Reservation' WHERE id = {$row['id']}";
-            mysqli_query($con, $update_query);
-            
-            // Update the status to 'Available' in tblitembrand
-            $update_brand_query = "UPDATE tblitembrand SET status='Available' WHERE id IN ({$row['itemid']})";
-            mysqli_query($con, $update_brand_query);
-            
-            continue; // Skip to the next event
-        }
         // Format the date and time
         $formattedDateTime = date('h:iA F-d-Y', strtotime($datetime));
     

@@ -95,7 +95,7 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
                    CONCAT(u1.fname, ' ', u1.lname) LIKE '%$search_query%' OR
                    CONCAT(u2.fname, ' ', u2.lname) LIKE '%$search_query%' OR
                    CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')
-                   AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
+                   AND br.itemreqstatus NOT IN ('Rejected', 'Canceled', 'Expired Reservation')";
 
     // Add WHERE clause if both start date and end date are provided
     if (!empty($start_date) && !empty($end_date)) {
