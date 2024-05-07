@@ -1,6 +1,8 @@
 <!-- edititemdetails.php -->
 <?php
 include "ccsfunctions.php";
+// Retrieve user information based on the logged-in user ID
+$staffId = $_SESSION['staff_id'];
 
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
 
@@ -25,7 +27,8 @@ if ($stmtSelect) {
     error_log("Statement preparation failed: " . mysqli_error($con));
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST["updateitem"])) {
     // Retrieve form data
     $itembrand = $_POST["itembrand"];
     $categoryname = $_POST["categoryname"];
@@ -97,23 +100,104 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                 Error updating item details.
              </div>';
     }
+} elseif (isset($_POST["confirmdelete"])) {
+    // Check if the item has already been requested for deletion
+    $sqlCheckRequest = "SELECT * FROM `tblpendingitemremoval` WHERE itemid = ? AND status = 'Pending'";
+    $stmtCheckRequest = mysqli_prepare($con, $sqlCheckRequest);
+
+    if ($stmtCheckRequest) {
+        mysqli_stmt_bind_param($stmtCheckRequest, "i", $id);
+        mysqli_stmt_execute($stmtCheckRequest);
+        $resultCheckRequest = mysqli_stmt_get_result($stmtCheckRequest);
+
+        if ($resultCheckRequest && mysqli_num_rows($resultCheckRequest) > 0) {
+            // Inform the user that the item has already been requested for deletion
+            echo '<div class="alert alert-danger mt-3" role="alert">
+                    This item has already been requested for deletion.
+                 </div>';
+        } else {
+            // Insert request to delete item into tblpendingitemremoval
+            $staffid = $_POST["staffid"]; // Assuming you have a staff ID
+            $status = "Pending";
+            // Determine item condition based on purchase date
+            date_default_timezone_set('Asia/Manila');
+            $datetimereq = date("Y-m-d H:i:s");
+
+            $sqlInsertRequest = "INSERT INTO `tblpendingitemremoval` (itemid, staffid, status, datetimereq) VALUES (?, ?, ?, ?)";
+            $stmtInsertRequest = mysqli_prepare($con, $sqlInsertRequest);
+
+            if ($stmtInsertRequest) {
+                mysqli_stmt_bind_param($stmtInsertRequest, "iiss", $id, $staffid, $status, $datetimereq);
+                if (mysqli_stmt_execute($stmtInsertRequest)) {
+                    echo "<script>window.location.href='ccstaffListofItems.php?msg_success=Deletion request sent successfully.';</script>";
+                    exit();
+                } else {
+                    // Log the error instead of displaying to users
+                    error_log("Failed to insert deletion request: " . mysqli_error($con));
+                    echo '<div class="alert alert-danger mt-3" role="alert">
+                            Error sending deletion request.
+                         </div>';
+                }
+                mysqli_stmt_close($stmtInsertRequest);
+            } else {
+                // Log the error instead of displaying to users
+                error_log("Statement preparation failed: " . mysqli_error($con));
+                echo '<div class="alert alert-danger mt-3" role="alert">
+                        Error sending deletion request.
+                     </div>';
+            }
+        }
+    } else {
+        // Log the error instead of displaying to users
+        error_log("Statement preparation failed: " . mysqli_error($con));
+        echo '<div class="alert alert-danger mt-3" role="alert">
+                Error checking deletion request.
+             </div>';
+    }
+}
 }
 ?>
 <form action="" method="post" enctype="multipart/form-data" name="updateitemForm">
+
+<!-- Delete item Modal HTML Structure -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Item</h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <img src="..\images\delete.gif" alt="delete Image" id="deleteImage" style="max-width: 100%; max-height: 100%;">
+                </div>
+                <div class="text-center mb-3">
+                    <p>Are you sure you want to request delete this item?</p>
+                </div>
+                <input type="hidden" name="staffid" value=<?php echo $staffId ?>> 
+                <input type="hidden" name="confirmdelete">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmdeleteBtn">Confirm Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container mt-1">
+<?php if (isset($row)): ?>
         <div class="row">
             <div class="col-md-7">
                 <!-- Form to add a new item Product -->
                 <h4 class="col-md text-start">Item Details</h4>
             </div>
             <div class="col-md-5 text-end">          
-                <button type="submit" class="btn btn-danger" name="deleteitem"><i class="fas fa-trash-alt"></i> Delete Item</button>
-                <button type="submit" class="btn btn-success" name="overviewitem"><i class="fas fa-history"></i> View History Transaction</button>
+                <a class="btn btn-danger" name="deleteitem" id="deleteItemButton"><i class="fas fa-trash-alt"></i> Request to Delete</a>
+                <a  class="btn btn-success" name="overviewitem"><i class="fas fa-history"></i> View History Transaction</a>
             </div>
         </div>
         <div class="row mt-1">
             <div class="col-md-12">
-                <?php if (isset($row)): ?>
                     <div class="card">
                         <div class="card-body"> 
                         <div class="row">                        
@@ -228,31 +312,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
                             </div>
                         </div>
                     </div>
-                <?php else: ?>
-                    <div class="alert alert-danger mt-3" role="alert">
-                        Item not found.
-                    </div>
-                <?php endif; ?>
+                </div>
             </div>
-        </div>
-    </div>
-<!-- Your Custom Script -->
-
+        <?php else: ?>
+            <div class="alert alert-danger mt-3" role="alert">
+            Item not found.
+            </div>
+    <?php endif; ?>
+</div>
 <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- jQuery and Bootstrap JS (Popper.js and Bootstrap JS) -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Autocomplete library CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha384-vk5+OZkz1TK8j0rPbZtph/uW9RJpZl3sn4b8bDqz7g9br7RsEC0tDZ4QbI5P1ptN" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
 <!-- jQuery and Autocomplete library JS -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha384-nvVw+zI2tP8Y2vZ1bqBCvC4zACD/02rR5L5bZ2b/RYs8wZgEAsHCCjQ6bphG/P4f" crossorigin="anonymous"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         // Event listener for the category dropdown
@@ -278,22 +360,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["updateitem"])) {
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    var deleteItemButton = document.getElementById('deleteItemButton');
+    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    var confirmDeleteBtn = document.getElementById('confirmdeleteBtn');
 
-    $(document).ready(function () {
-        // Initialize autocomplete on the assignfor field
-        $("#assignfor").autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: "getAssignForSuggestions.php", // Replace with the actual PHP file to fetch suggestions
-                    method: "POST",
-                    dataType: "json",
-                    data: { term: request.term },
-                    success: function (data) {
-                        response(data);
-                    }
-                });
-            },
-            minLength: 2 // Minimum characters before triggering autocomplete
-        });
+    deleteItemButton.addEventListener('click', function() {
+        deleteModal.show();
     });
+
+    confirmDeleteBtn.addEventListener('click', function() {
+        document.forms['updateitemForm'].submit();
+    });
+});
+
 </script>

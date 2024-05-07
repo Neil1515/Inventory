@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2024 at 06:35 PM
+-- Generation Time: May 06, 2024 at 01:49 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -92,13 +92,7 @@ INSERT INTO `tblborrowingreports` (`id`, `itemid`, `approvebyid`, `approvereserv
 (1242, 75, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-05 15:19:31', NULL, NULL, NULL, NULL, NULL, '2024-05-06 10:33:34', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
 (1243, 116, 3, NULL, NULL, 3, 988, 'Returned', '2024-05-06 10:45:53', NULL, '2024-05-06 13:01:34', NULL, NULL, NULL, NULL, NULL, '2024-05-06 13:22:17', NULL, 'sad', 'CTHOP9Y5', 'Damage', NULL, NULL),
 (1244, 75, 9, NULL, NULL, 9, 988, 'Returned', '2024-05-06 14:11:01', NULL, '2024-05-06 14:11:26', NULL, NULL, NULL, NULL, NULL, '2024-05-06 14:11:44', NULL, '74', 'O4PDUYRI', 'No Issue', NULL, NULL),
-(1245, 73, 3, NULL, NULL, NULL, 988, 'Approved', '2024-05-06 14:12:49', NULL, '2024-05-06 20:32:28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
-(1246, 75, 0, NULL, NULL, NULL, 10, 'Canceled', '2024-05-07 08:55:32', NULL, NULL, NULL, NULL, NULL, NULL, '2024-05-07 08:55:40', NULL, NULL, NULL, '', NULL, NULL, NULL),
-(1247, 75, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-07 08:57:48', NULL, '2024-05-07 10:24:32', NULL, NULL, NULL, NULL, NULL, '2024-05-07 10:26:03', '2024-05-07 10:25:02', 'sad', 'IACHNMIX', 'Lost', NULL, NULL),
-(1248, 121, 0, 3, NULL, NULL, 10, 'Expired Reservation', NULL, '2024-05-07 12:59:18', NULL, '2024-05-07 13:01:00', NULL, '2024-05-07 12:59:36', NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1249, 135, 0, 3, NULL, NULL, 10, 'Expired Reservation', NULL, '2024-05-07 13:18:49', NULL, '2024-05-07 13:23:00', '2024-05-07 13:22:20', '2024-05-07 13:18:57', NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1250, 135, 0, NULL, NULL, NULL, 10, 'Expired Reservation', NULL, '2024-05-07 13:23:52', NULL, '2024-05-07 13:24:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1251, 135, 3, 3, NULL, 3, 10, 'Returned', NULL, '2024-05-07 13:30:36', '2024-05-07 13:30:55', '2024-05-07 13:31:00', NULL, '2024-05-07 13:30:42', NULL, NULL, '2024-05-07 19:47:18', '2024-05-07 19:47:05', 'sad', 'UWOKQLX6', 'No Issue', 'sad', 'sad');
+(1245, 73, 0, NULL, NULL, NULL, 988, 'Pending Borrow', '2024-05-06 14:12:49', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -131,7 +125,7 @@ CREATE TABLE `tblitembrand` (
 
 INSERT INTO `tblitembrand` (`id`, `staffid`, `staffname`, `itembrand`, `categoryname`, `subcategoryname`, `borrowable`, `remarks`, `modelno`, `serialno`, `unitcost`, `status`, `itemcondition`, `datetimeadded`, `assignfor`, `datepurchased`) VALUES
 (72, 3, 'Naix Lifestealer', 'Intel Pentium Dual E2140 160 Ghz', 'Computer Hardware and Projector', 'CPU', 'Yes', '', '', 'SN-9356-VSND', 0, 'Available', 'New', '2024-03-13 16:12:54', 'MS. Aurora Miro Desk', '2024-03-01'),
-(73, 3, 'Naix Lifestealer', '1 GB Kingston', 'Computer Hardware and Projector', 'Memmory', 'Yes', '', '', 'SN-1265-XNIZ', 0, 'Borrowed', 'New', '2024-03-13 16:13:50', 'MS. Aurora Miro Desk', '2024-03-01'),
+(73, 3, 'Naix Lifestealer', '1 GB Kingston', 'Computer Hardware and Projector', 'Memmory', 'Yes', '', '', 'SN-1265-XNIZ', 0, 'Pending Borrow', 'New', '2024-03-13 16:13:50', 'MS. Aurora Miro Desk', '2024-03-01'),
 (74, 3, 'Naix Lifestealer', '1 GB Kingston', 'Computer Hardware and Projector', 'Memmory', 'Yes', '', '', 'SN-9046-CGWJ', 0, 'Available', 'New', '2024-03-13 16:13:50', 'For Faculty 1', '2024-03-01'),
 (75, 3, 'Naix Lifestealer', '80 GB SATA', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', '', 'SN-2510-ZBFX', 0, 'Available', 'New', '2024-03-13 16:14:31', 'MS. Aurora Miro Desk', '2024-03-01'),
 (76, 3, 'Naix Lifestealer', 'attached', 'Computer Hardware and Projector', 'Video Card', 'Yes', '', '', 'SN-3458-YMVO', 0, 'Available', 'New', '2024-03-13 16:16:56', 'MS. Aurora Miro Desk', '2024-03-01'),
@@ -167,16 +161,18 @@ INSERT INTO `tblitembrand` (`id`, `staffid`, `staffname`, `itembrand`, `category
 (117, 3, 'Naix Lifestealer', 'Samsung', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-5739-BVOF', 0, 'Available', 'New', '2024-03-13 21:27:31', 'For Faculty 1', '2024-03-01'),
 (118, 3, 'Naix Lifestealer', 'Windows XP Professional', 'Computer Hardware and Projector', 'Operating System', 'Yes', '', '', 'SN-1470-PXEF', 0, 'Available', 'New', '2024-03-13 21:32:34', 'For Faculty 1', '2024-03-01'),
 (119, 3, 'Naix Lifestealer', 'Samsung Syncmaster', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-3401-IUHM', 0, 'Available', 'New', '2024-03-13 21:36:58', 'Miss Gian PC', '2024-03-01'),
-(120, 3, 'Naix Lifestealer', 'Toshiba v1', 'Appliances', 'Stand Fand', 'Yes', '', '', 'SN-8356-AXYK', 0, 'Available', 'Good', '2024-03-19 21:07:44', '', '2024-03-20'),
-(121, 3, 'Naix Lifestealer', 'pldt', 'Ring Binder', 'Guitar', 'Yes', '', '', 'SN-6402-KXJD', 0, 'Available', 'Good', '2024-04-09 19:11:18', '', '2024-04-09'),
-(122, 3, 'Naix Lifestealer', 'sad12ds', 'Ring Binder', 'Guitar', 'Yes', '', '', 'SN-8675-BNWP', 0, 'Available', 'New', '2024-04-09 19:19:26', '', '2024-04-09'),
+(120, 3, 'Naix Lifestealer', 'Toshiba v1', 'Appliances', 'Stand Fan', 'Yes', '', '', 'SN-8356-AXYK', 0, 'Available', 'Good', '2024-03-19 21:07:44', '', '2024-03-20'),
+(121, 3, 'Naix Lifestealer', 'pldt', 'Ring Binder', 'Sample', 'Yes', '', '', 'SN-6402-KXJD', 0, 'Available', 'Good', '2024-04-09 19:11:18', '', '2024-04-09'),
+(122, 3, 'Naix Lifestealer', 'sad12ds', 'Ring Binder', 'Sample', 'Yes', '', '', 'SN-8675-BNWP', 0, 'Available', 'New', '2024-04-09 19:19:26', '', '2024-04-09'),
 (123, 3, 'Naix Lifestealer', 'sample', 'Sample', 'ZamBo', 'Yes', 'awd', 'sad', 'SN-3794-OAKG', 2131, 'Available', 'New', '2024-04-21 10:02:33', '', '2024-04-02'),
 (124, 3, 'Naix Lifestealer', 'sample', 'Sample', 'ZamBo', 'Yes', 'awd', 'sad', 'SN-9251-PCTQ', 2131, 'Available', 'New', '2024-04-21 10:02:33', '', '2024-04-02'),
 (125, 3, 'Ms. Gian Mahusay', 'Converge', 'Computer Hardware and Projector', 'Router', 'Yes', '', '', 'SN-5823-CTQI', 600, 'Available', 'New', '2024-04-28 10:43:26', '', '2024-04-02'),
 (126, 3, 'Ms. Gian Mahusay', 'Converge', 'Computer Hardware and Projector', 'Router', 'Yes', '', '', 'SN-3902-ARJU', 600, 'Available', 'New', '2024-04-28 10:43:26', '', '2024-04-02'),
 (127, 3, 'Ms. Gian Mahusay', 'sample', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', 'sad', 'SN-1867-DTQA', 100, 'Available', 'New', '2024-04-29 18:17:08', '', '2024-04-29'),
 (128, 3, 'Ms. Gian Mahusay', 'sample', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', 'sad', 'SN-5073-MKCI', 100, 'Available', 'New', '2024-04-29 18:17:08', '', '2024-04-29'),
-(135, 3, 'Ms. Gian Mahusay', 'Epsonsad', 'Appliances', 'Stand Fand', 'No', '', '', 'SN-8241-10YK', 0, 'Available', 'Old', '2024-05-01 20:52:39', '', '2023-10-19');
+(133, 3, 'Ms. Gian Mahusay', 'xp windoes', 'Sample', 'ZamBo', 'Yes', '', '', 'NA', 0, 'Available', 'New', '2024-05-01 20:23:49', NULL, '2023-11-30'),
+(134, 3, 'Ms. Gian Mahusay', 'xp windoes', 'Sample', 'ZamBo', 'Yes', '', '', 'NA', 0, 'Available', 'Old', '2024-05-01 20:30:13', NULL, '2023-10-01'),
+(135, 3, 'Ms. Gian Mahusay', 'Epson', 'Appliances', 'Stand Fan', 'Yes', '', '', 'NA', 0, 'Available', 'Old', '2024-05-01 20:52:39', '', '2023-10-19');
 
 -- --------------------------------------------------------
 
@@ -255,20 +251,6 @@ INSERT INTO `tblmessage_recipients` (`id`, `message_id`, `recipient_id`, `status
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tblpendingitemremoval`
---
-
-CREATE TABLE `tblpendingitemremoval` (
-  `id` int(11) NOT NULL,
-  `itemid` int(11) NOT NULL,
-  `staffid` int(11) NOT NULL,
-  `status` varchar(20) NOT NULL,
-  `datetimereq` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tblreportborroweracc`
 --
 
@@ -277,23 +259,41 @@ CREATE TABLE `tblreportborroweracc` (
   `staffid` int(11) NOT NULL,
   `borrowerid` int(11) NOT NULL,
   `reason` varchar(100) NOT NULL,
-  `status` varchar(20) NOT NULL,
-  `datetimereported` datetime DEFAULT NULL
+  `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tblreportborroweracc`
 --
 
-INSERT INTO `tblreportborroweracc` (`id`, `staffid`, `borrowerid`, `reason`, `status`, `datetimereported`) VALUES
-(86, 9, 10, 'Spamming borrow/reserve requests', 'Declined', NULL),
-(87, 3, 988, 'Damaging borrowed items intentionally', 'Declined', NULL),
-(88, 9, 988, 'Suspicious behavior', 'Unblock', NULL),
-(89, 3, 10, 'Spamming borrow/reserve requests', 'Declined', '2024-05-07 10:18:25'),
-(90, 3, 988, 'Spamming borrow/reserve requests', 'Unblock', '2024-05-07 10:19:09'),
-(91, 3, 10, 'Suspicious behavior', 'Declined', '2024-05-07 10:23:59'),
-(92, 3, 988, 'Not returning borrowed items', 'Declined', '2024-05-07 19:39:29'),
-(93, 3, 10, 'Violating terms and conditions', 'Declined', '2024-05-07 21:29:01');
+INSERT INTO `tblreportborroweracc` (`id`, `staffid`, `borrowerid`, `reason`, `status`) VALUES
+(41, 3, 10, 'Damaging borrowed items intentionally', 'Unblock'),
+(42, 3, 10, 'Not returning borrowed items', 'Unblock'),
+(43, 3, 10, 'Suspicious behavior', 'Declined'),
+(44, 3, 10, 'Spamming borrow/reserve requests', 'Unblock'),
+(45, 3, 10, 'Suspicious behavior', 'Declined'),
+(46, 3, 10, 'Suspicious behavior', 'Unblock'),
+(47, 3, 10, 'Suspicious behavior', 'Unblock'),
+(48, 3, 10, 'Damaging borrowed items intentionally', 'Unblock'),
+(49, 3, 10, 'Suspicious behavior', 'Declined'),
+(50, 3, 10, 'sad', 'Declined'),
+(51, 3, 10, 'Suspicious behavior', 'Unblock'),
+(52, 3, 9, 'Suspicious behavior', 'Unblock'),
+(53, 3, 9, 'Spamming borrow/reserve requests', 'Declined'),
+(54, 3, 9, 'Spamming borrow/reserve requests', 'Declined'),
+(55, 3, 10, 'Suspicious behavior', 'Unblock'),
+(56, 3, 10, 'Spamming borrow/reserve requests', 'Unblock'),
+(57, 3, 10, 'Suspicious behavior', 'Unblock'),
+(58, 3, 10, 'Spamming borrow/reserve requests', 'Unblock'),
+(59, 3, 10, 'Suspicious behavior', 'Declined'),
+(60, 3, 10, 'Spamming borrow/reserve requests', 'Unblock'),
+(61, 3, 10, 'Spamming borrow/reserve requests', 'Unblock'),
+(62, 3, 9, 'Suspicious behavior', 'Unblock'),
+(63, 3, 10, 'Damaging borrowed items intentionally', 'Declined'),
+(64, 3, 69, 'Suspicious behavior', 'Unblock'),
+(65, 3, 69, 'Spamming borrow/reserve requests', 'Declined'),
+(66, 3, 10, 'Spamming borrow/reserve requests', 'Declined'),
+(67, 3, 10, 'Spamming borrow/reserve requests', 'Unblock');
 
 -- --------------------------------------------------------
 
@@ -314,7 +314,7 @@ CREATE TABLE `tblsubcategory` (
 INSERT INTO `tblsubcategory` (`id`, `categoryname`, `subcategoryname`) VALUES
 (134, 'Computer Hardware and Projector', 'CPU'),
 (135, 'Computer Hardware and Projector', 'Memmory'),
-(143, 'Appliances', 'Stand Fand'),
+(143, 'Appliances', 'Stand Fan'),
 (145, 'Computer Hardware and Projector', 'Mouse'),
 (150, 'Computer Hardware and Projector', 'Laptop'),
 (151, 'Computer Hardware and Projector', 'Hard Disk'),
@@ -332,7 +332,7 @@ INSERT INTO `tblsubcategory` (`id`, `categoryname`, `subcategoryname`) VALUES
 (166, 'Clearbook', 'Seagull Clearbook'),
 (168, 'Computer Hardware and Projector', 'Projector'),
 (179, 'Filing Box', 'Filing Box Long'),
-(196, 'Ring Binder', 'Guitar'),
+(196, 'Ring Binder', 'Sample'),
 (204, 'Sample', 'ZamBo');
 
 -- --------------------------------------------------------
@@ -366,8 +366,8 @@ INSERT INTO `tblusers` (`id`, `addedbyid`, `usertype`, `fname`, `lname`, `passwo
 (1, 0, 'Admin', 'John', 'Neil', 'admin', 'offline', 'Active', 'admin@gmail.com', '', '', NULL, NULL, NULL),
 (2, 0, 'Admin', 'Naix', 'eawd', 'admin', 'offline', 'Active', '', '', '', NULL, NULL, NULL),
 (3, 0, 'CCS Staff', 'Gian', 'Mahusay', 'uclm-3', 'offline', 'Active', 'Mahusay3@gmail.com', 'Female', '', NULL, NULL, NULL),
-(9, 0, 'CCS Staff', 'JohnSkie', 'Aying', 'uclm-9', 'offline', 'Active', 'ayingneil9@gmail.com', 'Male', 'College of Computer Studies', 'Ms. Gian Mahusay', '2024-03-16 19:32:50', '2024-04-27 13:50:44'),
-(10, 0, 'Student', 'John Neil', 'Aying', 'uclm-10', 'online', 'Active', 'ayingneil10@gmail.com', 'Male', 'College of Computer Studies', 'Naix Lifestealer', '2024-03-16 19:30:36', '2024-03-16 19:30:46'),
+(9, 0, 'CCS Staff', 'John Neil', 'Aying', 'uclm-9', 'offline', 'Active', 'ayingneil9@gmail.com', 'Male', 'College of Computer Studies', 'Ms. Gian Mahusay', '2024-03-16 19:32:50', '2024-04-27 13:50:44'),
+(10, 0, 'Student', 'John Neil', 'Aying', 'uclm-10', 'offline', 'Active', 'ayingneil10@gmail.com', 'Male', 'College of Computer Studies', 'Naix Lifestealer', '2024-03-16 19:30:36', '2024-03-16 19:30:46'),
 (11, 0, 'Student', 'John Neil', 'Aying', 'Sadboid15', 'offline', 'Active', 'ayingsad2@gmail.com', 'Male', 'Eyy', 'Ms. Gian Mahusay', '2024-04-27 13:52:47', '2024-04-27 13:53:01'),
 (15, 0, 'CCS Staff', 'Neil', 'Aying', 'uclm-15', 'offline', 'Active', 'sad@sad.com', '', '', NULL, NULL, NULL),
 (17, 0, 'CCS Staff', 'sad', 'sad', 'uclm-17', 'offline', 'Active', 'sad1@sad.com', '', '', NULL, NULL, NULL),
@@ -375,13 +375,12 @@ INSERT INTO `tblusers` (`id`, `addedbyid`, `usertype`, `fname`, `lname`, `passwo
 (69, 0, 'Student', 'John', 'Aying', 'uclm-69', 'offline', 'Active', 'ayingneil5@gmail.com', 'Male', 'Ibobax', 'Naix Lifestealer', '2024-03-08 22:13:22', '2024-03-09 09:56:54'),
 (100, 0, 'Student', 'John Neil', 'Aying', 'Ayingneil100@gmail.com', 'offline', 'Blocked', 'Ayingneil100@gmail.com', 'Male', 'College of Computer Studies', 'Naix Lifestealer', '2024-04-12 17:20:27', '2024-04-22 23:36:55'),
 (123, 0, 'Dean', 'John Neil', 'Aying', 'uclm-123', 'offline', 'Blocked', 'sad2@sad.com', 'Female', '', NULL, NULL, NULL),
-(988, 0, 'Student', 'Jeneth', 'Escala', 'uclm-988', 'offline', 'Active', 'jen15@gmhail.com', 'Female', 'College of Hotel & Restaurant Management', 'Naix Lifestealer', '2024-03-10 13:41:25', '2024-03-12 23:26:55'),
+(988, 0, 'Student', 'Jeneth', 'Escala', 'uclm-988', 'online', 'Active', 'jen15@gmhail.com', 'Female', 'College of Hotel & Restaurant Management', 'Naix Lifestealer', '2024-03-10 13:41:25', '2024-03-12 23:26:55'),
 (2024, 0, 'Student', 'Rogelyn', 'Aying', 'uclm-2024', 'offline', 'Active', 'glyn1@gmail.com', 'Female', 'College of Engineering', 'Neil Aying', '2024-03-17 22:03:06', '2024-03-17 22:03:22'),
 (6060, 0, 'Student', 'Sample', 'Sample', 'Sample22', 'offline', 'Active', 'Sample@sad.com', 'Male', 'College of Nursing', 'Ms. Gian Mahusay', '2024-04-23 11:30:19', '2024-04-27 13:50:38'),
 (6969, 0, 'Student', 'Anthony', 'Augusto', 'uclm-6969', 'offline', 'Active', 'ayingant2q1@gmail.com', 'Male', 'College of Engineering', 'Naix Lifestealer', '2024-03-09 09:58:06', '2024-03-10 16:39:20'),
 (11111, 0, 'CCS Staff', 'awd', 'awd', 'uclm-11111', 'offline', 'Active', 'ayingneil1010@gmail.com', '', '', NULL, NULL, NULL),
 (12333, 0, 'Student', 'John Neil', 'Aying', '@sad!Addws23', 'offline', 'Active', 'ayingnsadasdeil15@gmail.com', 'Male', 'College of Customs Administration', 'Ms. Gian Mahusay', '2024-04-26 13:39:52', '2024-04-27 11:40:35'),
-(12345, 0, 'Student', 'John Neil', 'Aying', 'Aying21501', 'offline', 'Pending', 'ayingneil2215@gmail.com', 'Male', 'College of Computer Studies', NULL, '2024-05-06 20:11:10', NULL),
 (19104629, 0, 'Dean', 'Aurora', 'Miro', 'uclm-19104629', 'offline', 'Active', 'Miro22@gmail.com', 'Female', '', NULL, NULL, NULL);
 
 --
@@ -421,12 +420,6 @@ ALTER TABLE `tblmessage_recipients`
   ADD KEY `recipient_id` (`recipient_id`);
 
 --
--- Indexes for table `tblpendingitemremoval`
---
-ALTER TABLE `tblpendingitemremoval`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `tblreportborroweracc`
 --
 ALTER TABLE `tblreportborroweracc`
@@ -452,7 +445,7 @@ ALTER TABLE `tblusers`
 -- AUTO_INCREMENT for table `tblborrowingreports`
 --
 ALTER TABLE `tblborrowingreports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1252;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1246;
 
 --
 -- AUTO_INCREMENT for table `tblitembrand`
@@ -479,16 +472,10 @@ ALTER TABLE `tblmessage_recipients`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=540;
 
 --
--- AUTO_INCREMENT for table `tblpendingitemremoval`
---
-ALTER TABLE `tblpendingitemremoval`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
 -- AUTO_INCREMENT for table `tblreportborroweracc`
 --
 ALTER TABLE `tblreportborroweracc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `tblsubcategory`

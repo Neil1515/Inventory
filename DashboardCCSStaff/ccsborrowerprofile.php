@@ -479,7 +479,7 @@ if (isset($_POST['reportuserBtn'])) {
     }
 
     .report-icon::after {
-        content: "Report this account?";
+        content: "Report this user?";
         position: absolute;
         left: 20px;
         /* Adjust as needed */

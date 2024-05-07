@@ -107,6 +107,7 @@
             color: #007bff;
             /* Adjust the link color as needed */
             text-decoration: none;
+            cursor: pointer;
         }
 
         .register-label label {

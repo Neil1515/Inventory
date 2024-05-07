@@ -167,7 +167,6 @@ if ($resultReportedUsers && mysqli_num_rows($resultReportedUsers) > 0) {
             // Display only the status
             echo $row['status'];
         }
-        
         echo '</td>';
         echo '</tr>';
     }

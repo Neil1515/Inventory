@@ -1,3 +1,36 @@
+<?php
+// Include necessary files
+include ('ccsfunctions.php');
+// Check if the user is logged in
+if (!isset($_SESSION['staff_id'])) {
+    // Redirect to the login page or handle accordingly
+    header('Location: /Inventory/index.php');
+    exit();
+}
+// Retrieve user information based on the logged-in user ID
+$staffId = $_SESSION['staff_id'];
+$query = "SELECT * FROM tblusers WHERE id = ?";
+$stmt = mysqli_prepare($con, $query);
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "s", $staffId);
+    if (mysqli_stmt_execute($stmt)) {
+        $result = mysqli_stmt_get_result($stmt);
+        if ($result && mysqli_num_rows($result) > 0) {
+            // Valid user, retrieve user information
+            $row = mysqli_fetch_assoc($result);
+            $userType = $row["usertype"];
+        } else {
+            // Handle the case when user information is not found
+            // You might want to redirect or display an error message
+        }
+    } else {
+        die('Statement execution failed: ' . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_close($stmt);
+} else {
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
+?>
 <aside class="ccs-sidebar">
     <div class="container">
         <div class="sidebar-header col-md-2">
@@ -16,12 +49,14 @@
                     <span>All Items</span>
                 </a>
             </li>
+            <?php if ($row['usertype'] === 'CCS Staff'): ?>
             <li class="nav-item">
                 <a class="nav-link" href="ccstaffListofItems.php">
                     <i class="fas fa-list-ul me-2"></i>
                     <span>List of Items</span>
                 </a>
             </li>
+            <?php endif; ?>
             <li class="nav-item">
                 <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#approvalsSubMenu" aria-expanded="false">
                     <i class="fas fa-clock me-2"></i> <!-- Icon for Pending Approvals -->
@@ -48,7 +83,7 @@
                     </li>
                 </ul>
             </li>
-
+            <?php if ($row['usertype'] === 'CCS Staff'): ?>
             <li class="nav-item ">
                 <a class="nav-link submenu-toggle " href="#" data-bs-toggle="collapse" data-bs-target="#manageItemsSubMenu" aria-expanded="false">
                     <i class="fas fa-cogs me-2"></i>
@@ -75,8 +110,8 @@
                     </li>
                 </ul>
             </li>
-           
-            
+            <?php endif; ?>
+            <?php if ($row['usertype'] === 'CCS Staff'): ?>
             <li class="nav-item">
                 <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#newSubMenu" aria-expanded="false">
                     <i class="fas fa-tasks me-2"></i>
@@ -105,6 +140,7 @@
                     </li>
                 </ul>
             </li>
+            <?php endif; ?>
             <li class="nav-item">
                 <a class="nav-link" href="ccsstaffReports.php">
                     <i class="fas fa-file-alt me-2"></i>
