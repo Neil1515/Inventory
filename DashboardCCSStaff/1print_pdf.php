@@ -205,8 +205,8 @@ $content .= '
     <h2 style="margin: 20; text-align: center;">CCS-IMS Inventory Management System</h2>
     <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandue</p>
     <p style="margin: 0; text-align: center;">As of ' . $current_date . '</p>
-    <p style="margin-bottom: 1px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
-    <h3 style="margin-top: 2px;">Borrowers Report</h3>
+    <p style="margin-bottom: 0px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
+    <h3 style="margin-top: 0px;">Borrowers Report</h3>
     <table border="1" cellspacing="0" cellpadding="3">
         <tr align="center">
             <th>Status</th>
@@ -222,9 +222,7 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '');
 $content .= '</table>';
-$content .= '<br>';
 $content .= '<br><br><h3 style="margin-top: 20px;">Printed by: <u>' . $staffSalutation . ' ' . $staffName . '</u></h3>';
-$content .= '<br>';
 $content .= '<h3 style="margin-top: 25px; margin-bottom: 10px; margin-right: 25px;  text-align: right;">CCS Dean: <u>' . $deanSalutation . ' ' . $deanName . '</u></h3><br><br>';
 
 // Write the HTML content to the PDF and output it

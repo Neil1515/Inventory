@@ -211,6 +211,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetAutoPageBreak(TRUE, 10);
 $pdf->SetFont('times', '', 10);
 $pdf->AddPage();
+
 // Set the default timezone to Philippines
 date_default_timezone_set('Asia/Manila');
 // Get the current date and format it
@@ -218,10 +219,10 @@ $current_date = date('F d, Y g:i A');
 // Construct the PDF content
 $content = '';
 $content .= '
-    <h2 style="margin-top: 20px; text-align: center;">CCS-IMS Inventory Management System</h2>
+    <h2 style="margin-top: 30px; text-align: center;">CCS-IMS Inventory Management System</h2>
     <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandue</p>
     <p style="margin: 0; text-align: center;">As of ' . $current_date . '</p>
-    <p style="margin-bottom: 1px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
+    <p style="margin-bottom: 0px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
     <h4 style="margin-top: 0px; ">Report of <u>'.$borrowerSalutation.' '.$borrowerName.' ('. $borrowerRow['usertype'].')</u></h4>
     <table border="1" cellspacing="0" cellpadding="3">
         <tr align="center">
