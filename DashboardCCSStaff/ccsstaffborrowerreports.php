@@ -164,7 +164,8 @@ if ($stmt) {
                             LEFT JOIN tblusers AS u2 ON br.approvebyid = u2.id
                             LEFT JOIN tblusers AS u3 ON br.approvereturnbyid = u3.id
                             LEFT JOIN tblitembrand AS ib ON br.itemid = ib.id
-                            WHERE br.borrowerid = ?";
+                            WHERE br.borrowerid = ?
+                            AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
 
 
                             // Add WHERE clause if both start date and end date are provided

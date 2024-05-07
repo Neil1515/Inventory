@@ -101,7 +101,8 @@ function generateRows($con, $start_date, $end_date, $search_query, $borrowerIdFr
                    ib.subcategoryname LIKE '%$search_query%' OR
                    CONCAT(u1.fname, ' ', u1.lname) LIKE '%$search_query%' OR
                    CONCAT(u2.fname, ' ', u2.lname) LIKE '%$search_query%' OR
-                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')";
+                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')
+                   AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
 
     // Add WHERE clause if borrower ID is provided
     if (!empty($borrowerIdFromDB)) {

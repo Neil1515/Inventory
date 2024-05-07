@@ -140,7 +140,8 @@ function generateRows($con, $start_date, $end_date, $search_query, $borrowerIdFr
                    ib.subcategoryname LIKE '%$search_query%' OR
                    CONCAT(u1.fname, ' ', u1.lname) LIKE '%$search_query%' OR
                    CONCAT(u2.fname, ' ', u2.lname) LIKE '%$search_query%' OR
-                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')";
+                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')
+                    AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
 
     // Add WHERE clause if borrower ID is provided
     if (!empty($borrowerIdFromDB)) {
@@ -196,7 +197,7 @@ function generateRows($con, $start_date, $end_date, $search_query, $borrowerIdFr
                 $rows .= "<td class='text-center'>{$approvedBy}</td>";
 
                 // Check if the value is NULL, if so, display ---
-                $dateTimeApproved = $row['datimeapproved'] ? date("Y-m-d h:i A", strtotime($row['datimeapproved'])) : '---';
+                $dateTimeApproved = $row['datimeapproved'] ? date("F d, Y g:i A", strtotime($row['datimeapproved'])) : '---';
                 $rows .= "<td class='text-center'>{$dateTimeApproved}</td>";
 
                 // Concatenate first and last name if both are not NULL, otherwise display ---
@@ -204,7 +205,7 @@ function generateRows($con, $start_date, $end_date, $search_query, $borrowerIdFr
                 $rows .= "<td class='text-center'>{$approveReturnBy}</td>";
 
                 // Check if the value is NULL, if so, display ---
-                $dateTimeReturn = $row['datetimereturn'] ? date("Y-m-d h:i A", strtotime($row['datetimereturn'])) : '---';
+                $dateTimeReturn = $row['datetimereturn'] ? date("F d, Y g:i A", strtotime($row['datetimereturn'])) : '---';
                 $rows .= "<td class='text-center'>{$dateTimeReturn}</td>";
 
                 $returncondition = $row['returnitemcondition'] ?? '---';
@@ -257,7 +258,7 @@ if ($stmt) {
 }
 $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetTitle("Borrowers Report");
+$pdf->SetTitle("Report of $borrowerName");
 $pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
 $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));

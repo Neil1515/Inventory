@@ -112,6 +112,7 @@ if ($resultReportedUsers && mysqli_num_rows($resultReportedUsers) > 0) {
     echo '<th>Reported by</th>';
     echo '<th>Reported to</th>';
     echo '<th>Reason</th>';
+    echo '<th>DateTime Reported</th>';
     echo '<th class="text-center">Status</th>';
     echo '<th class="text-center">Action</th>';
     echo '</tr>';
@@ -139,6 +140,8 @@ if ($resultReportedUsers && mysqli_num_rows($resultReportedUsers) > 0) {
         echo '<td>' . $reportedByRow['fname'] . ' ' . $reportedByRow['lname'] . '</td>';
         echo '<td>' . $reportedToRow['fname'] . ' ' . $reportedToRow['lname'] . '</td>';
         echo '<td>' . $row['reason'] . '</td>';
+        $datetimereported = $row['datetimereported'] ? date("F d, Y g:i A", strtotime($row['datetimereported'])) : '---';
+        echo '<td class="text-center">' . $datetimereported . '</td>';
         echo '<td class="text-center">' . $row['status'] . '</td>';
         echo '<td class="text-center">';
         // Conditionally display action buttons based on the status

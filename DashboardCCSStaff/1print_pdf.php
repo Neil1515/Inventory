@@ -94,7 +94,8 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
                    ib.subcategoryname LIKE '%$search_query%' OR
                    CONCAT(u1.fname, ' ', u1.lname) LIKE '%$search_query%' OR
                    CONCAT(u2.fname, ' ', u2.lname) LIKE '%$search_query%' OR
-                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')";
+                   CONCAT(u3.fname, ' ', u3.lname) LIKE '%$search_query%')
+                   AND br.itemreqstatus NOT IN ('Rejected', 'Canceled')";
 
     // Add WHERE clause if both start date and end date are provided
     if (!empty($start_date) && !empty($end_date)) {
@@ -127,7 +128,7 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
         $rows .= "<td class='text-center'>{$approvedBy}</td>";
 
         // Check if the value is NULL, if so, display ---
-        $dateTimeApproved = $row['datimeapproved'] ? date("Y-m-d h:i A", strtotime($row['datimeapproved'])) : '---';
+        $dateTimeApproved = $row['datimeapproved'] ? date("F d, Y g:i A", strtotime($row['datimeapproved'])) : '---';
         $rows .= "<td class='text-center'>{$dateTimeApproved}</td>";
 
         // Concatenate first and last name if both are not NULL, otherwise display ---
@@ -135,7 +136,7 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
         $rows .= "<td class='text-center'>{$approveReturnBy}</td>";
 
         // Check if the value is NULL, if so, display ---
-        $dateTimeReturn = $row['datetimereturn'] ? date("Y-m-d h:i A", strtotime($row['datetimereturn'])) : '---';
+        $dateTimeReturn = $row['datetimereturn'] ? date("F d, Y g:i A", strtotime($row['datetimereturn'])) : '---';
         $rows .= "<td class='text-center'>{$dateTimeReturn}</td>";
 
         $returncondition = $row['returnitemcondition'] ?? '---';
