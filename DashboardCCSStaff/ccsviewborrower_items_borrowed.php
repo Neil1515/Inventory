@@ -168,9 +168,9 @@ if ($stmt) {
                         <!-- Table body -->
                         <tbody>
                             <?php foreach ($items as $item) { ?>
-                                <tr>
+                                <tr class="align-middle">
                                     <!-- Render item details -->
-                                    <td class='text-center'>
+                                    <td class='text-center '>
                                         <?php
                                         $imagePath = '../DashboardCCSStaff/inventory/SubcategoryItemsimages/' . $item['subcategoryname'] . '.png';
                                         if (file_exists($imagePath)) {
@@ -182,7 +182,7 @@ if ($stmt) {
                                     </td>
                                     <td><?php echo $item['subcategoryname']; ?></td>
                                     <td><?php echo $item['itembrand']; ?></td>
-                                    <td><?php echo $item['serialno']; ?></td>
+                                    <td><span class="text-danger"><?php echo $item['serialno']; ?></span></td>
                                     <td><?php echo $item['itemreqstatus'] === 'Approved' ? '---' : $item['itemreqstatus']; ?></td>
                                     <!-- Automatically check the checkbox if itemreqstatus is 'Request Return' -->
                                     <td><input type="checkbox" value="<?php echo $item['itemid']; ?>" <?php echo $item['itemreqstatus'] === 'Request Return' ? 'checked' : ''; ?>></td>

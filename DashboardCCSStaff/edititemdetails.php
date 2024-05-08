@@ -29,129 +29,184 @@ if ($stmtSelect) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["updateitem"])) {
-    // Retrieve form data
-    $itembrand = $_POST["itembrand"];
-    $categoryname = $_POST["categoryname"];
-    $subcategoryname = $_POST["subcategoryname"];
-    $serialno = $_POST["serialno"];
-    $modelno = $_POST["modelno"];
-    $datePurchased = $_POST["datePurchased"];
-    $unitCost = $_POST["unitCost"];
-    $assignfor = $_POST["assignfor"];
-    $remarks = $_POST["remarks"];
-    $borrowable = $_POST['borrowable'];
+        // Check if the item is pending for deletion
+        $sqlCheckPending = "SELECT * FROM `tblpendingitemremoval` WHERE itemid = ? AND status = 'Pending'";
+        $stmtCheckPending = mysqli_prepare($con, $sqlCheckPending);
 
-    // Determine the status based on the value of "borrowable"
-    $status = ($borrowable == 'Yes') ? 'Available' : 'Standby';
+        if ($stmtCheckPending) {
+            mysqli_stmt_bind_param($stmtCheckPending, "i", $id);
+            mysqli_stmt_execute($stmtCheckPending);
+            $resultCheckPending = mysqli_stmt_get_result($stmtCheckPending);
 
-    // Update query
-    $sqlUpdate = "UPDATE `tblitembrand` SET
-        itembrand = ?,
-        categoryname = ?,
-        subcategoryname = ?,
-        serialno = ?,
-        modelno = ?,
-        datepurchased = ?,
-        unitcost = ?,
-        assignfor = ?,
-        remarks = ?,
-        borrowable = ?,
-        status = ?
-        WHERE id = ?";
+            if ($resultCheckPending && mysqli_num_rows($resultCheckPending) > 0) {
+                echo '<div class="alert alert-danger mt-3" role="alert">
+                        Item is pending for deletion. Update not allowed.
+                     </div>';
+            } else {
+                // Retrieve form data
+                $itembrand = $_POST["itembrand"];
+                $categoryname = $_POST["categoryname"];
+                $subcategoryname = $_POST["subcategoryname"];
+                $serialno = $_POST["serialno"];
+                $modelno = $_POST["modelno"];
+                $datePurchased = $_POST["datePurchased"];
+                $unitCost = $_POST["unitCost"];
+                $assignfor = $_POST["assignfor"];
+                $remarks = $_POST["remarks"];
+                $borrowable = $_POST['borrowable'];
 
-    $stmtUpdate = mysqli_prepare($con, $sqlUpdate);
+                // Determine the status based on the value of "borrowable"
+                $status = ($borrowable == 'Yes') ? 'Available' : 'Standby';
 
-    if ($stmtUpdate) {
-        // Bind parameters
-        mysqli_stmt_bind_param(
-            $stmtUpdate,
-            "ssssssdssssi",
-            $itembrand,
-            $categoryname,
-            $subcategoryname,
-            $serialno,
-            $modelno,
-            $datePurchased,
-            $unitCost,
-            $assignfor,
-            $remarks,
-            $borrowable,
-            $status, // Status parameter added here
-            $id
-        );
+                // Update query
+                $sqlUpdate = "UPDATE `tblitembrand` SET
+                    itembrand = ?,
+                    categoryname = ?,
+                    subcategoryname = ?,
+                    serialno = ?,
+                    modelno = ?,
+                    datepurchased = ?,
+                    unitcost = ?,
+                    assignfor = ?,
+                    remarks = ?,
+                    borrowable = ?,
+                    status = ?
+                    WHERE id = ?";
 
-        // Execute the statement
-        if (mysqli_stmt_execute($stmtUpdate)) {
-            echo "<script>window.location.href='ccstaffListofItems.php?msg_success=Item details updated successfully.';</script>";
-            exit();
-        } else {
-            // Log the error instead of displaying to users
-            error_log("Failed to update item: " . mysqli_error($con));
-            echo '<div class="alert alert-danger mt-3" role="alert">
-                    Error updating item details.
-                 </div>';
-        }        
+                $stmtUpdate = mysqli_prepare($con, $sqlUpdate);
 
-        mysqli_stmt_close($stmtUpdate);
-    } else {
-        // Log the error instead of displaying to users
-        error_log("Statement preparation failed: " . mysqli_error($con));
-        echo '<div class="alert alert-danger mt-3" role="alert">
-                Error updating item details.
-             </div>';
-    }
-} elseif (isset($_POST["confirmdelete"])) {
-    // Check if the item has already been requested for deletion
-    $sqlCheckRequest = "SELECT * FROM `tblpendingitemremoval` WHERE itemid = ? AND status = 'Pending'";
-    $stmtCheckRequest = mysqli_prepare($con, $sqlCheckRequest);
+                if ($stmtUpdate) {
+                    // Bind parameters
+                    mysqli_stmt_bind_param(
+                        $stmtUpdate,
+                        "ssssssdssssi",
+                        $itembrand,
+                        $categoryname,
+                        $subcategoryname,
+                        $serialno,
+                        $modelno,
+                        $datePurchased,
+                        $unitCost,
+                        $assignfor,
+                        $remarks,
+                        $borrowable,
+                        $status, // Status parameter added here
+                        $id
+                    );
 
-    if ($stmtCheckRequest) {
-        mysqli_stmt_bind_param($stmtCheckRequest, "i", $id);
-        mysqli_stmt_execute($stmtCheckRequest);
-        $resultCheckRequest = mysqli_stmt_get_result($stmtCheckRequest);
+                    // Execute the statement
+                    if (mysqli_stmt_execute($stmtUpdate)) {
+                        echo "<script>window.location.href='ccstaffListofItems.php?msg_success=Item details updated successfully.';</script>";
+                        exit();
+                    } else {
+                        // Log the error instead of displaying to users
+                        error_log("Failed to update item: " . mysqli_error($con));
+                        echo '<div class="alert alert-danger mt-3" role="alert">
+                                Error updating item details.
+                             </div>';
+                    }        
 
-        if ($resultCheckRequest && mysqli_num_rows($resultCheckRequest) > 0) {
-            // Inform the user that the item has already been requested for deletion
-            echo '<div class="alert alert-danger mt-3" role="alert">
-                    This item has already been requested for deletion.
-                 </div>';
-        } else {
-            // Insert request to delete item into tblpendingitemremoval
-            $staffid = $_POST["staffid"]; // Assuming you have a staff ID
-            $status = "Pending";
-            // Determine item condition based on purchase date
-            date_default_timezone_set('Asia/Manila');
-            $datetimereq = date("Y-m-d H:i:s");
-
-            $sqlInsertRequest = "INSERT INTO `tblpendingitemremoval` (itemid, staffid, status, datetimereq) VALUES (?, ?, ?, ?)";
-            $stmtInsertRequest = mysqli_prepare($con, $sqlInsertRequest);
-
-            if ($stmtInsertRequest) {
-                mysqli_stmt_bind_param($stmtInsertRequest, "iiss", $id, $staffid, $status, $datetimereq);
-                if (mysqli_stmt_execute($stmtInsertRequest)) {
-                    echo "<script>window.location.href='ccstaffListofItems.php?msg_success=Deletion request sent successfully.';</script>";
-                    exit();
+                    mysqli_stmt_close($stmtUpdate);
                 } else {
                     // Log the error instead of displaying to users
-                    error_log("Failed to insert deletion request: " . mysqli_error($con));
+                    error_log("Statement preparation failed: " . mysqli_error($con));
                     echo '<div class="alert alert-danger mt-3" role="alert">
-                            Error sending deletion request.
+                            Error updating item details.
                          </div>';
                 }
-                mysqli_stmt_close($stmtInsertRequest);
-            } else {
-                // Log the error instead of displaying to users
-                error_log("Statement preparation failed: " . mysqli_error($con));
-                echo '<div class="alert alert-danger mt-3" role="alert">
-                        Error sending deletion request.
-                     </div>';
             }
+        } else {
+            // Log the error instead of displaying to users
+            error_log("Statement preparation failed: " . mysqli_error($con));
+            echo '<div class="alert alert-danger mt-3" role="alert">
+                    Error checking pending status.
+                 </div>';
+        }
+    } elseif (isset($_POST["confirmdelete"])) {
+    // Check if the item is borrowable
+    $sqlCheckBorrowable = "SELECT borrowable FROM `tblitembrand` WHERE id = ?";
+    $stmtCheckBorrowable = mysqli_prepare($con, $sqlCheckBorrowable);
+
+    if ($stmtCheckBorrowable) {
+        mysqli_stmt_bind_param($stmtCheckBorrowable, "i", $id);
+        mysqli_stmt_execute($stmtCheckBorrowable);
+        $resultCheckBorrowable = mysqli_stmt_get_result($stmtCheckBorrowable);
+
+        if ($resultCheckBorrowable && $rowBorrowable = mysqli_fetch_assoc($resultCheckBorrowable)) {
+            // Check if the item is not borrowable
+            if ($rowBorrowable['borrowable'] == 'Yes') {
+                // Inform the user that deletion is not allowed for borrowable items
+                echo '<div class="alert alert-danger mt-3" role="alert">
+                        Deletion not allowed for borrowable items. Set "Allow Borrow" to "No" to proceed.                    
+                    </div>';
+            } else {
+                // Proceed with deletion request
+                // Check if the item has already been requested for deletion
+                $sqlCheckRequest = "SELECT * FROM `tblpendingitemremoval` WHERE itemid = ? AND status = 'Pending'";
+                $stmtCheckRequest = mysqli_prepare($con, $sqlCheckRequest);
+
+                if ($stmtCheckRequest) {
+                    mysqli_stmt_bind_param($stmtCheckRequest, "i", $id);
+                    mysqli_stmt_execute($stmtCheckRequest);
+                    $resultCheckRequest = mysqli_stmt_get_result($stmtCheckRequest);
+
+                    if ($resultCheckRequest && mysqli_num_rows($resultCheckRequest) > 0) {
+                        // Inform the user that the item has already been requested for deletion
+                        echo '<div class="alert alert-danger mt-3" role="alert">
+                                This item has already been requested for deletion.
+                             </div>';
+                    } else {
+                        // Insert request to delete item into tblpendingitemremoval
+                        $staffid = $_POST["staffid"]; // Assuming you have a staff ID
+                        $status = "Pending";
+                        // Determine item condition based on purchase date
+                        date_default_timezone_set('Asia/Manila');
+                        $datetimereq = date("Y-m-d H:i:s");
+
+                        $sqlInsertRequest = "INSERT INTO `tblpendingitemremoval` (itemid, staffid, status, datetimereq) VALUES (?, ?, ?, ?)";
+                        $stmtInsertRequest = mysqli_prepare($con, $sqlInsertRequest);
+
+                        if ($stmtInsertRequest) {
+                            mysqli_stmt_bind_param($stmtInsertRequest, "iiss", $id, $staffid, $status, $datetimereq);
+                            if (mysqli_stmt_execute($stmtInsertRequest)) {
+                                echo "<script>window.location.href='ccstaffEditItemDetails.php?id=$id&msg_success=Deletion request sent successfully. Please await approval from Dean.';</script>";
+                                exit();
+                            } else {
+                                // Log the error instead of displaying to users
+                                error_log("Failed to insert deletion request: " . mysqli_error($con));
+                                echo '<div class="alert alert-danger mt-3" role="alert">
+                                        Error sending deletion request.
+                                     </div>';
+                            }
+                            mysqli_stmt_close($stmtInsertRequest);
+                        } else {
+                            // Log the error instead of displaying to users
+                            error_log("Statement preparation failed: " . mysqli_error($con));
+                            echo '<div class="alert alert-danger mt-3" role="alert">
+                                    Error sending deletion request.
+                                 </div>';
+                        }
+                    }
+                } else {
+                    // Log the error instead of displaying to users
+                    error_log("Statement preparation failed: " . mysqli_error($con));
+                    echo '<div class="alert alert-danger mt-3" role="alert">
+                            Error checking deletion request.
+                         </div>';
+                }
+            }
+        } else {
+            // Log the error instead of displaying to users
+            error_log("Failed to fetch borrowable status: " . mysqli_error($con));
+            echo '<div class="alert alert-danger mt-3" role="alert">
+                    Error fetching borrowable status.
+                 </div>';
         }
     } else {
         // Log the error instead of displaying to users
         error_log("Statement preparation failed: " . mysqli_error($con));
         echo '<div class="alert alert-danger mt-3" role="alert">
-                Error checking deletion request.
+                Error checking borrowable status.
              </div>';
     }
 }
@@ -188,8 +243,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php if (isset($row)): ?>
         <div class="row">
             <div class="col-md-7">
-                <!-- Form to add a new item Product -->
-                <h4 class="col-md text-start">Item Details</h4>
+            <!-- Form to add a new item Product -->
+            <h4 class="col-md text-start">Item Details 
+            <?php 
+            // Check if the item has a pending deletion request
+            $sqlCheckRequest = "SELECT * FROM `tblpendingitemremoval` WHERE itemid = ? AND status = 'Pending'";
+            $stmtCheckRequest = mysqli_prepare($con, $sqlCheckRequest);
+
+            if ($stmtCheckRequest) {
+                mysqli_stmt_bind_param($stmtCheckRequest, "i", $id);
+                mysqli_stmt_execute($stmtCheckRequest);
+                $resultCheckRequest = mysqli_stmt_get_result($stmtCheckRequest);
+
+                if ($resultCheckRequest && mysqli_num_rows($resultCheckRequest) > 0) {
+                    // Item deletion is pending, display the section
+                    echo '<span class="text-danger"><i class="fas fa-trash-alt"></i> Pending</span>';
+                }
+                else{
+                }
+            }?>
+            </h4>
             </div>
             <div class="col-md-5 text-end">          
                 <a class="btn btn-danger" name="deleteitem" id="deleteItemButton"><i class="fas fa-trash-alt"></i> Request to Delete</a>
@@ -303,10 +376,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <input class="form-check-input" type="radio" name="borrowable" id="borrowableNo" value="No" <?php echo ($row['borrowable'] == 'No') ? 'checked' : ''; ?> required>
                                             <label class="form-check-label" for="borrowableNo">No</label>
                                         </div>
-
                                     </div>
                                     <div class="mb-3 text-end">                                       
-                                    <a href="ccstaffListofItems.php" class="btn btn-danger"><i class="fas fa-times-circle"></i> Cancel</a>
+                                    <a href="ccstaffListofItems.php" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
                                     <button type="submit" class="btn btn-success" name="updateitem"><i class="fas fa-save"></i> Save Changes</button>                                    </div>
                                 </div>
                             </div>

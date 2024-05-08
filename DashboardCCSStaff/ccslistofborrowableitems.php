@@ -1,7 +1,7 @@
 <!-- ccslistofborrowableitems.php -->
 <?php
 // Query to fetch categories
-include('ccsfunctions.php');
+include ('ccsfunctions.php');
 
 //$queryitems = "SELECT * FROM tblitembrand WHERE borrowable = 'Yes' ORDER BY categoryname, subcategoryname, itembrand";  AND status <> 'Available'
 $queryitems = "SELECT *, COUNT(*) as quantity FROM tblitembrand WHERE borrowable = 'Yes' GROUP BY itembrand, subcategoryname,  status ORDER BY categoryname, subcategoryname, itembrand";
@@ -32,7 +32,7 @@ while ($row = mysqli_fetch_assoc($resultitems)) {
             break;
         case 'Pending Borrow':
             $pendingborrowCount += $row['quantity'];
-            break;    
+            break;
         case 'Pending Reserve':
             $pendingreserveCount += $row['quantity'];
             break;
@@ -44,77 +44,88 @@ mysqli_data_seek($resultitems, 0);
 ?>
 
 <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-        }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+    }
 
-        .ccs-main-container {
-            display: flex;
-            justify-content: center;
-        }
-        .card {
-            margin-bottom: 2px;
-        }
-        .searchbar {
-            font-size: 18px;
-        }
+    .ccs-main-container {
+        display: flex;
+        justify-content: center;
+    }
 
-        .card-title {
-            font-size: 18px;
-        }
-        .category-row {
-            cursor: pointer;
-            color: black;
-        }
-        /*colors for each status */
-        .status-available {
-            color: green;
-            font-weight: bold;
-        }
-        .status-reserve {
-            color: #808000;
-            font-weight: bold;
-        }
-        .status-borrowed {
-            color: blue;
-            font-weight: bold;
-        }
-        .status-missing {
-            color: red;
-            font-weight: bold;
-        }
-        .status-pendingborrow {
-            color: red;
-            font-weight: bold;
-        }
-        .status-pendingreserve {
-            color: red;
-            font-weight: bold;
-        }
-        .status-missing-row {
-            background-color: rgba(255, 0, 0, 0.2); 
-        }
-        .card:hover {
-         background-color: azure;
-         transition: background-color 0.3s ease-in-out;
-         cursor: pointer;
-        }
-    </style>
+    .card {
+        margin-bottom: 2px;
+    }
 
-    <!-- Add this script to include jQuery before your custom script -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    .searchbar {
+        font-size: 18px;
+    }
+
+    .card-title {
+        font-size: 18px;
+    }
+
+    .category-row {
+        cursor: pointer;
+        color: black;
+    }
+
+    /*colors for each status */
+    .status-available {
+        color: green;
+        font-weight: bold;
+    }
+
+    .status-reserve {
+        color: #808000;
+        font-weight: bold;
+    }
+
+    .status-borrowed {
+        color: blue;
+        font-weight: bold;
+    }
+
+    .status-missing {
+        color: red;
+        font-weight: bold;
+    }
+
+    .status-pendingborrow {
+        color: red;
+        font-weight: bold;
+    }
+
+    .status-pendingreserve {
+        color: red;
+        font-weight: bold;
+    }
+
+    .status-missing-row {
+        background-color: rgba(255, 0, 0, 0.2);
+    }
+
+    .card:hover {
+        background-color: azure;
+        transition: background-color 0.3s ease-in-out;
+        cursor: pointer;
+    }
+</style>
+
+<!-- Add this script to include jQuery before your custom script -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Your custom script -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Event listener for the search input
-        $('#searchInput').on('input', function() {
+        $('#searchInput').on('input', function () {
             // Get the search query value
             var searchQuery = $(this).val().toLowerCase();
 
             // Iterate through each row in the table body
-            $('.item-details-row').each(function() {
+            $('.item-details-row').each(function () {
                 var category = $(this).find('td:nth-child(1)').text().toLowerCase();
                 var itemBrand = $(this).find('td:nth-child(2)').text().toLowerCase();
                 var subcategory = $(this).find('td:nth-child(3)').text().toLowerCase();
@@ -143,11 +154,11 @@ mysqli_data_seek($resultitems, 0);
         });
 
         // Use event delegation for the click event on a parent container
-        $('.table').on('click', '.category-row', function() {
+        $('.table').on('click', '.category-row', function () {
             $(this).nextUntil('.category-row').toggle();
         });
     });
-    
+
 </script>
 <main class="ccs-main-container">
     <div id="dashboard-container" class="container">
@@ -158,9 +169,12 @@ mysqli_data_seek($resultitems, 0);
             <div class="col-md-6 text-md-end mb-2">
                 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                     <a href="ccsstaffReports.php" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Reports</a>
-                    <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i> Statistics</a>
-                    <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i> Calendar</a>
-                    <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i> Unreturn Item</a>
+                    <a href="ccsstaffStatistics.php" class="btn btn-primary"><i class="fas fa-chart-bar"></i>
+                        Statistics</a>
+                    <a href="ccsstaffCalendar.php" class="btn btn-danger"><i class="fas fa-calendar-alt"></i>
+                        Calendar</a>
+                    <a href="ccsstaffReturnListofBorrowers.php" class="btn btn-success"><i class="fas fa-undo"></i>
+                        Unreturn Item</a>
                 </div>
             </div>
         </div>
@@ -168,28 +182,32 @@ mysqli_data_seek($resultitems, 0);
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-bookmark me-2"></i>Reserve Items: <?php echo $reserveCount; ?></span>
+                        <span class="card-title"><i class="fas fa-bookmark me-2"></i>Reserve Items:
+                            <?php echo $reserveCount; ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-handshake"></i> Borrowed Items: <?php echo $borrowedCount; ?></span>
+                        <span class="card-title"><i class="fas fa-handshake"></i> Borrowed Items:
+                            <?php echo $borrowedCount; ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-exclamation-circle"></i> Damage: <?php echo $missingCount; ?></span>
+                        <span class="card-title"><i class="fas fa-exclamation-circle"></i> Damage:
+                            <?php echo $missingCount; ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-trash-alt"></i> Lost: <?php echo $missingCount; ?></span>
+                        <span class="card-title"><i class="fas fa-trash-alt"></i> Lost:
+                            <?php echo $missingCount; ?></span>
                     </div>
                 </div>
             </div>
@@ -198,38 +216,41 @@ mysqli_data_seek($resultitems, 0);
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-hourglass-half"></i> Pending Borrow: <?php echo $pendingborrowCount; ?></span>
+                        <span class="card-title"><i class="fas fa-hourglass-half"></i> Pending Borrow:
+                            <?php echo $pendingborrowCount; ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><i class="fas fa-hourglass-half"></i> Pending Reserve: <?php echo $pendingreserveCount; ?></span>
+                        <span class="card-title"><i class="fas fa-hourglass-half"></i> Pending Reserve:
+                            <?php echo $pendingreserveCount; ?></span>
                     </div>
                 </div>
             </div>
             <div class="search col-md-6">
-                <input type="text" class="form-control search-input" placeholder="Search" name="search" id="searchInput">
+                <input type="text" class="form-control search-input" placeholder="Search" name="search"
+                    id="searchInput">
             </div>
         </div>
         <div class="row table-responsive">
-        <table id="example" class="table table-bordered">
-        <thead class="table-dark">
-        <tr class="text-center">
-        <th scope="col">Image</th>
-        <th scope="col">Quantity</th>
-        <th scope="col">Item Name</th>
-        <th scope="col">Item Description</th>
-        <!--<th scope="col">Model No</th>
-        <th scope="col">Serial No</th>
-        <th scope="col">Item Condition</th>-->
-        <th scope="col">Status</th>
-        </tr>
-        </thead>
-        <?php 
-         if (mysqli_num_rows($resultitems) > 0) {
-            echo '<tbody>';
+            <table id="example" class="table table-bordered">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th scope="col">Image</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Item Description</th>
+                        <!--<th scope="col">Model No</th>
+                        <th scope="col">Serial No</th>
+                        <th scope="col">Item Condition</th>-->
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <?php
+                if (mysqli_num_rows($resultitems) > 0) {
+                    echo '<tbody>';
                     $currentCategory = null;
                     while ($row = mysqli_fetch_assoc($resultitems)) {
                         // Check if the category has changed
@@ -250,14 +271,14 @@ mysqli_data_seek($resultitems, 0);
                         // Check if an image exists, if not, use a default image
                         $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
                         if (file_exists($imagePath)) {
-                            echo "<td class='text-center'><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
+                            echo "<td class='text-center align-middle'><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
                         } else {
                             // Use a default image if no image is uploaded
-                            echo "<td class='text-center'><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
+                            echo "<td class='text-center align-middle'><img src='/inventory/SubcategoryItemsimages/defaultimageitem.png' alt='Default Image' width='50'></td>";
                         }
-                        echo "<td class='text-center'>{$row['quantity']}</td>";
-                        echo "<td>{$row['subcategoryname']}</td>";
-                        echo "<td>{$row['itembrand']}</td>";
+                        echo "<td class='text-center align-middle'>{$row['quantity']}</td>";
+                        echo "<td class='align-middle'>{$row['subcategoryname']}</td>";
+                        echo "<td class='align-middle'>{$row['itembrand']}</td>";
                         //echo "<td class='text-center'>{$row['modelno']}</td>";
                         //echo "<td class='text-center'>{$row['serialno']}</td>";
                         //echo "<td class='text-center'>{$row['itemcondition']}</td>";
@@ -283,18 +304,18 @@ mysqli_data_seek($resultitems, 0);
                                 $statusClass = 'status-pendingreserve';
                                 break;
                         }
-                        echo "<td class='text-center {$statusClass}'>{$row['status']}</td>";
-                        
+                        echo "<td class='text-center {$statusClass} align-middle'>{$row['status']}</td>";
+
                         echo "</tr>";
-                        
+
                     }
                     echo '</tbody>';
                 } else {
                     // Display message when no data is available
                     echo '<div class="col text-center">No data available in table</div>';
                 }
-                    echo '</table>';
-                
+                echo '</table>';
+
                 ?>
         </div>
     </div>

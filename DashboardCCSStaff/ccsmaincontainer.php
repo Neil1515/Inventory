@@ -86,7 +86,7 @@ $resultitems = mysqli_query($con, $queryitems);
                         }
                     
                         // Display the subcategory and other item details
-                        echo "<tr class='item-details-row'>";
+                        echo "<tr class='item-details-row align-middle' >";
                         $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
                         if (file_exists($imagePath)) {
                             echo "<td><img src='{$imagePath}' alt='Subcategory Image' width='45'></td>";
