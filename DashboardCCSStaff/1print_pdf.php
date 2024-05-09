@@ -154,16 +154,19 @@ $deanSalutation = '';
 $deanName = '';
 if ($rowDean = mysqli_fetch_assoc($resultDean)) {
     $deanName = $rowDean['dean_name'];
+    $usertypeDean = 'Dean'; // Assigning a value assuming it's intended for later use
     // Determine salutation based on gender
     if ($rowDean['gender'] == 'Male') {
         $deanSalutation = 'Mr.';
     } else {
-        $deanSalutation = 'Mrs.';
+        // Use appropriate salutation for female deans
+        $deanSalutation = 'Dr.';
     }
 }
 
+
 // Retrieve the name of the staff based on the staff ID
-$queryStaff = "SELECT CONCAT(fname, ' ', lname) AS staff_name, gender FROM tblusers WHERE id = ?";
+$queryStaff = "SELECT CONCAT(fname, ' ', lname) AS staff_name, gender, usertype FROM tblusers WHERE id = ?";
 $stmt = mysqli_prepare($con, $queryStaff);
 if ($stmt) {
     mysqli_stmt_bind_param($stmt, "s", $staffId);
@@ -171,6 +174,7 @@ if ($stmt) {
         $resultStaff = mysqli_stmt_get_result($stmt);
         if ($rowStaff = mysqli_fetch_assoc($resultStaff)) {
             $staffName = $rowStaff['staff_name'];
+            $userType = $rowStaff['usertype'];
         }
         // Determine salutation based on gender
         if ($rowStaff['gender'] == 'Male') {
@@ -198,15 +202,16 @@ $pdf->AddPage();
 // Set the default timezone to Philippines
 date_default_timezone_set('Asia/Manila');
 // Get the current date and format it
-$current_date = date('F d, Y g:i A');
+$current_date = date('F d, Y');
 // Construct the PDF content
 $content = '';
 $content .= '
     <h2 style="margin: 20; text-align: center;">CCS-IMS Inventory Management System</h2>
     <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandue</p>
+    <p style="margin-top: 0px; text-align: center;">Inventory Borrowers Report</p>
     <p style="margin: 0; text-align: center;">As of ' . $current_date . '</p>
     <p style="margin-bottom: 0px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
-    <h3 style="margin-top: 0px;">Borrowers Report</h3>
+    
     <table border="1" cellspacing="0" cellpadding="3">
         <tr align="center">
             <th>Status</th>
@@ -222,9 +227,11 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '');
 $content .= '</table>';
-$content .= '<br><br><h3 style="margin-top: 20px;">Printed by: <u>' . $staffSalutation . ' ' . $staffName . '</u></h3>';
-$content .= '<h3 style="margin-top: 25px; margin-bottom: 10px; margin-right: 25px;  text-align: right;">CCS Dean: <u>' . $deanSalutation . ' ' . $deanName . '</u></h3><br><br>';
-
+$content .= '<h3>Prepared by:<br></h3>';
+$content .= '<br><br><h3 style="margin-top: 20px;"><u>' . strtoupper($staffSalutation) . ' ' . strtoupper($staffName) . '</u><br>'. $userType .'</h3>';
+$content .= '<h3><br></h3>';
+$content .= '<h3>Noted by:<br></h3>';
+$content .= '<h3 style="margin-top: 20px;"><u>' . strtoupper($deanSalutation) . ' ' . strtoupper($deanName) . '</u><br>CCS '. $usertypeDean .'</h3>';
 // Write the HTML content to the PDF and output it
 $pdf->writeHTML($content);
 $pdf->Output('borrowersdata.pdf', 'I');

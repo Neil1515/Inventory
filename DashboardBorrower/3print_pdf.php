@@ -56,6 +56,7 @@ if ($stmt) {
             $borrowerRow = mysqli_fetch_assoc($result); 
             $borrowerIdFromDB = $borrowerRow['id']; 
             $borrowerName = $borrowerRow['fname'] . ' ' . $borrowerRow['lname']; 
+            
             // Determine salutation based on gender
             if ($borrowerRow['gender'] == 'Male') {
                 $borrowerSalutation = 'Mr.';
@@ -190,11 +191,29 @@ $deanSalutation = '';
 $deanName = '';
 if ($rowDean = mysqli_fetch_assoc($resultDean)) {
     $deanName = $rowDean['dean_name'];
+    $usertypeDean = 'Dean'; // Assigning a value assuming it's intended for later use
     // Determine salutation based on gender
     if ($rowDean['gender'] == 'Male') {
         $deanSalutation = 'Mr.';
     } else {
-        $deanSalutation = 'Mrs.';
+        // Use appropriate salutation for female deans
+        $deanSalutation = 'Dr.';
+    }
+}
+
+$queryStaff = "SELECT CONCAT(fname, ' ', lname) AS dean_name, gender FROM tblusers WHERE usertype = 'CCS Staff' AND status = 'Active'";
+$resultStaff = mysqli_query($con, $queryStaff);
+$staffSalutation = '';
+$staffName = '';
+if ($rowStaff = mysqli_fetch_assoc($resultStaff)) {
+    $staffName = $rowStaff['dean_name'];
+    $usertypeStaff = 'CCS Staff'; 
+    // Determine salutation based on gender
+    if ($rowStaff['gender'] == 'Male') {
+        $staffSalutation = 'Mr.';
+    } else {
+
+        $staffSalutation = 'Ms.';
     }
 }
 $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -238,8 +257,11 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '', $borrowerIdFromDB);
 $content .= '</table>';
-$content .= '<br>';
-$content .= '<h3 style="margin-top: 25px; margin-bottom: 10px; margin-right: 25px;  text-align: right;">CCS Dean: <u>' . $deanSalutation . ' ' . $deanName . '</u></h3><br><br>';
+$content .= '<h3>Prepared by:<br></h3>';
+$content .= '<br><br><h3 style="margin-top: 20px;"><u>' . strtoupper($staffSalutation) . ' ' . strtoupper($staffName) . '</u><br>'. $usertypeStaff .'</h3>';
+$content .= '<h3><br></h3>';
+$content .= '<h3>Noted by:<br></h3>';
+$content .= '<h3 style="margin-top: 20px;"><u>DR. ' . strtoupper($deanName) . '</u><br>CCS '. $usertypeDean .'</h3>';
 
 // Write the HTML content to the PDF and output it
 $pdf->writeHTML($content);

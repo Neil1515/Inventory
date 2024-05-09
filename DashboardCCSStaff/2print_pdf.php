@@ -229,6 +229,7 @@ $deanSalutation = '';
 $deanName = '';
 if ($rowDean = mysqli_fetch_assoc($resultDean)) {
     $deanName = $rowDean['dean_name'];
+    $usertypeDean = 'Dean';
     // Determine salutation based on gender
     if ($rowDean['gender'] == 'Male') {
         $deanSalutation = 'Mr.';
@@ -238,7 +239,7 @@ if ($rowDean = mysqli_fetch_assoc($resultDean)) {
 }
 
 // Retrieve the name of the staff based on the staff ID
-$queryStaff = "SELECT CONCAT(fname, ' ', lname) AS staff_name, gender FROM tblusers WHERE id = ?";
+$queryStaff = "SELECT CONCAT(fname, ' ', lname) AS staff_name, gender, usertype FROM tblusers WHERE id = ?";
 $stmt = mysqli_prepare($con, $queryStaff);
 if ($stmt) {
     mysqli_stmt_bind_param($stmt, "s", $staffId);
@@ -246,6 +247,7 @@ if ($stmt) {
         $resultStaff = mysqli_stmt_get_result($stmt);
         if ($rowStaff = mysqli_fetch_assoc($resultStaff)) {
             $staffName = $rowStaff['staff_name'];
+            $userType = $rowStaff['usertype'];
         }
         // Determine salutation based on gender
         if ($rowStaff['gender'] == 'Male') {
@@ -297,9 +299,11 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '', $borrowerIdFromDB);
 $content .= '</table>';
-$content .= '<br><br><h3 style="margin-top: 100px;">Printed by: <u>' . $staffSalutation . ' ' . $staffName . '</u></h3>';
-$content .= '<br>';
-$content .= '<h3 style="margin-top: 25px; margin-bottom: 10px; margin-right: 25px;  text-align: right;">CCS Dean: <u>' . $deanSalutation . ' ' . $deanName . '</u></h3><br><br>';
+$content .= '<h3>Prepared by:<br></h3>';
+$content .= '<br><br><h3 style="margin-top: 20px;"><u>' . strtoupper($staffSalutation) . ' ' . strtoupper($staffName) . '</u><br>'. $userType .'</h3>';
+$content .= '<h3><br></h3>';
+$content .= '<h3>Noted by:<br></h3>';
+$content .= '<h3 style="margin-top: 20px;"><u>DR. ' . strtoupper($deanName) . '</u><br>CCS '. $usertypeDean .'</h3>';
 
 // Write the HTML content to the PDF and output it
 $pdf->writeHTML($content);

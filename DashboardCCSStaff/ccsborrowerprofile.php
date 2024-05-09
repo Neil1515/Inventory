@@ -410,7 +410,7 @@ if (isset($_POST['reportuserBtn'])) {
                                     class="hoverable-card">
                                     <div class="card bg-success text-white text-center">
                                         <div class="card-body">
-                                            <h5 class="card-title">Borrowed Items</h5>
+                                            <h5 class="card-title">Current Borrowed Items</h5>
                                             <h3 class="card-text"><?php echo $totalApprovedItems ?></h3>
                                         </div>
                                     </div>
