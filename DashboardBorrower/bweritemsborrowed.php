@@ -1,5 +1,6 @@
 <!-- bweritemsborrowed.php -->
 <?php
+
 echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
@@ -22,7 +23,7 @@ if ($stmt) {
                             FROM tblborrowingreports b
                             INNER JOIN tblitembrand i ON b.itemid = i.id
                             LEFT JOIN tblusers u ON b.approvebyid = u.id
-                            WHERE b.borrowerid = ? AND(b.itemreqstatus = 'Approved' OR b.itemreqstatus = 'Request return')";
+                            WHERE b.borrowerid = ? AND(b.itemreqstatus = 'Approved' OR b.itemreqstatus = 'Request Return')";
             $stmt_items = mysqli_prepare($con, $query_items);
 
             if ($stmt_items) {
@@ -34,7 +35,7 @@ if ($stmt) {
                     if ($result_items && mysqli_num_rows($result_items) > 0) {
                         while ($item_row = mysqli_fetch_assoc($result_items)) {
                             $imagePath = ''; // Initialize image path
-                            
+
                             // Fetch subcategory information for the current item
                             $sqlSubcategory = "SELECT subcategoryname FROM `tblitembrand` WHERE id = ?";
                             $stmtSubcategory = mysqli_prepare($con, $sqlSubcategory);
@@ -50,7 +51,7 @@ if ($stmt) {
                                 }
                                 mysqli_stmt_close($stmtSubcategory);
                             }
-                            
+
                             // If subcategory image is not found, use default
                             if (empty($imagePath)) {
                                 $imagePath = 'inventory/SubcategoryItemsimages/defaultimageitem.png';
@@ -59,10 +60,10 @@ if ($stmt) {
                             echo '<div class="col-md-3 mb-3">';
                             echo '<div class="card">';
                             echo '<div class="card-body">';
-                            echo '<h5 class="card-title">' . $item_row['subcategoryname'] . '</h5>';
+                            echo '<h4 class="card-title">' . $item_row['subcategoryname'] . '</h4>';
                             echo '<div class="mb-3 text-center">';
                             echo '<img src="' . $imagePath . '" alt="Image" width="70">';
-                            echo '</div>';  
+                            echo '</div>';
                             //echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
                             echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
@@ -76,15 +77,16 @@ if ($stmt) {
                                         echo '<button type="button" class="btn btn-success request-return-btn" data-item-id="' . $item_row['id'] . '">Request Return</button>';
                                         break;
                                     case 'Request Return':
-                                        echo '<button type="button" class="btn btn-primary request-cancel-btn" data-item-id="' . $item_row['id'] . '">Request Sent</button>';                                        break;
+                                        echo '<button type="button" class="btn btn-primary request-cancel-btn" data-item-id="' . $item_row['id'] . '">Request Sent</button>';
+                                        break;
                                     default:
-                                        // Default action or no action for other statuses
+                                            echo '<p class="text-danger">Cannot request return</p>';
                                         break;
                                 }
                             } else {
                                 echo '<p class="text-danger">Status not available</p>';
                             }
-                            echo '</div>';                       
+                            echo '</div>';
                             echo '</div>';
                             echo '</div>';
                             echo '</div>';
@@ -140,6 +142,9 @@ echo '</div>';
                             //alert("Item request status updated successfully.");
                             // Redirect to the desired page
                             window.location.href = 'borrowerItemsBorrowed.php?msg_success=Item request return updated successfully.';
+                        } else if (xhr.responseText.includes("Item request status is not 'Approved' or item not found.")) {
+                            // Redirect with failure message
+                            window.location.href = "borrowerItemsBorrowed.php?msg_fail=Fail to Request Return!";
                         } else {
                             // Handle other responses if needed
                         }
@@ -149,7 +154,6 @@ echo '</div>';
                     }
                 }
             };
-
             xhr.open('POST', 'bwerupdate_itemreqstatus.php', true);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.send('itemId=' + encodeURIComponent(itemId));
@@ -176,10 +180,12 @@ echo '</div>';
                         console.log(xhr.responseText);
                         // Check if the response contains a success message
                         if (xhr.responseText.includes("Item request status updated successfully.")) {
-
                             window.location.href = 'borrowerItemsBorrowed.php?msg_success=Item request cancel return updated successfully.';
+                        } else if (xhr.responseText.includes("Item request status is not 'Request Return' or item not found.")) {
+                            window.location.href = 'borrowerItemsBorrowed.php?msg_fail=Fail to cancel request';
                         } else {
                             // Handle other responses if needed
+                            console.error('Unexpected response: ' + xhr.responseText);
                         }
                     } else {
                         // Handle error
@@ -187,7 +193,6 @@ echo '</div>';
                     }
                 }
             };
-
             xhr.open('POST', 'bwercancel_itemreqstatus.php', true);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.send('itemId=' + encodeURIComponent(itemId));

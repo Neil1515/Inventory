@@ -13,16 +13,21 @@ if (isset($_POST['itemId']) && !empty($_POST['itemId'])) {
 
     // Get the current date and time in the Philippines timezone
     $datetimereqreturn = date("Y-m-d H:i:s");
-    
+
     // Update itemreqstatus and datetimereqreturn for the specified itemId
-    $query = "UPDATE tblborrowingreports SET itemreqstatus = 'Request Return', datetimereqreturn = ? WHERE id = ?";
+    $query = "UPDATE tblborrowingreports SET itemreqstatus = 'Request Return', datetimereqreturn = ? WHERE id = ? AND itemreqstatus = 'Approved'";
     $stmt = mysqli_prepare($con, $query);
 
     if ($stmt) {
         mysqli_stmt_bind_param($stmt, "si", $datetimereqreturn, $itemId);
         if (mysqli_stmt_execute($stmt)) {
-            // Return success message and redirect script
-            echo "<script>window.location.href='borrowerItemsBorrowed.php?msg_success=Item request status updated successfully.';</script>";
+            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                // Return success message
+                echo "Item request status updated successfully.";
+            } else {
+                // No rows affected, item request status may not be 'Approved'
+                echo "Item request status is not 'Approved' or item not found.";
+            }
         } else {
             // Return error message
             echo "Error updating item request status: " . mysqli_error($con);
@@ -37,3 +42,4 @@ if (isset($_POST['itemId']) && !empty($_POST['itemId'])) {
     echo "Invalid request.";
 }
 ?>
+
