@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2024 at 04:39 AM
+-- Generation Time: May 07, 2024 at 06:35 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -58,13 +58,47 @@ CREATE TABLE `tblborrowingreports` (
 --
 
 INSERT INTO `tblborrowingreports` (`id`, `itemid`, `approvebyid`, `approvereservebyid`, `rejectedbyid`, `approvereturnbyid`, `borrowerid`, `itemreqstatus`, `datetimereqborrow`, `datetimereqreservation`, `datimeapproved`, `datetimereserve`, `updatereservation`, `datetimeapprovereserved`, `datimerejected`, `datetimecanceled`, `datetimereturn`, `datetimereqreturn`, `returnremarks`, `returncode`, `returnitemcondition`, `reservelocation`, `reservepurpose`) VALUES
-(1252, 116, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-08 22:16:39', NULL, '2024-05-08 22:17:39', NULL, NULL, NULL, NULL, NULL, '2024-05-08 22:48:11', NULL, 'sad', '09ASUMGY', 'No Issue', NULL, NULL),
-(1253, 116, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-08 22:51:56', NULL, '2024-05-08 22:52:00', NULL, NULL, NULL, NULL, NULL, '2024-05-08 22:52:20', NULL, 'sad', 'QNAIHODD', 'No Issue', NULL, NULL),
-(1254, 116, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-08 22:54:39', NULL, '2024-05-08 22:54:47', NULL, NULL, NULL, NULL, NULL, '2024-05-08 22:55:05', NULL, 'sad', 'P5BJZIRI', 'No Issue', NULL, NULL),
-(1255, 116, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-08 22:55:57', NULL, '2024-05-08 22:56:09', NULL, NULL, NULL, NULL, NULL, '2024-05-08 22:56:41', NULL, 'aw', '9W6KOJ1O', 'No Issue', NULL, NULL),
-(1256, 121, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-08 22:59:31', NULL, '2024-05-08 22:59:38', NULL, NULL, NULL, NULL, NULL, '2024-05-08 22:59:54', NULL, 'sad', 'XQKW74TE', 'No Issue', NULL, NULL),
-(1271, 121, 0, NULL, NULL, NULL, 988, 'Pending Borrow', '2024-05-09 10:33:38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
-(1272, 119, 0, NULL, NULL, NULL, 988, 'Pending Borrow', '2024-05-09 10:33:38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL);
+(1211, 87, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-04 23:54:09', NULL, '2024-05-05 10:46:34', NULL, NULL, NULL, NULL, NULL, '2024-05-05 10:47:58', NULL, 'sad', 'CFXFF0CS', 'No Issue', NULL, NULL),
+(1212, 88, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1213, 89, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1214, 127, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1215, 128, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1216, 73, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1217, 74, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1218, 117, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1219, 125, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1220, 126, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1221, 118, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1222, 83, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1223, 84, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1224, 85, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1225, 86, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1226, 119, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1227, 121, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1228, 122, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1229, 79, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1230, 135, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1231, 133, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1232, 134, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1233, 123, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1234, 124, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1235, 76, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1236, 120, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:09', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1237, 75, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:19', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1238, 111, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:19', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1239, 112, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-04 23:54:19', NULL, '2024-05-05 10:46:27', NULL, NULL, NULL, NULL, NULL, '2024-05-05 10:47:58', NULL, 'sad', 'CFXFF0CS', 'No Issue', NULL, NULL),
+(1240, 72, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-04 23:54:19', NULL, '2024-05-05 10:46:29', NULL, NULL, NULL, NULL, NULL, '2024-05-05 10:47:58', NULL, 'sad', 'CFXFF0CS', 'No Issue', NULL, NULL),
+(1241, 116, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-04 23:54:19', NULL, NULL, NULL, NULL, NULL, '2024-05-05 15:19:02', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1242, 75, 0, NULL, 3, NULL, 10, 'Rejected', '2024-05-05 15:19:31', NULL, NULL, NULL, NULL, NULL, '2024-05-06 10:33:34', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1243, 116, 3, NULL, NULL, 3, 988, 'Returned', '2024-05-06 10:45:53', NULL, '2024-05-06 13:01:34', NULL, NULL, NULL, NULL, NULL, '2024-05-06 13:22:17', NULL, 'sad', 'CTHOP9Y5', 'Damage', NULL, NULL),
+(1244, 75, 9, NULL, NULL, 9, 988, 'Returned', '2024-05-06 14:11:01', NULL, '2024-05-06 14:11:26', NULL, NULL, NULL, NULL, NULL, '2024-05-06 14:11:44', NULL, '74', 'O4PDUYRI', 'No Issue', NULL, NULL),
+(1245, 73, 3, NULL, NULL, NULL, 988, 'Approved', '2024-05-06 14:12:49', NULL, '2024-05-06 20:32:28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1246, 75, 0, NULL, NULL, NULL, 10, 'Canceled', '2024-05-07 08:55:32', NULL, NULL, NULL, NULL, NULL, NULL, '2024-05-07 08:55:40', NULL, NULL, NULL, '', NULL, NULL, NULL),
+(1247, 75, 3, NULL, NULL, 3, 10, 'Returned', '2024-05-07 08:57:48', NULL, '2024-05-07 10:24:32', NULL, NULL, NULL, NULL, NULL, '2024-05-07 10:26:03', '2024-05-07 10:25:02', 'sad', 'IACHNMIX', 'Lost', NULL, NULL),
+(1248, 121, 0, 3, NULL, NULL, 10, 'Expired Reservation', NULL, '2024-05-07 12:59:18', NULL, '2024-05-07 13:01:00', NULL, '2024-05-07 12:59:36', NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
+(1249, 135, 0, 3, NULL, NULL, 10, 'Expired Reservation', NULL, '2024-05-07 13:18:49', NULL, '2024-05-07 13:23:00', '2024-05-07 13:22:20', '2024-05-07 13:18:57', NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
+(1250, 135, 0, NULL, NULL, NULL, 10, 'Expired Reservation', NULL, '2024-05-07 13:23:52', NULL, '2024-05-07 13:24:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
+(1251, 135, 3, 3, NULL, 3, 10, 'Returned', NULL, '2024-05-07 13:30:36', '2024-05-07 13:30:55', '2024-05-07 13:31:00', NULL, '2024-05-07 13:30:42', NULL, NULL, '2024-05-07 19:47:18', '2024-05-07 19:47:05', 'sad', 'UWOKQLX6', 'No Issue', 'sad', 'sad');
 
 -- --------------------------------------------------------
 
@@ -97,7 +131,7 @@ CREATE TABLE `tblitembrand` (
 
 INSERT INTO `tblitembrand` (`id`, `staffid`, `staffname`, `itembrand`, `categoryname`, `subcategoryname`, `borrowable`, `remarks`, `modelno`, `serialno`, `unitcost`, `status`, `itemcondition`, `datetimeadded`, `assignfor`, `datepurchased`) VALUES
 (72, 3, 'Naix Lifestealer', 'Intel Pentium Dual E2140 160 Ghz', 'Computer Hardware and Projector', 'CPU', 'Yes', '', '', 'SN-9356-VSND', 0, 'Available', 'New', '2024-03-13 16:12:54', 'MS. Aurora Miro Desk', '2024-03-01'),
-(73, 3, 'Naix Lifestealer', '1 GB Kingston', 'Computer Hardware and Projector', 'Memmory', 'Yes', '', '', 'SN-1265-XNIZ', 0, 'Available', 'New', '2024-03-13 16:13:50', 'MS. Aurora Miro Desk', '2024-03-01'),
+(73, 3, 'Naix Lifestealer', '1 GB Kingston', 'Computer Hardware and Projector', 'Memmory', 'Yes', '', '', 'SN-1265-XNIZ', 0, 'Borrowed', 'New', '2024-03-13 16:13:50', 'MS. Aurora Miro Desk', '2024-03-01'),
 (74, 3, 'Naix Lifestealer', '1 GB Kingston', 'Computer Hardware and Projector', 'Memmory', 'Yes', '', '', 'SN-9046-CGWJ', 0, 'Available', 'New', '2024-03-13 16:13:50', 'For Faculty 1', '2024-03-01'),
 (75, 3, 'Naix Lifestealer', '80 GB SATA', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', '', 'SN-2510-ZBFX', 0, 'Available', 'New', '2024-03-13 16:14:31', 'MS. Aurora Miro Desk', '2024-03-01'),
 (76, 3, 'Naix Lifestealer', 'attached', 'Computer Hardware and Projector', 'Video Card', 'Yes', '', '', 'SN-3458-YMVO', 0, 'Available', 'New', '2024-03-13 16:16:56', 'MS. Aurora Miro Desk', '2024-03-01'),
@@ -132,16 +166,17 @@ INSERT INTO `tblitembrand` (`id`, `staffid`, `staffname`, `itembrand`, `category
 (116, 3, 'Naix Lifestealer', 'Intel Core Duo E7400 2.80 Ghz', 'Computer Hardware and Projector', 'CPU', 'Yes', '', '', 'SN-7084-HKWT', 0, 'Available', 'New', '2024-03-13 21:25:01', 'For Faculty 1', '2024-03-01'),
 (117, 3, 'Naix Lifestealer', 'Samsung', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-5739-BVOF', 0, 'Available', 'New', '2024-03-13 21:27:31', 'For Faculty 1', '2024-03-01'),
 (118, 3, 'Naix Lifestealer', 'Windows XP Professional', 'Computer Hardware and Projector', 'Operating System', 'Yes', '', '', 'SN-1470-PXEF', 0, 'Available', 'New', '2024-03-13 21:32:34', 'For Faculty 1', '2024-03-01'),
-(119, 3, 'Naix Lifestealer', 'Samsung Syncmaster', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-3401-IUHM', 0, 'Pending Borrow', 'New', '2024-03-13 21:36:58', 'Miss Gian PC', '2024-03-01'),
-(120, 3, 'Naix Lifestealer', 'Toshiba v1', 'Appliances', 'Stand Fand', 'No', '', '', 'SN-8356-AXYK', 0, 'Standby', 'Good', '2024-03-19 21:07:44', '', '2024-03-20'),
-(121, 3, 'Naix Lifestealer', 'pldt', 'Ring Binder', 'Guitar', 'Yes', '', '', 'SN-6402-KXJD', 0, 'Pending Borrow', 'Good', '2024-04-09 19:11:18', '', '2024-04-09'),
+(119, 3, 'Naix Lifestealer', 'Samsung Syncmaster', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-3401-IUHM', 0, 'Available', 'New', '2024-03-13 21:36:58', 'Miss Gian PC', '2024-03-01'),
+(120, 3, 'Naix Lifestealer', 'Toshiba v1', 'Appliances', 'Stand Fand', 'Yes', '', '', 'SN-8356-AXYK', 0, 'Available', 'Good', '2024-03-19 21:07:44', '', '2024-03-20'),
+(121, 3, 'Naix Lifestealer', 'pldt', 'Ring Binder', 'Guitar', 'Yes', '', '', 'SN-6402-KXJD', 0, 'Available', 'Good', '2024-04-09 19:11:18', '', '2024-04-09'),
 (122, 3, 'Naix Lifestealer', 'sad12ds', 'Ring Binder', 'Guitar', 'Yes', '', '', 'SN-8675-BNWP', 0, 'Available', 'New', '2024-04-09 19:19:26', '', '2024-04-09'),
-(123, 3, 'Naix Lifestealer', 'sample', 'Sample', 'ZamBo', 'No', '', 'sad', 'SN-3794-OAKG', 2131, 'Standby', 'New', '2024-04-21 10:02:33', 'sad', '2024-04-02'),
-(124, 3, 'Naix Lifestealer', 'sample', 'Sample', 'ZamBo', 'No', 'awd', 'sad', 'SN-9251-PCTQ', 2131, 'Standby', 'New', '2024-04-21 10:02:33', '', '2024-04-02'),
+(123, 3, 'Naix Lifestealer', 'sample', 'Sample', 'ZamBo', 'Yes', 'awd', 'sad', 'SN-3794-OAKG', 2131, 'Available', 'New', '2024-04-21 10:02:33', '', '2024-04-02'),
+(124, 3, 'Naix Lifestealer', 'sample', 'Sample', 'ZamBo', 'Yes', 'awd', 'sad', 'SN-9251-PCTQ', 2131, 'Available', 'New', '2024-04-21 10:02:33', '', '2024-04-02'),
 (125, 3, 'Ms. Gian Mahusay', 'Converge', 'Computer Hardware and Projector', 'Router', 'Yes', '', '', 'SN-5823-CTQI', 600, 'Available', 'New', '2024-04-28 10:43:26', '', '2024-04-02'),
 (126, 3, 'Ms. Gian Mahusay', 'Converge', 'Computer Hardware and Projector', 'Router', 'Yes', '', '', 'SN-3902-ARJU', 600, 'Available', 'New', '2024-04-28 10:43:26', '', '2024-04-02'),
 (127, 3, 'Ms. Gian Mahusay', 'sample', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', 'sad', 'SN-1867-DTQA', 100, 'Available', 'New', '2024-04-29 18:17:08', '', '2024-04-29'),
-(128, 3, 'Ms. Gian Mahusay', 'sample', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', 'sad', 'SN-5073-MKCI', 100, 'Available', 'New', '2024-04-29 18:17:08', '', '2024-04-29');
+(128, 3, 'Ms. Gian Mahusay', 'sample', 'Computer Hardware and Projector', 'Hard Disk', 'Yes', '', 'sad', 'SN-5073-MKCI', 100, 'Available', 'New', '2024-04-29 18:17:08', '', '2024-04-29'),
+(135, 3, 'Ms. Gian Mahusay', 'Epsonsad', 'Appliances', 'Stand Fand', 'No', '', '', 'SN-8241-10YK', 0, 'Available', 'Old', '2024-05-01 20:52:39', '', '2023-10-19');
 
 -- --------------------------------------------------------
 
@@ -190,9 +225,7 @@ CREATE TABLE `tblmessages` (
 INSERT INTO `tblmessages` (`id`, `sender_id`, `message`, `timestamp`, `status`) VALUES
 (215, 3, 'eyy', '2024-05-01 03:09:07', 'unread'),
 (216, 10, 'eyy', '2024-05-01 03:09:19', 'unread'),
-(217, 3, 'eyy', '2024-05-01 14:51:15', 'unread'),
-(218, 10, 'eyy', '2024-05-09 02:29:43', 'unread'),
-(219, 19104629, 'http://localhost/inventory/images/imageofusers/10.png?1715221827', '2024-05-09 02:30:41', 'unread');
+(217, 3, 'eyy', '2024-05-01 14:51:15', 'unread');
 
 -- --------------------------------------------------------
 
@@ -217,13 +250,7 @@ INSERT INTO `tblmessage_recipients` (`id`, `message_id`, `recipient_id`, `status
 (536, 216, 15, 'unread'),
 (537, 216, 17, 'unread'),
 (538, 216, 11111, 'unread'),
-(539, 217, 10, 'read'),
-(540, 218, 3, 'unread'),
-(541, 218, 9, 'unread'),
-(542, 218, 15, 'unread'),
-(543, 218, 17, 'unread'),
-(544, 218, 11111, 'unread'),
-(545, 219, 10, 'read');
+(539, 217, 10, 'read');
 
 -- --------------------------------------------------------
 
@@ -238,13 +265,6 @@ CREATE TABLE `tblpendingitemremoval` (
   `status` varchar(20) NOT NULL,
   `datetimereq` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblpendingitemremoval`
---
-
-INSERT INTO `tblpendingitemremoval` (`id`, `itemid`, `staffid`, `status`, `datetimereq`) VALUES
-(28, 120, 3, 'Pending', '2024-05-09 10:28:04');
 
 -- --------------------------------------------------------
 
@@ -273,9 +293,7 @@ INSERT INTO `tblreportborroweracc` (`id`, `staffid`, `borrowerid`, `reason`, `st
 (90, 3, 988, 'Spamming borrow/reserve requests', 'Unblock', '2024-05-07 10:19:09'),
 (91, 3, 10, 'Suspicious behavior', 'Declined', '2024-05-07 10:23:59'),
 (92, 3, 988, 'Not returning borrowed items', 'Declined', '2024-05-07 19:39:29'),
-(93, 3, 10, 'Violating terms and conditions', 'Declined', '2024-05-07 21:29:01'),
-(94, 19104629, 988, 'eyy', 'Unblock', '2024-05-08 00:36:09'),
-(95, 3, 10, 'Suspicious behavior', 'Declined', '2024-05-08 22:05:56');
+(93, 3, 10, 'Violating terms and conditions', 'Declined', '2024-05-07 21:29:01');
 
 -- --------------------------------------------------------
 
@@ -349,7 +367,7 @@ INSERT INTO `tblusers` (`id`, `addedbyid`, `usertype`, `fname`, `lname`, `passwo
 (2, 0, 'Admin', 'Naix', 'eawd', 'admin', 'offline', 'Active', '', '', '', NULL, NULL, NULL),
 (3, 0, 'CCS Staff', 'Gian', 'Mahusay', 'uclm-3', 'offline', 'Active', 'Mahusay3@gmail.com', 'Female', '', NULL, NULL, NULL),
 (9, 0, 'CCS Staff', 'JohnSkie', 'Aying', 'uclm-9', 'offline', 'Active', 'ayingneil9@gmail.com', 'Male', 'College of Computer Studies', 'Ms. Gian Mahusay', '2024-03-16 19:32:50', '2024-04-27 13:50:44'),
-(10, 0, 'Student', 'John Neil', 'Aying', 'uclm-10', 'offline', 'Active', 'ayingneil10@gmail.com', 'Male', 'College of Computer Studies', 'Naix Lifestealer', '2024-03-16 19:30:36', '2024-03-16 19:30:46'),
+(10, 0, 'Student', 'John Neil', 'Aying', 'uclm-10', 'online', 'Active', 'ayingneil10@gmail.com', 'Male', 'College of Computer Studies', 'Naix Lifestealer', '2024-03-16 19:30:36', '2024-03-16 19:30:46'),
 (11, 0, 'Student', 'John Neil', 'Aying', 'Sadboid15', 'offline', 'Active', 'ayingsad2@gmail.com', 'Male', 'Eyy', 'Ms. Gian Mahusay', '2024-04-27 13:52:47', '2024-04-27 13:53:01'),
 (15, 0, 'CCS Staff', 'Neil', 'Aying', 'uclm-15', 'offline', 'Active', 'sad@sad.com', '', '', NULL, NULL, NULL),
 (17, 0, 'CCS Staff', 'sad', 'sad', 'uclm-17', 'offline', 'Active', 'sad1@sad.com', '', '', NULL, NULL, NULL),
@@ -357,7 +375,7 @@ INSERT INTO `tblusers` (`id`, `addedbyid`, `usertype`, `fname`, `lname`, `passwo
 (69, 0, 'Student', 'John', 'Aying', 'uclm-69', 'offline', 'Active', 'ayingneil5@gmail.com', 'Male', 'Ibobax', 'Naix Lifestealer', '2024-03-08 22:13:22', '2024-03-09 09:56:54'),
 (100, 0, 'Student', 'John Neil', 'Aying', 'Ayingneil100@gmail.com', 'offline', 'Blocked', 'Ayingneil100@gmail.com', 'Male', 'College of Computer Studies', 'Naix Lifestealer', '2024-04-12 17:20:27', '2024-04-22 23:36:55'),
 (123, 0, 'Dean', 'John Neil', 'Aying', 'uclm-123', 'offline', 'Blocked', 'sad2@sad.com', 'Female', '', NULL, NULL, NULL),
-(988, 0, 'Student', 'Jeneth', 'Escala', 'uclm-988', 'online', 'Active', 'jen15@gmhail.com', 'Female', 'College of Hotel & Restaurant Management', 'Naix Lifestealer', '2024-03-10 13:41:25', '2024-03-12 23:26:55'),
+(988, 0, 'Student', 'Jeneth', 'Escala', 'uclm-988', 'offline', 'Active', 'jen15@gmhail.com', 'Female', 'College of Hotel & Restaurant Management', 'Naix Lifestealer', '2024-03-10 13:41:25', '2024-03-12 23:26:55'),
 (2024, 0, 'Student', 'Rogelyn', 'Aying', 'uclm-2024', 'offline', 'Active', 'glyn1@gmail.com', 'Female', 'College of Engineering', 'Neil Aying', '2024-03-17 22:03:06', '2024-03-17 22:03:22'),
 (6060, 0, 'Student', 'Sample', 'Sample', 'Sample22', 'offline', 'Active', 'Sample@sad.com', 'Male', 'College of Nursing', 'Ms. Gian Mahusay', '2024-04-23 11:30:19', '2024-04-27 13:50:38'),
 (6969, 0, 'Student', 'Anthony', 'Augusto', 'uclm-6969', 'offline', 'Active', 'ayingant2q1@gmail.com', 'Male', 'College of Engineering', 'Naix Lifestealer', '2024-03-09 09:58:06', '2024-03-10 16:39:20'),
@@ -434,7 +452,7 @@ ALTER TABLE `tblusers`
 -- AUTO_INCREMENT for table `tblborrowingreports`
 --
 ALTER TABLE `tblborrowingreports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1273;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1252;
 
 --
 -- AUTO_INCREMENT for table `tblitembrand`
@@ -452,25 +470,25 @@ ALTER TABLE `tblitemcategory`
 -- AUTO_INCREMENT for table `tblmessages`
 --
 ALTER TABLE `tblmessages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
 
 --
 -- AUTO_INCREMENT for table `tblmessage_recipients`
 --
 ALTER TABLE `tblmessage_recipients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=546;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=540;
 
 --
 -- AUTO_INCREMENT for table `tblpendingitemremoval`
 --
 ALTER TABLE `tblpendingitemremoval`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tblreportborroweracc`
 --
 ALTER TABLE `tblreportborroweracc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `tblsubcategory`
