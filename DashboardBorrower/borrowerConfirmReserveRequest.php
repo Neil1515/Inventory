@@ -110,8 +110,9 @@ if ($stmt) {
                                 </label>
                                 </div> 
                                 <!-- Note -->
-                                <p class="text-danger ">Reservation should be filed <strong>3 days before the actual date of use.</strong>  Assigned CCS Staff must be notified there be any changes of schedule of the reserved time</p>
-                                
+                                <p class="text-danger ">• Reservation should be filed <strong>3 days before the actual date of use.</strong>  Assigned CCS Staff must be notified there be any changes of schedule of the reserved time</p>
+                                <p class="text-danger ">• If approved, please ensure to claim the item by the specified date and time to avoid expiration.</p>
+
                             </div>
                             <div class="modal-footer">
                                 <!-- Disabled Confirm button initially -->

@@ -37,6 +37,7 @@ $result = mysqli_query($con, $sql);
 
 // Count the number of pending item removal requests
 $countPending = mysqli_num_rows($result);
+
 ?>
 <style>
     .notification-dropdown {

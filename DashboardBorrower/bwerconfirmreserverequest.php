@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
         }
     }
     // Optionally, you can redirect the user to a confirmation page
-    echo "<script>window.location.href='borrowerDashboardPage.php?msg_success=Successfully Requesting Reservation, Please await for CCS Staff for approval';</script>";
+    echo "<script>window.location.href='borrowerDashboardPage.php?msg_success=Successfully Requesting Reservation, Please await for CCS Staff and Dean for approval';</script>";
     exit();
 } else {
     error_log("Invalid form submission for reserving items.");
@@ -180,35 +180,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['requestReserve'])) {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-         $(document).ready(function() {
-        // Set the minimum date for the "Date of Use" input to today
-        var today = new Date().toISOString().split('T')[0];
-        document.getElementById("dateOfUse").min = today;
-        
-        // Function to set the minimum time for the "Time of Use" input
-        function setMinTime() {
-            var selectedDate = document.getElementById("dateOfUse").value;
-            var currentDate = new Date().toISOString().split('T')[0];
+       $(document).ready(function() {
+    // Function to get today's date in the Asia/Manila timezone
+    function getAsiaManilaDate() {
+        // Set the timezone to Asia/Manila (GMT+8)
+        var timezoneOffset = 8;
+        var currentDate = new Date(new Date().getTime() + (timezoneOffset * 60 * 60 * 1000));
+        return currentDate.toISOString().split('T')[0];
+    }
 
-            if (selectedDate === currentDate) {
-                // If the selected date is the current date, set the minimum time to the current time
-                var currentTime = new Date();
-                var currentHour = currentTime.getHours();
-                var currentMinute = currentTime.getMinutes();
-                var formattedCurrentTime = (currentHour < 10 ? '0' : '') + currentHour + ':' + (currentMinute < 10 ? '0' : '') + currentMinute;
-                document.getElementById("timeOfUse").min = formattedCurrentTime;
-            } else {
-                // If the selected date is not the current date, there is no minimum time restriction
-                document.getElementById("timeOfUse").removeAttribute("min");
-            }
+    // Set the minimum date for the "Date of Use" input to today in Asia/Manila timezone
+    var today = getAsiaManilaDate();
+    document.getElementById("dateOfUse").min = today;
+
+    // Function to set the minimum time for the "Time of Use" input
+    function setMinTime() {
+        var selectedDate = document.getElementById("dateOfUse").value;
+        var currentDate = getAsiaManilaDate();
+
+        if (selectedDate === currentDate) {
+            // If the selected date is the current date, set the minimum time to the current time in Asia/Manila timezone
+            var currentTime = new Date();
+            var currentHour = currentTime.getHours();
+            var currentMinute = currentTime.getMinutes();
+            var formattedCurrentTime = (currentHour < 10 ? '0' : '') + currentHour + ':' + (currentMinute < 10 ? '0' : '') + currentMinute;
+            document.getElementById("timeOfUse").min = formattedCurrentTime;
+        } else {
+            // If the selected date is not the current date, there is no minimum time restriction
+            document.getElementById("timeOfUse").removeAttribute("min");
         }
+    }
 
-        // Call setMinTime function when the "Date of Use" input changes
-        $("#dateOfUse").change(setMinTime);
+    // Call setMinTime function when the "Date of Use" input changes
+    $("#dateOfUse").change(setMinTime);
 
-        // Call setMinTime function initially to set the minimum time based on the initial value of the "Date of Use" input
-        setMinTime();
-        
-        });
+    // Call setMinTime function initially to set the minimum time based on the initial value of the "Date of Use" input
+    setMinTime();
+});
+
+
     </script>
 </main>

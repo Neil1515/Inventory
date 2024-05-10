@@ -31,7 +31,60 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
-
+// Fetch the count of unique dates and times with notifications from tblborrowingreports for the logged-in borrower ID
+$queryCount = "SELECT COUNT(DISTINCT datetime) AS notification_count
+               FROM (
+                   SELECT br.borrowerid, br.datetimereqborrow AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datetimereqborrow IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datetimereqreservation AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datetimereqreservation IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datimeapproved AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datimeapproved IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datetimeapprovereserved AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datetimeapprovereserved IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datetimecanceled AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datetimecanceled IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datimerejected AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datimerejected IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datetimereturn AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datetimereturn IS NOT NULL
+                   UNION ALL
+                   SELECT br.borrowerid, br.datetimereqreturn AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.borrowerid = ? AND br.datetimereqreturn IS NOT NULL
+               ) AS subquery";
+$stmtCount = mysqli_prepare($con, $queryCount);
+if ($stmtCount) {
+    mysqli_stmt_bind_param($stmtCount, "ssssssss", $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId);
+    if (mysqli_stmt_execute($stmtCount)) {
+        $resultCount = mysqli_stmt_get_result($stmtCount);
+        if ($resultCount && mysqli_num_rows($resultCount) > 0) {
+            $rowCount = mysqli_fetch_assoc($resultCount);
+            // Total notification count is the count of unique dates and times with notifications
+            $notificationCount = $rowCount['notification_count'];
+        } else {
+            $notificationCount = 0;
+        }
+    } else {
+        $notificationCount = 0;
+    }
+    mysqli_stmt_close($stmtCount);
+} else {
+    $notificationCount = 0;
+}
 ?>
 
 <div class="container-fluid">
@@ -51,20 +104,19 @@ if ($stmt) {
                     <sup class="badge bg-danger"><?php echo $unreadMessages; ?></sup> <!-- Message counter -->
                 </a>
 
-                <!-- Notification Icon and Counter -->
-                <button class="btn btn-secondary custom-dropdown-btn mr-2" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-bell fs-5 me-1"></i> <!-- Add the correct Font Awesome bell icon class -->
-                    <sup class="badge bg-danger" id="notificationCounter">0</sup>
-                </button>
+<!-- Notification Icon and Counter -->
+<button class="btn btn-secondary custom-dropdown-btn mr-2" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="fas fa-bell fs-5 me-1"></i> <!-- Add the correct Font Awesome bell icon class -->
+    <sup class="badge bg-danger" id="notificationCounter"><?php echo $notificationCount; ?></sup>
+</button>
 <!-- Notification Dropdown Menu -->
 <ul class="dropdown-menu" aria-labelledby="notificationDropdown" id="notificationMenu">
     <div class="notification-header">
         <h5><i class="fas fa-bell fs-5 ms-1 me-1"></i>Notifications</h5>
-    </div>
-              
+    </div>        
     <?php
 // Fetch notifications from tblborrowingreports for the logged-in borrower ID
-$query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqborrow AS datetime, 'request to borrow' AS action 
+$query = "SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqborrow AS datetime, 'request to borrow' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
@@ -72,15 +124,7 @@ $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategorynam
           AND br.datetimereqborrow IS NOT NULL
           GROUP BY br.borrowerid, br.datetimereqborrow
           UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datimeapproved AS datetime, 'request to borrow: <strong>Approved</strong>' AS action 
-          FROM tblborrowingreports br
-          JOIN tblusers u ON br.borrowerid = u.id
-          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          WHERE br.borrowerid = ?  -- Filter by borrower ID
-          AND br.datimeapproved IS NOT NULL
-          GROUP BY br.borrowerid, br.datimeapproved
-          UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreservation AS datetime, 'request to reserve' AS action 
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreservation AS datetime, 'request to reserve' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
@@ -88,7 +132,15 @@ $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategorynam
           AND br.datetimereqreservation IS NOT NULL
           GROUP BY br.borrowerid, br.datetimereqreservation
           UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimeapprovereserved AS datetime, 'request to reserve: <strong>Approved</strong>' AS action 
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datimeapproved AS datetime, 'request to borrow: <strong>Approved</strong>' AS action 
+          FROM tblborrowingreports br
+          JOIN tblusers u ON br.borrowerid = u.id
+          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+          WHERE br.borrowerid = ?  -- Filter by borrower ID
+          AND br.datimeapproved IS NOT NULL
+          GROUP BY br.borrowerid, br.datimeapproved
+          UNION
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimeapprovereserved AS datetime, 'request to reserve: <strong>Approved</strong>' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
@@ -96,7 +148,7 @@ $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategorynam
           AND br.datetimeapprovereserved IS NOT NULL
           GROUP BY br.borrowerid, br.datetimeapprovereserved
           UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimecanceled AS datetime, 'cancel' AS action 
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimecanceled AS datetime, 'cancel' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
@@ -104,18 +156,33 @@ $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategorynam
           AND br.datetimecanceled IS NOT NULL
           GROUP BY br.borrowerid, br.datetimecanceled
           UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereturn AS datetime, 'returned' AS action 
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datimerejected AS datetime, 'reject' AS action 
+          FROM tblborrowingreports br
+          JOIN tblusers u ON br.borrowerid = u.id
+          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+          WHERE br.borrowerid = ?  -- Filter by borrower ID
+          AND br.datimerejected IS NOT NULL
+          GROUP BY br.borrowerid, br.datimerejected
+          UNION
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereturn AS datetime, 'returned' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
           WHERE br.borrowerid = ?  -- Filter by borrower ID
           AND br.datetimereturn IS NOT NULL
           GROUP BY br.borrowerid, br.datetimereturn
+          UNION
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreturn AS datetime, 'request to return' AS action 
+          FROM tblborrowingreports br
+          JOIN tblusers u ON br.borrowerid = u.id
+          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+          WHERE br.borrowerid = ?  -- Filter by borrower ID
+          AND br.datetimereqreturn IS NOT NULL
+          GROUP BY br.borrowerid, br.datetimereqreturn
           ORDER BY datetime DESC";
-
 $stmt = mysqli_prepare($con, $query);
 if ($stmt) {
-    mysqli_stmt_bind_param($stmt, "ssssss", $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId);
+    mysqli_stmt_bind_param($stmt, "ssssssss", $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId, $BorrowerId);
     if (mysqli_stmt_execute($stmt)) {
         $result = mysqli_stmt_get_result($stmt);
         if ($result && mysqli_num_rows($result) > 0) {
@@ -148,8 +215,7 @@ if ($stmt) {
                 // Determine the href based on the action
                 $href = '#'; // Default href
                 if ($row['action'] === 'request to borrow') {
-                    $borrowerId = $row['borrowerid']; // Get borrower ID
-                    $href = 'borrowerPendingborrowItems.php'; // Set appropriate URL for Request to borrow            
+                    $href = 'borrowerPendingborrowItems.php';
                 } elseif ($row['action'] === 'request to borrow: <strong>Approved</strong>') {
                     $href = 'borrowerItemsBorrowed.php';
                 } elseif ($row['action'] === 'request to reserve') {
@@ -198,7 +264,6 @@ if ($stmt) {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
 ?>
-
 </ul>
                 
 <button class="btn btn-secondary dropdown-toggle custom-dropdown-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">

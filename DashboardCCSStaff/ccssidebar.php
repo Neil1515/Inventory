@@ -30,6 +30,28 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
+
+// Query to fetch pending item removal requests
+$sql = "SELECT * FROM `tblusers` WHERE `status` = 'Pending'";
+$result = mysqli_query($con, $sql);
+
+// Count the number of pending item removal requests
+$accountPending = mysqli_num_rows($result);
+
+// Query to fetch pending item removal requests
+$sql = "SELECT * FROM `tblborrowingreports` WHERE `itemreqstatus` = 'Pending Borrow'";
+$result = mysqli_query($con, $sql);
+
+// Count the number of pending item removal requests
+$borrowPending = mysqli_num_rows($result);
+
+// Query to fetch pending item removal requests
+$sql = "SELECT * FROM `tblborrowingreports` WHERE `itemreqstatus` = 'Pending Reserve' OR  `itemreqstatus` = 'Approve Reserve'";
+$result = mysqli_query($con, $sql);
+
+// Count the number of pending item removal requests
+$reservePending = mysqli_num_rows($result);
+
 ?>
 <aside class="ccs-sidebar">
     <div class="container">
@@ -66,19 +88,19 @@ if ($stmt) {
                     <li>
                         <a class="nav-link" href="ccsstaffPendingAccounts.php">
                             <i class="fas fa-user-clock me-2"></i> <!-- Icon for Pending Accounts -->
-                            Pending Accounts
+                            Manage Account <sup class="badge bg-danger"><?php echo $accountPending; ?></sup>
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="ccsstaffListofPendingBorrowerusers.php">
                             <i class="fas fa-hand-holding me-2"></i> <!-- Icon for Pending Borrow -->
-                            Pending Borrow
+                            Pending Borrow <sup class="badge bg-danger"><?php echo $borrowPending; ?></sup>
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="ccsstaffUsersPendingReserveItems.php">
                             <i class="fas fa-clock me-2"></i> <!-- Icon for Pending Reserve -->
-                            Pending Reserve
+                            Pending Reserve <sup class="badge bg-danger"><?php echo $reservePending; ?></sup>
                         </a>
                     </li>
                 </ul>

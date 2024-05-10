@@ -266,7 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="col-md-5 text-end">          
                 <a class="btn btn-danger" name="deleteitem" id="deleteItemButton"><i class="fas fa-trash-alt"></i> Request to Delete</a>
-                <a  class="btn btn-success" name="overviewitem"><i class="fas fa-history"></i> View History Transaction</a>
+                <!--<a  class="btn btn-success" name="overviewitem"><i class="fas fa-history"></i> View History Transaction</a>-->
             </div>
         </div>
         <div class="row mt-1">
@@ -330,8 +330,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <input type="text" class="form-control" id="itembrand" name="itembrand" value="<?php echo $row['itembrand'] ?? ''; ?>" required>
                                     </div>
                                     <div class="mb-3">
-                                        <span class="form-label">Serial No:</span>
-                                        <input type="text" class="form-control" id="serialno" name="serialno" value="<?php echo $row['serialno'] ?? ''; ?>" >
+                                        <span class="form-label">Serial No:<span class="text-danger">*</span></span>
+                                        <input type="text" class="form-control" id="serialno" name="serialno" value="<?php echo $row['serialno'] ?? ''; ?>" required>
                                     </div>
                                     <div class="mb-3">
                                         <span class="form-label">Model No:</span>

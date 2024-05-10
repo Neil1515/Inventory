@@ -240,14 +240,9 @@ function updateButtonStatus() {
 
 
 function clearitem() {
-    var confirmationMessage = 'Are you sure you want to clear all items?';
-    var isConfirmed = confirm(confirmationMessage);
-
-    if (isConfirmed) {
-        // Redirect to updateUserStatus.php with appropriate parameters
-        window.location.href = 'borrowerDashboardPage.php';
-    }
+    window.location.href = 'borrowerDashboardPage.php';
 }
+
 
 document.getElementById('borrow-btn').addEventListener('click', function() {
     // Get the added items

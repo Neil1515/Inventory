@@ -1,5 +1,7 @@
 <!-- bwerpendingborrowitems.php -->
 <?php
+
+
 echo '<div class="ccs-main-container">';
 echo '<div class="container">';
 echo '<div class="row">';
@@ -96,6 +98,8 @@ if ($stmt) {
 echo '</div>';
 echo '</div>';
 echo '</div>';
+
+
 ?>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

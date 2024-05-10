@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $errorMsg = "User with email $email already exists. Please choose a different email.";
             }
-        
             echo "<script>window.location.href='registrationform.php?msg_fail=$errorMsg&existing_id=$id';</script>";
             exit();
         }
@@ -81,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mysqli_stmt_bind_param($insertStmt, "ssssssssss", $id, $password, $userType, $firstName, $lastName, $email, $gender, $department, $status, $datetimeregister);
 
         if (mysqli_stmt_execute($insertStmt)) {
-            echo "<script>window.location.href='index.php?msg_success={$lastName} please await approval from CCS staff.';</script>";
+            echo "<script>window.location.href='index.php?msg_success={$lastName} please await approval from CCS staff and Dean.';</script>";
             exit();
         } else {
             echo "Failed: " . mysqli_error($con);
