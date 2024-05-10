@@ -130,8 +130,8 @@ foreach ($itemsArray as $item) {
                     echo '
                     <div class="col-md-3 mb-1">
                         <div class="card">
-                            <div class="text-center"> <!-- Center the image -->
-                                <img src="' . $imagePath . '" class="card-img-top" alt="Item Image" style="max-width: 80px; max-height: 80px;">
+                            <div class="text-center mt-2"> <!-- Center the image -->
+                                <img src="' . $imagePath . '" class="card-img-top" alt="Item Image" style="max-width: 100px; max-height: 100px;">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">' . $item['subcategoryname'] . '</h5>';

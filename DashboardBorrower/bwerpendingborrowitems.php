@@ -64,7 +64,7 @@ if ($stmt) {
                             echo '<img src="' . $imagePath . '" alt="Image" width="100px" height="100px">';
                             echo '</div>';  
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
-                            echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
+                            echo '<h7 class="card-text">Serial No: <span class="text-danger">' . $item_row['serialno'] . '</span><br></h7>';
                             $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datetimereqborrow']));
                             echo '<h7 class="card-text">Date Request: <br> ' . $formattedDatetime . '</h7>';
                             echo '<div class="card text-end">';

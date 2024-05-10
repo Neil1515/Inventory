@@ -110,7 +110,7 @@ if ($stmt) {
                                     </label>
                                 </div>        
                                 <!-- Note -->
-                                <p class="text-danger">Any deformation or lost/damage of items borrowed are subject to replacement on your account.</p>
+                                <strong><p class="text-danger">Any deformation or lost/damage of items borrowed are subject to replacement on your account.</p></strong>
                             </div>
                             <div class="modal-footer">
                                 <!-- Disabled Confirm button initially -->

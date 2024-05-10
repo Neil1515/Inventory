@@ -74,7 +74,7 @@ if ($stmt) {
                             echo '</div>';
                             echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
-                            echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
+                            echo '<h7 class="card-text">Serial No: <span class="text-danger">' . $item_row['serialno'] . '</span><br></h7>';
                             $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datetimereserve']));
                             echo '<h7 class="card-text">Date Reserve: <br> ' . $formattedDatetime . '</h7>';
                             echo '<div class="card text-end">';
