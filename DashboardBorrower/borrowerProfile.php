@@ -414,10 +414,10 @@ if ($stmtApprovedReserveItems) {
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'] . $profileImagePath)) {
                                             echo '<img src="' . $profileImagePath . '?' . time() . '" class="img-fluid rounded-circle " width="250" height="250">';
                                         } else {
-                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="150" height="150">';
+                                            echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="250" height="250">';
                                         }
                                     } else {
-                                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="150" height="150">';
+                                        echo '<img src="/inventory/images/imageofusers/profile-user.png?' . time() . '" class="img-fluid rounded-circle" width="250" height="250">';
                                     }
                                     ?>
                                     </div>
