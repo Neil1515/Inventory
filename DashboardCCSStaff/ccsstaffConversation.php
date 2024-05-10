@@ -63,6 +63,23 @@ if(isset($_GET['sender_id'])) {
     } else {
         $senderName = "Unknown User";
     }
+
+    // Update the status of messages from the sender as read by the recipient
+    $update_query = "UPDATE tblmessage_recipients SET status = 'read' WHERE recipient_id = ? AND message_id IN (SELECT id FROM tblmessages WHERE sender_id = ?)";
+    $stmt_update = mysqli_prepare($con, $update_query);
+
+    if ($stmt_update) {
+        mysqli_stmt_bind_param($stmt_update, "ii", $staffId, $senderId);
+
+        if (mysqli_stmt_execute($stmt_update)) {
+            // Messages marked as read successfully
+        } else {
+            echo "Error marking messages as read: " . mysqli_error($con);
+        }
+        mysqli_stmt_close($stmt_update);
+    } else {
+        echo "Statement preparation failed: " . mysqli_error($con);
+    }
 } else {
     $senderName = "Unknown User";
 }
@@ -110,7 +127,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
 
 ?>
 <!DOCTYPE html>
@@ -198,6 +214,7 @@ if ($stmt_messages) {
 } else {
     echo "Statement preparation failed to fetch messages: " . mysqli_error($con);
 }
+
 ?>
 
     </div>
@@ -256,7 +273,7 @@ if ($stmt_messages) {
             background-color: #007bff;
             color: #fff;
         }
-        .sender-message {
+        .borrower-message {
             align-self: flex-start;
             background-color: #f0f0f0;
             color: #333;

@@ -55,10 +55,9 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
              ?>
                              <div class="card me-2">
                                  <div class="card-body">
-                                     <h5 class="card-title">Borrower ID: <?php echo $borrowerDetails['id']; ?></h5>
-                                     <h6 class="card-text">Name: <?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?><br></h6>
-                                     <h6 class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?><br></h6>
-                                     <h6 class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></h6>
+                                     <h5 class="card-title">Name: <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId; ?>"><?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></a> </h5>
+                                     <p class="card-text"><?php echo $borrowerDetails['usertype']; ?> ID: <?php echo $borrowerDetails['id']; ?></p>
+                                     <p class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></p>
 
                                      <!-- Display the item IDs with pending status and their subcategories with quantity -->
                                      <?php
@@ -88,7 +87,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
                                                      }
                                                  }
 
-                                                 echo '<h6 class="card-text">Accepted reserve item(s): ';
+                                                 echo '<p class="card-text">Accepted reserve item(s): ';
                                                  foreach ($itemCounts as $subcategory => $count) {
                                                      echo $subcategory;
 
@@ -99,7 +98,7 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
 
                                                      echo ', ';
                                                  }
-                                                 echo '</h6>';
+                                                 echo '</p>';
                                              } else {
                                                  echo '<p class="card-text">No items with pending status.</p>';
                                              }
@@ -218,4 +217,8 @@ echo '</div>';
      transition: background-color 0.3s ease-in-out;
      cursor: pointer;
  }
+ a {
+        text-decoration: none !important;
+        ;
+    }
 </style>

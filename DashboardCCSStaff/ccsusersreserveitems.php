@@ -55,11 +55,9 @@ echo '<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-1">';
              ?>
                              <div class="card me-2">
                                  <div class="card-body">
-                                     <h5 class="card-title">Borrower ID: <?php echo $borrowerDetails['id']; ?></h5>
-                                     <p class="card-text">Name: <?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></p>
-                                     <p class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?></p>
+                                     <h5 class="card-title">Name: <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId; ?>"><?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></a> </h5>
+                                     <p class="card-text"><?php echo $borrowerDetails['usertype']; ?> ID: <?php echo $borrowerDetails['id']; ?></p>
                                      <p class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></p>
-
                                      <!-- Display the item IDs with pending status and their subcategories with quantity -->
                                      <?php
                                      $queryPendingItems = "SELECT br.itemid, ib.subcategoryname
@@ -217,4 +215,8 @@ echo '</div>';
      transition: background-color 0.3s ease-in-out;
      cursor: pointer;
  }
+ a {
+        text-decoration: none !important;
+        ;
+    }
 </style>

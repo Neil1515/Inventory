@@ -103,7 +103,6 @@ if ($stmtCount) {
                     <i class="fas fa-envelope fs-5 me-1"></i> <!-- Message icon -->
                     <sup class="badge bg-danger"><?php echo $unreadMessages; ?></sup> <!-- Message counter -->
                 </a>
-
 <!-- Notification Icon and Counter -->
 <button class="btn btn-secondary custom-dropdown-btn mr-2" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
     <i class="fas fa-bell fs-5 me-1"></i> <!-- Add the correct Font Awesome bell icon class -->

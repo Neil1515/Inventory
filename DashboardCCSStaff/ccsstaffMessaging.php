@@ -35,6 +35,7 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -86,9 +87,33 @@ if ($stmt) {
 
                 if ($user_messages_result && mysqli_num_rows($user_messages_result) > 0) {
                     while ($user_message_row = mysqli_fetch_assoc($user_messages_result)) {
-                        echo '<a href="ccsstaffConversation.php?sender_id=' . $user_message_row['sender_id'] . '" class="list-group-item list-group-item-action">';
+                        // Query to count unread messages from this sender to the recipient
+                        $unread_query = "SELECT COUNT(*) AS unread_count 
+                                        FROM tblmessages m
+                                        INNER JOIN tblmessage_recipients mr ON m.id = mr.message_id
+                                        WHERE mr.recipient_id = ? AND mr.status = 'unread' AND m.sender_id = ?";
+                        $stmt = mysqli_prepare($con, $unread_query);
+                        if ($stmt) {
+                            mysqli_stmt_bind_param($stmt, "ii", $staffId, $user_message_row['sender_id']);
+                            if (mysqli_stmt_execute($stmt)) {
+                                $result = mysqli_stmt_get_result($stmt);
+                                if ($result && mysqli_num_rows($result) > 0) {
+                                    // Fetch unread message count
+                                    $row = mysqli_fetch_assoc($result);
+                                    $senderunreadMessages = $row['unread_count'];
+                                }
+                            } else {
+                                // Handle query execution error
+                                echo "Error executing query: " . mysqli_error($con);
+                            }
+                            mysqli_stmt_close($stmt);
+                        } else {
+                            // Handle query preparation error
+                            echo "Error preparing statement: " . mysqli_error($con);
+                        }              
+                        echo '<a href="ccsstaffConversation.php?sender_id=' . $user_message_row['sender_id'] . '" class="list-group-item list-group-item-action" >';
                         echo '<div class="d-flex w-100 justify-content-between">';
-                        echo '<h7 class="mb-1"><i class="fas fa-user me-1"></i> ' . $user_message_row['fname'] . ' ' . $user_message_row['lname'] . '</h7>';
+                        echo '<h7 class="mb-1"><i class="fas fa-user me-1"></i>' . $user_message_row['fname'] . ' ' . $user_message_row['lname'] . ' <sup class="badge bg-danger"> ' . $senderunreadMessages . '</sup></h7>';
                         echo '<small class="text-muted">' . date('F j, Y, g:i a', strtotime($user_message_row['timestamp'])) . '</small>';
                         echo '</div>';
                         echo '<p class="mb-1">Message: ' . $user_message_row['message'] . '</p>'; // Display the most recent message
@@ -97,6 +122,7 @@ if ($stmt) {
                 } else {
                     echo '<a href="#" class="list-group-item list-group-item-action">No users found.</a>';
                 }
+                
                 ?>
             </div>
         </div>

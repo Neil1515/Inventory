@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message_id = mysqli_insert_id($con);
 
             // Get recipient IDs for CCS Staff
-            $recipient_query = "SELECT id FROM tblusers WHERE usertype = 'CCS Staff'";
+            $recipient_query = "SELECT id FROM tblusers WHERE usertype = 'CCS Staff'OR usertype = 'Dean'";
             $recipient_result = mysqli_query($con, $recipient_query);
 
             if ($recipient_result && mysqli_num_rows($recipient_result) > 0) {
@@ -121,7 +121,6 @@ if ($updateStmt) {
     echo "Statement preparation failed: " . mysqli_error($con);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

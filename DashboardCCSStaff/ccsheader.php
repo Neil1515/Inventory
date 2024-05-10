@@ -2,6 +2,7 @@
 <?php
 // Include necessary files
 include ('ccsfunctions.php');
+include('ccsmessage_count.php');
 // Check if the user is logged in
 if (!isset($_SESSION['staff_id'])) {
     // Redirect to the login page or handle accordingly
@@ -140,7 +141,7 @@ $countPending = mysqli_num_rows($result);
                 <a href="ccsstaffMessaging.php" class="btn btn-secondary custom-dropdown-btn" type="button"
                     id="messageDropdown" data-bs-toggle="messagedropdown" aria-expanded="false">
                     <i class="fas fa-envelope fs-5 me-1"></i> <!-- Message icon -->
-                    <sup class="badge bg-danger">0</sup> <!-- Notification counter -->
+                    <sup class="badge bg-danger"><?php echo $unreadMessages; ?></sup> <!-- Notification counter -->
                 </a>
 
                 <!-- Notification Icon and Counter -->

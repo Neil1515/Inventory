@@ -7,6 +7,50 @@ if (!isset($_SESSION['staff_id'])) {
     header('Location: /Inventory/index.php');
     exit();
 }
+
+
+// Query to fetch pending item removal requests
+$sql = "SELECT * FROM `tblusers` WHERE `status` = 'Pending'";
+$result = mysqli_query($con, $sql);
+
+// Count the number of pending item removal requests
+$accountPending = mysqli_num_rows($result);
+
+// Query to fetch pending item removal requests
+$sql = "SELECT COUNT(DISTINCT borrowerid) AS num_borrowers
+        FROM tblborrowingreports
+        WHERE itemreqstatus = 'Pending Borrow'";
+$result = $con->query($sql);
+
+// Check if the query executed successfully
+if ($result !== false) {
+    // Fetch the count of borrowers with Pending item
+    $row = $result->fetch_assoc();
+    $borrowerPending = $row['num_borrowers'];
+} else {
+    // Handle query execution error
+    echo "Error: " . $con->error;
+}
+
+// Free result set
+$result->free_result();
+
+// Query to fetch pending item removal requests
+$sql = "SELECT COUNT(DISTINCT borrowerid) AS num_borrowers FROM `tblborrowingreports` WHERE `itemreqstatus` = 'Pending Reserve' OR  `itemreqstatus` = 'Approve Reserve'";
+$result = mysqli_query($con, $sql);
+
+// Check if the query executed successfully
+if ($result !== false) {
+    // Fetch the count of borrowers with Pending item
+    $row = $result->fetch_assoc();
+    $borrowerreservePending = $row['num_borrowers'];
+} else {
+    // Handle query execution error
+    echo "Error: " . $con->error;
+}
+
+
+
 // Retrieve user information based on the logged-in user ID
 $staffId = $_SESSION['staff_id'];
 $query = "SELECT * FROM tblusers WHERE id = ?";
@@ -30,28 +74,6 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
-
-// Query to fetch pending item removal requests
-$sql = "SELECT * FROM `tblusers` WHERE `status` = 'Pending'";
-$result = mysqli_query($con, $sql);
-
-// Count the number of pending item removal requests
-$accountPending = mysqli_num_rows($result);
-
-// Query to fetch pending item removal requests
-$sql = "SELECT * FROM `tblborrowingreports` WHERE `itemreqstatus` = 'Pending Borrow'";
-$result = mysqli_query($con, $sql);
-
-// Count the number of pending item removal requests
-$borrowPending = mysqli_num_rows($result);
-
-// Query to fetch pending item removal requests
-$sql = "SELECT * FROM `tblborrowingreports` WHERE `itemreqstatus` = 'Pending Reserve' OR  `itemreqstatus` = 'Approve Reserve'";
-$result = mysqli_query($con, $sql);
-
-// Count the number of pending item removal requests
-$reservePending = mysqli_num_rows($result);
-
 ?>
 <aside class="ccs-sidebar">
     <div class="container">
@@ -94,13 +116,13 @@ $reservePending = mysqli_num_rows($result);
                     <li>
                         <a class="nav-link" href="ccsstaffListofPendingBorrowerusers.php">
                             <i class="fas fa-hand-holding me-2"></i> <!-- Icon for Pending Borrow -->
-                            Pending Borrow <sup class="badge bg-danger"><?php echo $borrowPending; ?></sup>
+                            Pending Borrow <sup class="badge bg-danger"><?php echo $borrowerPending; ?></sup>
                         </a>
                     </li>
                     <li>
                         <a class="nav-link" href="ccsstaffUsersPendingReserveItems.php">
                             <i class="fas fa-clock me-2"></i> <!-- Icon for Pending Reserve -->
-                            Pending Reserve <sup class="badge bg-danger"><?php echo $reservePending; ?></sup>
+                            Pending Reserve <sup class="badge bg-danger"><?php echo $borrowerreservePending; ?></sup>
                         </a>
                     </li>
                 </ul>

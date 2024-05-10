@@ -78,9 +78,8 @@
                 ?>
                                 <div class="card me-2">
                                     <div class="card-body">
-                                        <h5 class="card-title">Borrower ID: <?php echo $borrowerDetails['id']; ?></h5>
-                                        <p class="card-text">Name: <?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></p>
-                                        <p class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?></p>
+                                        <h5 class="card-title">Name: <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId; ?>"><?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></a></h5>
+                                        <p class="card-text"><?php echo $borrowerDetails['usertype']; ?> ID: <?php echo $borrowerDetails['id']; ?></p>
                                         <p class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></p>
 
                                         <!-- Display the item IDs with pending status and their subcategories with quantity -->
@@ -119,7 +118,6 @@
                                                         if ($count > 1) {
                                                             echo '(' . $count . ')';
                                                         }
-
                                                         echo ', ';
                                                     }
                                                     echo '</p>';
@@ -238,7 +236,7 @@ function approveAllItemsToThisBorrowerId(borrowerId, borrowerName) {
 
 function rejectAllItemsToThisBorrowerId(borrowerId, borrowerName) {
     // Set the confirmation message
-    $('#modalMessages').html('Are you sure you want to <strong class="text-danger">REJECT</strong> all items to this user? <strong class="text-danger"><br>' + borrowerName + '</strong>?');
+    $('#modalMessages').html('Are you sure you want to <strong class="text-danger">REJECT</strong> all items to this user? <h5><strong class="text-danger">' + borrowerName + '</strong></h5>');
     // Show the confirmation modal
     $('#confirmationModalreject').modal('show');
 
@@ -337,5 +335,9 @@ function handleRejectResponse(response) {
         background-color: azure;
         transition: background-color 0.3s ease-in-out;
         cursor: pointer;
+    }
+    a {
+        text-decoration: none !important;
+        ;
     }
 </style>
