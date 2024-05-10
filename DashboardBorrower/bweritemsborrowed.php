@@ -1,5 +1,40 @@
 <!-- bweritemsborrowed.php -->
 <?php
+// Include necessary files
+include('bwerfunctions.php');
+// Check if the user is logged in
+if (!isset($_SESSION['borrower_id'])) {
+    // Redirect to the login page or handle accordingly
+    header('Location: /Inventory/index.php');
+    exit();
+}
+// Retrieve user information based on the logged-in user ID
+$borrowerId = $_SESSION['borrower_id'];
+
+
+$query = "SELECT * FROM tblusers WHERE id = ?";
+$stmt = mysqli_prepare($con, $query);
+
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "s", $borrowerId);
+
+    if (mysqli_stmt_execute($stmt)) {
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            // Valid user, retrieve user information
+            $row = mysqli_fetch_assoc($result);
+        } else {
+            // Handle the case when user information is not found
+            // You might want to redirect or display an error message
+        }
+    } else {
+        die('Statement execution failed: ' . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_close($stmt);
+} else {
+    die('Statement preparation failed: ' . mysqli_error($con));
+}
 
 echo '<div class="ccs-main-container">';
 echo '<div class="container">';
@@ -159,6 +194,8 @@ echo '</div>';
             xhr.send('itemId=' + encodeURIComponent(itemId));
         }
     });
+
+    
     // JavaScript function to handle Request cancel button click
     document.addEventListener('DOMContentLoaded', function () {
         const requestCancelButtons = document.querySelectorAll('.request-cancel-btn');

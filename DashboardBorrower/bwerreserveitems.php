@@ -43,7 +43,7 @@ if ($stmt) {
                     if ($result_items && mysqli_num_rows($result_items) > 0) {
                         while ($item_row = mysqli_fetch_assoc($result_items)) {
                             $imagePath = ''; // Initialize image path
-                            
+
                             // Fetch subcategory information for the current item
                             $sqlSubcategory = "SELECT subcategoryname FROM `tblitembrand` WHERE id = ?";
                             $stmtSubcategory = mysqli_prepare($con, $sqlSubcategory);
@@ -59,7 +59,7 @@ if ($stmt) {
                                 }
                                 mysqli_stmt_close($stmtSubcategory);
                             }
-                            
+
                             // If subcategory image is not found, use default
                             if (empty($imagePath)) {
                                 $imagePath = 'inventory/SubcategoryItemsimages/defaultimageitem.png';
@@ -71,7 +71,7 @@ if ($stmt) {
                             echo '<h5 class="card-title">' . $item_row['categoryname'] . '</h5>';
                             echo '<div class="mb-3 text-center">';
                             echo '<img src="' . $imagePath . '" alt="Image" width="70">';
-                            echo '</div>';  
+                            echo '</div>';
                             echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
                             echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
@@ -112,18 +112,16 @@ echo '</div>';
 
 <script>
     function cancelRequest(itemId) {
-        if (confirm('Are you sure you want to cancel this item request?')) {
-            $.ajax({
+        $.ajax({
             type: "POST",
             url: "bwercancel_request.php", // PHP script to handle the AJAX request
             data: { itemId: itemId }, // Data to be sent to the server
-            success: function(response) {
+            success: function (response) {
                 // Handle the response from the server, if needed
                 console.log(response);
                 //alert('Item Canceled successfully!');
                 window.location.href = 'borrowerPendingReserve.php?msg_success=Reserve item Successfully Canceled';
             }
         });
-        }
     }
 </script>

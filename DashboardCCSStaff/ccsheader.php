@@ -39,6 +39,40 @@ $result = mysqli_query($con, $sql);
 // Count the number of pending item removal requests
 $countPending = mysqli_num_rows($result);
 
+// Fetch the count of unique dates and times with notifications from tblborrowingreports
+$queryCount = "SELECT COUNT(DISTINCT datetime) AS notification_count
+               FROM (
+                   SELECT br.datetimereqborrow AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.datetimereqborrow IS NOT NULL
+                   UNION ALL
+                   SELECT br.datetimereqreservation AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.datetimereqreservation IS NOT NULL
+                   UNION ALL
+                   SELECT br.datetimereqreturn AS datetime
+                   FROM tblborrowingreports br
+                   WHERE br.datetimereqreturn IS NOT NULL
+               ) AS subquery";
+$stmtCount = mysqli_prepare($con, $queryCount);
+if ($stmtCount) {
+    if (mysqli_stmt_execute($stmtCount)) {
+        $resultCount = mysqli_stmt_get_result($stmtCount);
+        if ($resultCount && mysqli_num_rows($resultCount) > 0) {
+            $rowCount = mysqli_fetch_assoc($resultCount);
+
+            $notificationCount = $rowCount['notification_count'];
+        } else {
+            $notificationCount = 0;
+        }
+    } else {
+        $notificationCount = 0;
+    }
+    mysqli_stmt_close($stmtCount);
+} else {
+    $notificationCount = 0;
+}
+
 ?>
 <style>
     .notification-dropdown {
@@ -148,7 +182,7 @@ $countPending = mysqli_num_rows($result);
                 <button href="ccsstaffNotifications.php" class="btn btn-secondary custom-dropdown-btn" type="button"
                     id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-bell fs-5 me-1"></i> <!-- Add the correct Font Awesome bell icon class -->
-                    <sup class="badge bg-danger" id="notificationCounter">0</sup>
+                    <sup class="badge bg-danger" id="notificationCounter"><?php echo $notificationCount; ?></sup>
                 </button>
 
                 <!-- Notification Dropdown Menu -->

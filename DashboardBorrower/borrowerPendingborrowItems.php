@@ -4,12 +4,14 @@ session_start();
 
 // Include necessary files
 include('bwerfunctions.php');
+
 // Check if the user is logged in
 if (!isset($_SESSION['borrower_id'])) {
     // Redirect to the login page or handle accordingly
     header('Location: /Inventory/index.php');
     exit();
 }
+
 // Retrieve user information based on the logged-in user ID
 $borrowerId = $_SESSION['borrower_id'];
 
@@ -25,6 +27,7 @@ if ($stmt) {
         if ($result && mysqli_num_rows($result) > 0) {
             // Valid user, retrieve user information
             $row = mysqli_fetch_assoc($result);
+            $borrowerIDe = $row['id'];
         } else {
             // Handle the case when user information is not found
             // You might want to redirect or display an error message
@@ -36,8 +39,6 @@ if ($stmt) {
 } else {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -99,5 +100,7 @@ if ($stmt) {
     <!-- Bootstrap JS (Popper.js and Bootstrap JS) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

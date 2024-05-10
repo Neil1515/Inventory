@@ -9,7 +9,6 @@ echo '<h3 class="text-start">Pending Borrow Item(s) </h3>';
 
 $query = "SELECT borrowerid FROM tblborrowingreports WHERE borrowerid = ?";
 $stmt = mysqli_prepare($con, $query);
-
 if ($stmt) {
     mysqli_stmt_bind_param($stmt, "s", $borrowerId);
 
@@ -60,11 +59,10 @@ if ($stmt) {
                             echo '<div class="col-md-3 mb-3">';
                             echo '<div class="card">';
                             echo '<div class="card-body">';
-                            echo '<h5 class="card-title">' . $item_row['categoryname'] . '</h5>';
+                            echo '<h5 class="card-title">' . $item_row['subcategoryname'] . '</h5>';
                             echo '<div class="mb-3 text-center">';
-                            echo '<img src="' . $imagePath . '" alt="Image" width="70">';
+                            echo '<img src="' . $imagePath . '" alt="Image" width="100px" height="100px">';
                             echo '</div>';  
-                            echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';
                             echo '<h7 class="card-text">Serial No: ' . $item_row['serialno'] . '<br></h7>';
                             $formattedDatetime = date('F d, Y (g:i A) ', strtotime($item_row['datetimereqborrow']));
@@ -106,8 +104,7 @@ echo '</div>';
 
 <script>
     function cancelRequest(itemId) {
-        if (confirm('Are you sure you want to cancel this item request?')) {
-            $.ajax({
+        $.ajax({
             type: "POST",
             url: "bwercancel_request.php", // PHP script to handle the AJAX request
             data: { itemId: itemId }, // Data to be sent to the server
@@ -118,6 +115,6 @@ echo '</div>';
                 window.location.href = 'borrowerPendingborrowItems.php?msg_success=Item Successfully Canceled';
             }
         });
-        }
     }
 </script>
+

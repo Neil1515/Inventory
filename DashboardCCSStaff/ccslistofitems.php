@@ -114,7 +114,6 @@ $(document).ready(function() {
         });
     });
 </script>
-
         <main class="ccs-main-container">
             <div class="container">   
             <div class="row">
@@ -133,7 +132,7 @@ $(document).ready(function() {
                 <div class="row table-responsive ">
                     <table  class="table">
                         <thead class="table-dark">
-                            <tr>
+                            <tr class="align-middle">
                                 <th scope="col">Category</th>
                                 <th scope="col">Item Name</th>  
                                 <th scope="col">Item Description</th>                                           
@@ -145,6 +144,7 @@ $(document).ready(function() {
                             </tr>
                         </thead>
                         <tbody>
+
                             <?php
                             $currentCategory = null;
                             while ($row = mysqli_fetch_assoc($resultitems)) {
@@ -158,7 +158,7 @@ $(document).ready(function() {
                                 }
                                 
                                 // Display the subcategory and other item details with a class for toggling
-                                echo "<tr class='item-details-row'>";
+                                echo "<tr class='item-details-row align-middle'>";
                                 // Check if an image exists, if not, use a default image
                                 $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
                                 if (file_exists($imagePath)) {

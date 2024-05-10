@@ -96,7 +96,7 @@ foreach ($itemsArray as $item) {
     }
 }
     // Optionally, you can redirect the user to a confirmation page
-    echo "<script>window.location.href='borrowerDashboardPage.php?msg_success=Successfully Requesting Borrow, Please await for CCS Staff for approval';</script>";
+    echo "<script>window.location.href='borrowerDashboardPage.php?msg_success=Successfully Requesting Borrow, Please await for CCS Staff or Dean for approval';</script>";
     exit();
 } else {
     error_log("Statement preparation failed for inserting into tblborrowingreports or updating tblitembrand: " . mysqli_error($con));
