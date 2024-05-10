@@ -21,7 +21,7 @@ if ($stmtSelectUser) {
         $staffid = $staffId;
     } else {
         // Log the error instead of displaying to users
-        error_log("Failed to fetch user data: " . mysqli_error($con));
+        //error_log("Failed to fetch user data: " . mysqli_error($con));
     }    
 
     mysqli_stmt_close($stmtSelectUser);
@@ -35,14 +35,12 @@ if (isset($_POST["addItemBrand"])) {
     $itemBrand = $_POST['itemBrand'];
     $categoryName = $_POST['categoryName'];
     $subcategoryName = $_POST['subcategoryName'];
-    $remarks = $_POST['remarks'];
     $modelNo = $_POST['modelNo'];
     $serialNo = $_POST['serialNo'];
     $unitCost = $_POST['unitCost'];
     $datepurchased = $_POST['datePurchased'];
     $borrowable = $_POST['borrowable'];
     $quantity = $_POST['quantity'];
-
     // Determine item condition based on purchase date
     date_default_timezone_set('Asia/Manila');
     $datetimeadded = date("Y-m-d H:i:s");
@@ -51,32 +49,29 @@ if (isset($_POST["addItemBrand"])) {
     $interval = $currentDate->diff($purchaseDate);
     $monthsDifference = $interval->y * 12 + $interval->m;
     $itemcondition = ($monthsDifference >= 6) ? 'Old' : 'New';
-
     // Set status based on borrowable option
     $status = ($borrowable === "Yes") ? "Available" : "Standby";
 
     // Loop to insert rows based on quantity
     for ($i = 0; $i < $quantity; $i++) {
         // Prepare the statement
-        $sql = "INSERT INTO `tblitembrand` (`itembrand`, `staffid`, `staffname`, `categoryname`, `subcategoryname`, `remarks`, `modelno`, `serialno`, `unitcost`, `datetimeadded`, `datepurchased`, `borrowable`, `status`, `itemcondition`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO `tblitembrand` (`itembrand`, `staffid`, `staffname`, `categoryname`, `subcategoryname`,  `modelno`, `serialno`, `unitcost`, `datetimeadded`, `datepurchased`, `borrowable`, `status`, `itemcondition`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $sql);
 
         if ($stmt) {
             // Add 's' for string and 'd' for double (decimal) placeholders for each parameter
-            mysqli_stmt_bind_param($stmt, "ssssssssdsssss", $itemBrand, $staffid, $staffname, $categoryName, $subcategoryName, $remarks, $modelNo, $serialNo, $unitCost, $datetimeadded, $datepurchased, $borrowable, $status, $itemcondition);
+            mysqli_stmt_bind_param($stmt, "sssssssdsssss", $itemBrand, $staffid, $staffname, $categoryName, $subcategoryName,  $modelNo, $serialNo, $unitCost, $datetimeadded, $datepurchased, $borrowable, $status, $itemcondition);
 
             if (mysqli_stmt_execute($stmt)) {
                 // Success message or further processing if needed
             } else {
-                echo "Failed: " . mysqli_error($con);
+                //echo "Failed: " . mysqli_error($con);
             }
             mysqli_stmt_close($stmt);
         } else {
-            echo "Failed to prepare statement: " . mysqli_error($con);
+            //echo "Failed to prepare statement: " . mysqli_error($con);
         }
     }
-    
-    // Redirect after processing form data
     echo "<script>window.location.href='ccstaffAddItemBrand.php?msg_success=New {$subcategoryName} {$itemBrand} Items created successfully';</script>";
     exit();
 }
@@ -90,7 +85,7 @@ if (isset($_POST["addItemBrand"])) {
             <h4 class="col-md text-start"><i class="fas fa-plus-circle me-2"></i>Add Item</h4>
         </div>
         <div class="col-md-3 text-end">
-            <a href="ccsstaffDashboardPage.php" class="col-md-5 btn btn-danger">Cancel</a>
+            <a href="ccsstaffDashboardPage.php" class="col-md-5 btn btn-danger">Back</a>
             <button type="submit" class="col-md-5 btn btn-success" name="addItemBrand">Add Item</button>
         </div>
         

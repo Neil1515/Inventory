@@ -158,26 +158,26 @@ $countPending = mysqli_num_rows($result);
                     <?php
                     // Fetch notifications from tblborrowingreports
                     $query = "SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqborrow AS datetime, 'request to borrow' AS action 
-          FROM tblborrowingreports br
-          JOIN tblusers u ON br.borrowerid = u.id
-          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          WHERE br.datetimereqborrow IS NOT NULL
-          GROUP BY br.borrowerid, br.datetimereqborrow
-          UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreservation AS datetime, 'request to reserve' AS action 
-          FROM tblborrowingreports br
-          JOIN tblusers u ON br.borrowerid = u.id
-          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          WHERE br.datetimereqreservation IS NOT NULL
-          GROUP BY br.borrowerid, br.datetimereqreservation
-          UNION
-          SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreturn AS datetime, 'request to returned' AS action 
-          FROM tblborrowingreports br
-          JOIN tblusers u ON br.borrowerid = u.id
-          JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
-          WHERE br.datetimereqreturn IS NOT NULL
-          GROUP BY br.borrowerid, br.datetimereqreturn
-          ORDER BY datetime DESC";
+                    FROM tblborrowingreports br
+                    JOIN tblusers u ON br.borrowerid = u.id
+                    JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+                    WHERE br.datetimereqborrow IS NOT NULL
+                    GROUP BY br.borrowerid, br.datetimereqborrow
+                    UNION
+                    SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreservation AS datetime, 'request to reserve' AS action 
+                    FROM tblborrowingreports br
+                    JOIN tblusers u ON br.borrowerid = u.id
+                    JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+                    WHERE br.datetimereqreservation IS NOT NULL
+                    GROUP BY br.borrowerid, br.datetimereqreservation
+                    UNION
+                    SELECT br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datetimereqreturn AS datetime, 'request to returned' AS action 
+                    FROM tblborrowingreports br
+                    JOIN tblusers u ON br.borrowerid = u.id
+                    JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
+                    WHERE br.datetimereqreturn IS NOT NULL
+                    GROUP BY br.borrowerid, br.datetimereqreturn
+                    ORDER BY datetime DESC";
 
                     $result = mysqli_query($con, $query);
 
