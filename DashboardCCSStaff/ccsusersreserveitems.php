@@ -151,7 +151,7 @@ echo '</div>';
 
 <script>
  function approveAllItemsToThisBorrowerId(borrowerId) {
-     if (confirm('Are you sure you want to approve all items to this user?')) {
+
          // Send an AJAX request to approve all items
          $.ajax({
              type: 'GET',
@@ -164,7 +164,7 @@ echo '</div>';
                  console.error('AJAX request failed. Status: ' + status + ', Error: ' + error);
              }
          });
-     }
+     
  }
  function handleApprovalResponse(response) {
      console.log(response);
@@ -180,7 +180,6 @@ echo '</div>';
  }
 
  function rejectAllItemsToThisBorrowerId(borrowerId) {
-     if (confirm('Are you sure you want to reject all items to this user?')) {
          // Send an AJAX request to reject all items
          $.ajax({
              type: 'GET',
@@ -193,7 +192,7 @@ echo '</div>';
                  console.error('AJAX request failed. Status: ' + status + ', Error: ' + error);
              }
          });
-     }
+    
  }
 
  function handleRejectResponse(response) {

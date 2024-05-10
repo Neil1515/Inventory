@@ -70,7 +70,7 @@ if ($stmt) {
                             echo '<div class="card-body">';
                             echo '<h5 class="card-title">' . $item_row['categoryname'] . '</h5>';
                             echo '<div class="mb-3 text-center">';
-                            echo '<img src="' . $imagePath . '" alt="Image" width="70">';
+                            echo '<img src="' . $imagePath . '" alt="Image" width="90">';
                             echo '</div>';
                             echo '<h7 class="text-center">' . $item_row['subcategoryname'] . '<br></h7>';
                             echo '<h7 class="card-text">' . $item_row['itembrand'] . '<br></h7>';

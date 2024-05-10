@@ -49,8 +49,6 @@ if ($result !== false) {
     echo "Error: " . $con->error;
 }
 
-
-
 // Retrieve user information based on the logged-in user ID
 $staffId = $_SESSION['staff_id'];
 $query = "SELECT * FROM tblusers WHERE id = ?";

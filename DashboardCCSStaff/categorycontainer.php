@@ -147,7 +147,7 @@ if (isset($_GET["categoryname"])) {
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">Category Name</th>
-                        <th scope="col">Total Item</th>
+                        <th scope="col">Quantity</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
