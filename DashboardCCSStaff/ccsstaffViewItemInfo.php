@@ -1,4 +1,4 @@
-<!-- ccsstaffViewRemarksItem.php -->
+<!-- ccsstaffViewItemInfo.php -->
 <?php
 session_start();
 // Include necessary files
@@ -67,14 +67,7 @@ if ($stmt) {
             </div>
             <!-- Main container on the right -->
             <div class="col-md-10">
-                <div class="row">
-                    <div class="col-md">
-                        <h4 class="text-start"><i class="fas fa-plus-circle me-2"></i>Items</h4>
-                    </div>
-                    <div class="col-md-10 text-end">
-                        <a href="ccsstaffInventoryProperties.php" class="btn btn-danger">Back</a>
-                    </div>
-                </div>
+                
                 <?php
                 if (isset($_GET["msg_success"])) {
                     echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
@@ -109,21 +102,47 @@ if ($stmt) {
                         mysqli_stmt_bind_param($stmtItemDetails, "i", $itemId);
                         mysqli_stmt_execute($stmtItemDetails);
                         $resultItemDetails = mysqli_stmt_get_result($stmtItemDetails);
-
+                        
                         if ($resultItemDetails && $rowItemDetails = mysqli_fetch_assoc($resultItemDetails)) {
-
+                            if (isset($rowItemDetails['subcategoryname']) && isset($rowItemDetails['itembrand'])) {
+                                echo '<div class="row align-items-center">
+                                    <div class="col-md-auto">'; // Adjust the column width as needed
+                            
+                                // Check and display subcategory image
+                                $imagePath = "inventory/SubcategoryItemsimages/" . $rowItemDetails["subcategoryname"] . ".png";
+                                if (file_exists($imagePath)) {
+                                    echo '<img src="' . $imagePath . '" alt="Subcategory Image" width="60" height="60">';
+                                } else {
+                                    echo '<img src="/inventory/SubcategoryItemsimages/defaultimageitem.png" alt="Default Image" width="60" height="60">';
+                                }
+                            
+                                echo '</div>
+                                    <div class="col-md-9">';
+                                
+                                echo '<h4>' . $rowItemDetails["subcategoryname"] . ' <span class="text-danger">(' . $rowItemDetails["itembrand"] . ')</span></h4>
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        <a href="ccsstaffInventoryProperties.php" class="btn btn-danger"><i class="fas fa-arrow-left"></i> Back</a>
+                                    </div>
+                                </div>';
+                            } else {
+                                echo "Subcategory name or item brand not found.";
+                            }
+                            
+                            
                             // Display item details and other items with the same brand in a single table
                             echo '<table class="table">';
                             echo '<thead>';
                             echo '<tr>';
-                            echo '<th scope="col">Item ID</th>';
-                            echo '<th scope="col">Item Description</th>';
-                            echo '<th scope="col">Subcategory</th>';
+                            //echo '<th scope="col">Item ID</th>';
+                            //echo '<th scope="col">Item Description</th>';
+                            //echo '<th scope="col">Subcategory</th>';
+                            echo '<th scope="col">Status</th>';
                             echo '<th scope="col">Model No</th>';
                             echo '<th scope="col">Serial No</th>';
                             echo '<th scope="col">Date of Purchase</th>';
                             echo '<th scope="col">Unit Cost</th>';
-                            echo '<th scope="col">Status</th>';
+                           
                             echo '<th scope="col">Item Condition</th>';
                             echo '<th scope="col">Remarks</th>';
                             echo '</tr>';
@@ -132,39 +151,43 @@ if ($stmt) {
                             
                             // Display item details row
                             echo '<tr>';
-                            echo '<td>' . $rowItemDetails['id'] . '</td>';
-                            echo '<td>' . $rowItemDetails['itembrand'] . '</td>';
-                            echo '<td>' . $rowItemDetails['subcategoryname'] . '</td>';
+                            //echo '<td>' . $rowItemDetails['id'] . '</td>';
+                            //echo '<td>' . $rowItemDetails['itembrand'] . '</td>';
+                            //echo '<td>' . $rowItemDetails['subcategoryname'] . '</td>';
+                            echo '<td>' . $rowItemDetails['status'] . '</td>';
                             echo '<td>' . $rowItemDetails['modelno'] . '</td>';
                             echo '<td>' . $rowItemDetails['serialno'] . '</td>';
                             echo '<td>' . $rowItemDetails['datepurchased'] . '</td>';
                             echo '<td>' . $rowItemDetails['unitcost'] . '</td>';
-                            echo '<td>' . $rowItemDetails['status'] . '</td>';
+                           
                             echo '<td>' . $rowItemDetails['itemcondition'] . '</td>';
                             echo '<td>' . $rowItemDetails['remarks'] . '</td>';
                             echo '</tr>';
                             
                             // Fetch other items with the same itembrand
-                            $querySameBrandItems = "SELECT * FROM tblitembrand WHERE itembrand = ? AND categoryname = ? AND subcategoryname = ? AND modelno = ? AND serialno = ? AND datepurchased = ? AND unitcost = ?  AND id != ?";
+                            $querySameBrandItems = "SELECT * FROM tblitembrand WHERE itembrand = ? AND categoryname = ? AND subcategoryname = ?  AND assignfor = ?  AND id != ?";
                             $stmtSameBrandItems = mysqli_prepare($con, $querySameBrandItems);
-
+                            
                             if ($stmtSameBrandItems) {
-                                mysqli_stmt_bind_param($stmtSameBrandItems, "sssssssi", $rowItemDetails['itembrand'], $rowItemDetails['categoryname'], $rowItemDetails['subcategoryname'], $rowItemDetails['modelno'], $rowItemDetails['serialno'], $rowItemDetails['datepurchased'], $rowItemDetails['unitcost'], $itemId);
+                                mysqli_stmt_bind_param($stmtSameBrandItems, "ssssi", $rowItemDetails['itembrand'], $rowItemDetails['categoryname'], $rowItemDetails['subcategoryname'], $rowItemDetails['assignfor'], $itemId);
                                 mysqli_stmt_execute($stmtSameBrandItems);
                                 $resultSameBrandItems = mysqli_stmt_get_result($stmtSameBrandItems);
+                            
 
                                 if ($resultSameBrandItems) {
                                     // Display other items rows
                                     while ($rowSameBrandItem = mysqli_fetch_assoc($resultSameBrandItems)) {
                                         echo '<tr>';
-                                        echo '<td>' . $rowSameBrandItem['id'] . '</td>';
-                                        echo '<td>' . $rowSameBrandItem['itembrand'] . '</td>';
-                                        echo '<td>' . $rowSameBrandItem['subcategoryname'] . '</td>';
+                                        //echo '<td>' . $rowSameBrandItem['id'] . '</td>';
+                                        //echo '<td>' . $rowSameBrandItem['itembrand'] . '</td>';
+                                        //echo '<td>' . $rowSameBrandItem['subcategoryname'] . '</td>';
+                                        echo '<td>' . $rowSameBrandItem['status'] . '</td>';
                                         echo '<td>' . $rowSameBrandItem['modelno'] . '</td>';
                                         echo '<td>' . $rowSameBrandItem['serialno'] . '</td>';
                                         echo '<td>' . $rowSameBrandItem['datepurchased'] . '</td>';
                                         echo '<td>' . $rowSameBrandItem['unitcost'] . '</td>';
-                                        echo '<td>' . $rowSameBrandItem['status'] . '</td>';
+                                        
+                                        echo '<td>' . $rowSameBrandItem['itemcondition'] . '</td>';
                                         echo '<td>' . $rowSameBrandItem['remarks'] . '</td>';
                                         echo '</tr>';
                                     }

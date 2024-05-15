@@ -84,7 +84,7 @@ $resultitems = mysqli_query($con, $queryitems);
                     
                             $currentAssignFor = $row['assignfor'];
                         }
-                    
+                
                         // Display the subcategory and other item details
                         echo "<tr class='item-details-row align-middle' >";
                         $imagePath = 'inventory/SubcategoryItemsimages/' . $row['subcategoryname'] . '.png';
@@ -100,7 +100,7 @@ $resultitems = mysqli_query($con, $queryitems);
                         echo "<td class='text-center'>---</td>";
                         echo "<td class='text-center'>---</td>";
                         echo "<td>
-                                <a href='ccsstaffViewRemarksItem.php?itemId={$row['id']}' class='btn btn-outline-primary btn-sm'>
+                                <a href='ccsstaffViewItemInfo.php?itemId={$row['id']}' class='btn btn-outline-primary btn-sm'>
                                     <i class='fa-solid fa-pen-to-square fs-7 me-2'></i>View info
                                 </a>
                               </td>";
