@@ -89,8 +89,9 @@ if ($stmt) {
                 }
                 //include('bwerdashboardpage.php');
                 ?>
-                <!-- Modal HTML Structure -->
-                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+                <!-- Modal HTML Structure
+                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true"> -->
+                <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true" data-bs-backdrop="static">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">

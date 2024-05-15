@@ -83,8 +83,7 @@ if ($resultBorrowers && mysqli_num_rows($resultBorrowers) > 0) {
                         <div class="card me-2">
                             <div class="card-body">
                                 <h5 class="card-title">Name: <a href="ccstaffBorrowerProfile.php?borrower_id=<?php echo $borrowerId ?>" style='text-decoration: none;'><?php echo $borrowerDetails['fname'] . ' ' . $borrowerDetails['lname']; ?></a> </h5>
-                                <p class="card-text">Borrower ID: <?php echo $borrowerDetails['id']; ?></p>
-                                <p class="card-text">Type: <?php echo $borrowerDetails['usertype']; ?></p>
+                                <p class="card-text"><?php echo $borrowerDetails['usertype']; ?> ID: <?php echo $borrowerDetails['id']; ?></p>
                                 <p class="card-text">Number of item(s): <?php echo $rowItemCount['itemCount']; ?></p>
 
                                 <!-- Display the item IDs with Approved status and their subcategories with quantity -->

@@ -187,7 +187,6 @@ a {
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     function approveItem(itemId, borrowerId) {
-        if (confirm('Are you sure you want to approve this item?')) {
         $.ajax({
             type: "POST",
             url: "ccsapprove_item.php", // PHP script to handle the AJAX request
@@ -199,11 +198,10 @@ a {
                 window.location.href = 'ccsstaffViewBorrower_all_items.php?borrowerId=' + borrowerId + '&msg_success=Items approved successfully';
             }
         });
-    }
+    
     }
 
     function rejectItem(itemId, borrowerId) {
-        if (confirm('Are you sure you want to reject this item?')) {
         $.ajax({
             type: "POST",
             url: "ccsreject_item.php", // PHP script to handle the AJAX request
@@ -215,7 +213,6 @@ a {
                 window.location.href = 'ccsstaffViewBorrower_all_items.php?borrowerId=' + borrowerId + '&msg_success=Item rejected successfully';
             }
         });
-    }
     }
 
 </script>

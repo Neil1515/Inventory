@@ -86,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Failed: " . mysqli_error($con);
             exit();
         }
-
         mysqli_stmt_close($insertStmt);
     } else {
         echo "Failed to prepare statement: " . mysqli_error($con);

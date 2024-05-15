@@ -171,7 +171,7 @@ echo '</div>';
 echo '</div>';
 ?>
 <!-- Modalrelease HTML Structure -->
-<div class="modal fade" id="confirmationModalrelease" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModalrelease" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -196,7 +196,7 @@ echo '</div>';
 </div>
 
 <!-- Modalreject HTML Structure -->
-<div class="modal fade" id="confirmationModalreject" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModalreject" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -226,7 +226,7 @@ echo '</div>';
 <script>
 function approveAllItemsToThisBorrowerId(borrowerId, borrowerName) {
      // Set the confirmation message
-     $('#modalMessage').html('Are you sure you want to <strong class="text-success">RELEASE</strong> all items to this user? <br><h5><strong class="text-danger">'+borrowerName+'</strong></h5>');
+     $('#modalMessage').html('Are you sure you want to <strong class="text-success">RELEASE ALL </strong> items to this user? <br><h5><strong class="text-danger">'+borrowerName+'</strong></h5>');
     // Show the confirmation modal
     $('#confirmationModalrelease').modal('show');
 
@@ -236,7 +236,7 @@ function approveAllItemsToThisBorrowerId(borrowerId, borrowerName) {
 
 function rejectAllItemsToThisBorrowerId(borrowerId, borrowerName) {
     // Set the confirmation message
-    $('#modalMessages').html('Are you sure you want to <strong class="text-danger">REJECT</strong> all items to this user? <h5><strong class="text-danger">' + borrowerName + '</strong></h5>');
+    $('#modalMessages').html('Are you sure you want to <strong class="text-danger">REJECT ALL </strong> items to this user? <h5><strong class="text-danger">' + borrowerName + '</strong></h5>');
     // Show the confirmation modal
     $('#confirmationModalreject').modal('show');
 

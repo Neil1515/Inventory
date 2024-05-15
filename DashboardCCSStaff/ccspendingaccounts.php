@@ -80,7 +80,7 @@ $resultPendingAccounts = mysqli_query($con, $queryPendingAccounts);
 </div> <!-- closing div for container -->
 
 <!-- Modal HTML Structure -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

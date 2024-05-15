@@ -155,7 +155,7 @@ $query = "SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONC
           AND br.datetimecanceled IS NOT NULL
           GROUP BY br.borrowerid, br.datetimecanceled
           UNION
-          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datimerejected AS datetime, 'reject' AS action 
+          SELECT br.id AS report_id, br.borrowerid, u.fname, u.lname, GROUP_CONCAT(ib.subcategoryname SEPARATOR '|') AS subcategories, br.datimerejected AS datetime, 'request is rejected' AS action 
           FROM tblborrowingreports br
           JOIN tblusers u ON br.borrowerid = u.id
           JOIN tblitembrand ib ON FIND_IN_SET(ib.id, br.itemid)
@@ -224,7 +224,7 @@ if ($stmt) {
                 } elseif ($row['action'] === 'cancel') {
                     $href = '#';  
                 } elseif ($row['action'] === 'returned') {
-                    $href = 'return.php'; // Change to appropriate URL for Return
+                    $href = 'borrowerReturn.php'; // Change to appropriate URL for Return
                 }
 
                 // Explode the concatenated subcategories

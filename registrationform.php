@@ -208,7 +208,8 @@
     if (isNaN(intValue) || intValue <= 0) {
         input.value = '';
     } else {
-        input.value = intValue;
+        //input.value = intValue;
+        input.value = intValue.toString().slice(0, 11);
     }
 }
 </script>

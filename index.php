@@ -56,7 +56,7 @@
                 echo '<p style="color: red;"><i class="fas fa-exclamation-triangle"></i> Login failed. Please check your credentials.</p>';
             }
             if (isset($_GET["msg_success"])) {
-                echo '<div class="alert alert-success alert-dismissible fade show text-center" role="alert">';
+                echo '<div id="successMessage" class="alert alert-success alert-dismissible fade show text-center" role="alert">';
                 echo $_GET["msg_success"];
                 echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
                 echo '</div>';
@@ -91,6 +91,12 @@
                 //showPasswordLabel.innerHTML = ' ';
             }
         }
+        setTimeout(function() {
+            var successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.remove();
+            }
+        }, 10000); // 10 seconds in milliseconds
     </script>
     <style>
         .register-label {

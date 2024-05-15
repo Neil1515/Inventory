@@ -152,7 +152,7 @@ if ($stmt) {
                                 <img src="<?php echo $imagePath; ?>" alt="Image" width="100" height="100">
                             </div>
                             <h7 class="card-text"><?php echo $row['itembrand']; ?><br></h7>
-                            <h7 class="card-text">Serial No: <?php echo $row['serialno']; ?><br></h7>
+                            <h class="card-text">Serial No: <span class="text-danger"><?php echo $row['serialno']; ?></span><br></h7>
                             <h7 class="card-text">Previous Condition: <?php echo $row['itemcondition']; ?><br></h7>
             
                             <!-- Dropdown for item issues return item condition-->
@@ -239,7 +239,7 @@ echo '</div>';
 ?>
 </div>
 <!-- Modal for Note -->
-<div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true">
+<div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">

@@ -145,7 +145,7 @@ foreach ($selectedItemsIds as $itemId) {
                                     <img src="<?php echo $item['imagePath']; ?>" alt="Image" width="100" height="100">
                                 </div>
                                 <h7 class="card-text"><?php echo $item['itembrand']; ?><br></h7>
-                                <h7 class="card-text">Serial No: <?php echo $item['serialno']; ?><br></h7>
+                                <h7 class="card-text">Serial No: <span class="text-danger"><?php echo $item['serialno']; ?><br></span></h7>
                                 <h7 class="card-text">Previous Condition: <?php echo $item['itemcondition']; ?><br></h7>
                                 <h7 class="text-muted">Current Condition<br></h7>
                                 <!-- Select return condition dropdown -->
