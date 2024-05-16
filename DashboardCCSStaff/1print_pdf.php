@@ -37,22 +37,7 @@ if ($stmt) {
     die('Statement preparation failed: ' . mysqli_error($con));
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Reports</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="short icon" type="x-icon" href="/Inventory/images/imsicon.png">
-    <link rel="stylesheet" type="text/css" href="staffstyles.css">
-    <!-- Bootstrap and Font Awesome -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 
-</head>
-<body>
 <?php
 ob_start();
 // Database connection
@@ -69,12 +54,21 @@ if (!$con) {
     die('Database connection failed: ' . mysqli_connect_error());
 }
 
-
+// Add a global variable to hold the row count for Approved items
+$totalRowsCountApproved = 0;
+$totalRowsCountPendingBorrow = 0;
+$totalRowsCountPendingReserve = 0;
+$totalRowsCountApproveReserve = 0;
+$totalRowsCountReturned = 0;
+$totalRowsCountNoIssue = 0;
+$totalRowsCountDamage = 0;
+$totalRowsCountLost = 0;
 // Function to generate table rows based on filtered data
 function generateRows($con, $start_date, $end_date, $search_query) {
-   // Retrieve search query from GET parameter
-$search_query = isset($_GET['search']) ? $_GET['search'] : '';
-
+    global $totalRowsCount, $totalRowsCountApproved, $totalRowsCountPendingBorrow, $totalRowsCountPendingReserve, $totalRowsCountApproveReserve, $totalRowsCountReturned,
+    $totalRowsCountNoIssue, $totalRowsCountDamage, $totalRowsCountLost;
+    // Retrieve search query from GET parameter
+    $search_query = isset($_GET['search']) ? $_GET['search'] : '';
 
     // Modify the SQL query to include search functionality
     $query = "SELECT br.itemreqstatus, br.itemid, br.returnitemcondition, ib.subcategoryname,
@@ -104,7 +98,7 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
     }
 
     // Add ORDER BY clause to order by datetimereqborrow in descending order
-    $query .= " ORDER BY br.id DESC"; 
+    $query .= " ORDER BY br.id DESC";
 
     $result = mysqli_query($con, $query);
     $rows = '';
@@ -114,6 +108,30 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
         // Check if the value is NULL, if so, display ---
         $itemStatus = $row['itemreqstatus'] ?? '---';
         $rows .= "<td>{$itemStatus}</td>";
+
+        // Increment the total rows count
+        $totalRowsCount++;
+
+        switch ($itemStatus) {
+            case "Approved":
+                $totalRowsCountApproved++;
+                break;
+            case "Pending Borrow":
+                $totalRowsCountPendingBorrow++;
+                break;
+            case "Pending Reserve":
+                $totalRowsCountPendingReserve++;
+                break;
+            case "Approve Reserve":
+                $totalRowsCountApproveReserve++;
+                break;
+            case "Returned":
+                $totalRowsCountReturned++;
+                break;
+            default:
+                // If status doesn't match any of the above, do nothing
+                break;
+        }
 
         // Similarly, check other fields and display --- if NULL
         $itemName = $row['subcategoryname'] ?? 'Item Not Found';
@@ -139,6 +157,20 @@ $search_query = isset($_GET['search']) ? $_GET['search'] : '';
         $dateTimeReturn = $row['datetimereturn'] ? date("F d, Y g:i A", strtotime($row['datetimereturn'])) : '---';
         $rows .= "<td class='text-center'>{$dateTimeReturn}</td>";
 
+        switch ($row['returnitemcondition']) {
+            case 'No Issue':
+                $totalRowsCountNoIssue++;
+                break;
+            case 'Damage':
+                $totalRowsCountDamage++;
+                break;
+            case 'Lost':
+                $totalRowsCountLost++;
+                break;
+            default:
+                break;
+        }
+
         $returncondition = $row['returnitemcondition'] ?? '---';
         $rows .= "<td class='text-center'>{$returncondition}</td>";
         $rows .= "</tr>";
@@ -160,7 +192,7 @@ if ($rowDean = mysqli_fetch_assoc($resultDean)) {
         $deanSalutation = 'Mr.';
     } else {
         // Use appropriate salutation for female deans
-        $deanSalutation = 'Dr.';
+        $deanSalutation = 'Mrs.';
     }
 }
 
@@ -185,9 +217,10 @@ if ($stmt) {
     }
     mysqli_stmt_close($stmt);
 }
+
 $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetTitle("Borrowers Report");
+$pdf->SetTitle("Inventory Borrowers Report");
 $pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
 $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -207,12 +240,12 @@ $current_date = date('F d, Y');
 $content = '';
 $content .= '
     <h2 style="margin: 20; text-align: center;">CCS-IMS Inventory Management System</h2>
-    <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandue</p>
+    <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandaue</p>
     <p style="margin-top: 0px; text-align: center;">Inventory Borrowers Report</p>
     <p style="margin: 0; text-align: center;">As of ' . $current_date . '</p>
-    <p style="margin-bottom: 0px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
+    <p style="margin-bottom: 10px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
     
-    <table border="1" cellspacing="0" cellpadding="3">
+    <table border="1" cellspacing="0" cellpadding="3" style="width: 100%; margin-bottom: 10px;">
         <tr align="center">
             <th>Status</th>
             <th>Item</th>
@@ -227,14 +260,17 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '');
 $content .= '</table>';
-$content .= '<h3>Prepared by:<br></h3>';
-$content .= '<br><br><h3 style="margin-top: 20px;"><u>' . strtoupper($staffSalutation) . ' ' . strtoupper($staffName) . '</u><br>'. $userType .'</h3>';
-$content .= '<h3><br></h3>';
-$content .= '<h3>Noted by:<br></h3>';
-$content .= '<h3 style="margin-top: 20px;"><u>' . strtoupper($deanSalutation) . ' ' . strtoupper($deanName) . '</u><br>CCS '. $usertypeDean .'</h3>';
+$content .= '<p>Total Rows: '.$totalRowsCount.' <br>';
+$content .= 'Status: • Approved '.$totalRowsCountApproved.' • Returned '.$totalRowsCountReturned.' • Pending Borrow '.$totalRowsCountPendingBorrow.' • Pending Reserve '.$totalRowsCountPendingReserve.' •  Approve Reserve '.$totalRowsCountApproveReserve.'<br>';
+$content .= 'Return Condition: • No Issue '.$totalRowsCountNoIssue.' • Damage '.$totalRowsCountDamage.' • Lost '.$totalRowsCountLost.'';
+$content .= '</p>';
+$content .= '<h3>Prepared by:</h3>';
+$content .= '<h3><u>' . strtoupper($staffSalutation) . ' ' . strtoupper($staffName) . '</u><br>'. $userType .'</h3>';
+$content .= '<h3>Noted by:</h3>';
+$content .= '<h3><u>' . strtoupper($deanSalutation) . ' ' . strtoupper($deanName) . '</u><br>CCS '. $usertypeDean .'</h3>';
 // Write the HTML content to the PDF and output it
 $pdf->writeHTML($content);
-$pdf->Output('borrowersdata.pdf', 'I');
+$pdf->Output('Inventoryborrowersreports.pdf', 'I');
 ob_end_flush();
 ?>
     <!-- Google Fonts -->
@@ -248,5 +284,3 @@ ob_end_flush();
     <link rel="stylesheet" href="assets/css/datatables.min.css">
     <!-- Bootstrap and Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

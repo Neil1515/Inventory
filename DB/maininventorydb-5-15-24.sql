@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2024 at 08:05 PM
+-- Generation Time: May 10, 2024 at 06:38 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -75,19 +75,6 @@ CREATE TABLE `tblborrowingreports` (
   `reservepurpose` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblborrowingreports`
---
-
-INSERT INTO `tblborrowingreports` (`id`, `itemid`, `approvebyid`, `approvereservebyid`, `rejectedbyid`, `approvereturnbyid`, `borrowerid`, `itemreqstatus`, `datetimereqborrow`, `datetimereqreservation`, `datimeapproved`, `datetimereserve`, `updatereservation`, `datetimeapprovereserved`, `datimerejected`, `datetimecanceled`, `datetimereturn`, `datetimereqreturn`, `returnremarks`, `returncode`, `returnitemcondition`, `reservelocation`, `reservepurpose`) VALUES
-(1350, 144, 3, NULL, NULL, 3, 19104629, 'Returned', '2024-05-15 21:52:56', NULL, '2024-05-15 21:53:01', NULL, NULL, NULL, NULL, NULL, '2024-05-15 23:43:41', '2024-05-15 23:43:30', 'sad', 'BM4TENJF', 'Lost', NULL, NULL),
-(1351, 87, 0, NULL, 3, NULL, 19104629, 'Rejected', '2024-05-15 23:00:53', NULL, NULL, NULL, NULL, NULL, '2024-05-15 23:02:19', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
-(1352, 88, 3, NULL, NULL, 3, 19104629, 'Returned', '2024-05-15 23:00:53', NULL, '2024-05-15 23:02:05', NULL, NULL, NULL, NULL, NULL, '2024-05-16 01:56:36', NULL, 'sad', 'XVPYIAW9', 'No Issue', NULL, NULL),
-(1353, 87, 0, 3, NULL, NULL, 19104629, 'Canceled', NULL, '2024-05-15 23:08:19', NULL, '2024-05-15 23:14:00', '2024-05-15 23:09:10', '2024-05-15 23:08:30', NULL, '2024-05-15 23:09:48', NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1354, 89, 0, 3, NULL, NULL, 19104629, 'Expired Reservation', NULL, '2024-05-15 23:08:19', NULL, '2024-05-15 23:14:00', '2024-05-15 23:09:10', '2024-05-15 23:08:30', NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1355, 83, 0, NULL, 3, NULL, 19104629, 'Rejected', NULL, '2024-05-15 23:10:22', NULL, '2024-05-15 23:15:00', NULL, NULL, '2024-05-15 23:10:35', NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1356, 83, 0, NULL, 3, NULL, 19104629, 'Rejected', '2024-05-15 23:38:36', NULL, NULL, NULL, NULL, NULL, '2024-05-15 23:41:05', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -140,8 +127,8 @@ INSERT INTO `tblitembrand` (`id`, `staffid`, `staffname`, `itembrand`, `category
 (141, 3, 'Gian Mahusay', 'A4tech', 'Phones and Other Devices', 'Webcam', 'Yes', '', 'PKS-810G', 'SN-2020-AYIN', 500, 'Available', 'New', '2024-05-10 14:17:24', '', '2024-05-10'),
 (142, 3, 'Gian Mahusay', 'Logitech Stereo', 'Phones and Other Devices', 'Speaker', 'Yes', '', '', 'SN-4123-DVSW', 0, 'Available', 'New', '2024-05-10 14:18:59', '', '2024-05-10'),
 (143, 3, 'Gian Mahusay', 'Mini Display Port', 'Phones and Other Devices', 'VGA', 'Yes', '', '', 'SN-4675-XBIN', 0, 'Available', 'New', '2024-05-10 14:20:50', '', '2024-05-10'),
-(144, 3, 'Gian Mahusay', 'Super Vision Gaming Monitor HD 1080p 165HZ', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-7232-SQAA', 0, 'Available', 'New', '2024-05-10 18:52:16', '', '2024-05-10'),
-(145, 3, 'Gian Mahusay', 'Epson', 'Appliances', 'Stand Fan', 'Yes', '', '', 'SN-8456-EPSL', 0, 'Available', 'New', '2024-05-10 23:25:15', '', '2024-05-10'),
+(144, 3, 'Gian Mahusay', 'Super Vision Gaming Monitor HD 1080p 165HZ', 'Computer Hardware and Projector', 'Monitor', 'Yes', NULL, '', '', 0, 'Available', 'New', '2024-05-10 18:52:16', NULL, '2024-05-10'),
+(145, 3, 'Gian Mahusay', 'Epson', 'Appliances', 'Stand Fan', 'No', '', '', 'SN-8456-EPSL', 0, 'Standby', 'New', '2024-05-10 23:25:15', '', '2024-05-10'),
 (146, 3, 'Gian Mahusay', 'Epson', 'Appliances', 'Stand Fan', 'No', '', '', 'SN-8231-XADD', 0, 'Standby', 'New', '2024-05-10 23:25:15', '', '2024-05-10');
 
 -- --------------------------------------------------------
@@ -179,14 +166,6 @@ CREATE TABLE `tblmessages` (
   `status` enum('unread','read') DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblmessages`
---
-
-INSERT INTO `tblmessages` (`id`, `sender_id`, `message`, `timestamp`, `status`) VALUES
-(250, 3, 'awww', '2024-05-15 16:56:01', 'unread'),
-(251, 3, 'sad', '2024-05-15 16:56:06', 'unread');
-
 -- --------------------------------------------------------
 
 --
@@ -199,14 +178,6 @@ CREATE TABLE `tblmessage_recipients` (
   `recipient_id` int(11) DEFAULT NULL,
   `status` enum('unread','read') DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblmessage_recipients`
---
-
-INSERT INTO `tblmessage_recipients` (`id`, `message_id`, `recipient_id`, `status`) VALUES
-(590, 250, 19104629, 'read'),
-(591, 251, 19104629, 'read');
 
 -- --------------------------------------------------------
 
@@ -309,9 +280,7 @@ INSERT INTO `tblusers` (`id`, `addedbyid`, `usertype`, `fname`, `lname`, `passwo
 (2, 0, 'Dean', 'Aurora', 'Miro', 'uclm-2', 'offline', 'Active', 'Miro2@gmail.com', '', '', NULL, NULL, NULL),
 (3, 0, 'CCS Staff', 'Gian', 'Mahusay', 'uclm-3', 'offline', 'Active', 'Mahusay3@gmail.com', 'Female', '', NULL, NULL, NULL),
 (15, 15, 'Admin', 'John', 'Neil', 'admin', 'offline', 'Active', 'admin@gmail.com', '', '', NULL, NULL, NULL),
-(69, 0, 'Student', 'Sample', 'Sample', 'Ayingneil100', 'offline', 'Pending', 'ayingneil2215@gmail.com', 'Female', 'Sample', NULL, '2024-05-15 23:36:05', NULL),
-(19104629, 0, 'Student', 'John Neil', 'Aying', 'Uclm-19104629', 'online', 'Active', 'ayingneil15@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-11 06:20:55', '2024-05-15 20:29:24'),
-(19116243, 15, 'Student', 'John Wilson', 'Solamo', 'uclm-19116243', 'offline', 'Active', 'johnwilson@gmail.com', 'Male', 'College of Computer Studies', NULL, '2024-05-10 08:19:42', '2024-05-10 08:19:42'),
+(19116243, 15, 'Student', 'John Wilson', 'Solamo', 'uclm-19116243', 'online', 'Active', 'johnwilson@gmail.com', 'Male', 'College of Computer Studies', NULL, '2024-05-10 08:19:42', '2024-05-10 08:19:42'),
 (20169219, 0, 'Student', 'Lance Carvin', 'Tinapay', 'Uclm-20169219', 'offline', 'Active', 'tinapaylance@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-10 14:39:55', '2024-05-10 14:40:20'),
 (20169225, 0, 'Student', 'James Rovic', 'Amistoso', 'Uclm-20169225', 'offline', 'Active', 'Rovic.amistoso@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-10 14:38:32', '2024-05-10 14:40:18'),
 (20175114, 0, 'Student', 'John Victor', 'Ong', 'Uclm-20175114', 'offline', 'Active', 'jvkoong@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-10 14:30:36', '2024-05-10 14:31:42');
@@ -396,7 +365,7 @@ ALTER TABLE `tblborrowernotifreports`
 -- AUTO_INCREMENT for table `tblborrowingreports`
 --
 ALTER TABLE `tblborrowingreports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1357;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1350;
 
 --
 -- AUTO_INCREMENT for table `tblitembrand`
@@ -414,13 +383,13 @@ ALTER TABLE `tblitemcategory`
 -- AUTO_INCREMENT for table `tblmessages`
 --
 ALTER TABLE `tblmessages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
 -- AUTO_INCREMENT for table `tblmessage_recipients`
 --
 ALTER TABLE `tblmessage_recipients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=592;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=590;
 
 --
 -- AUTO_INCREMENT for table `tblpendingitemremoval`

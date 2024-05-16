@@ -78,9 +78,21 @@ if ($stmt) {
 }
 
 
-
+// Add a global variable to hold the row count for Approved items
+$totalRowsCountApproved = 0;
+$totalRowsCountPendingBorrow = 0;
+$totalRowsCountPendingReserve = 0;
+$totalRowsCountApproveReserve = 0;
+$totalRowsCountReturned = 0;
+$totalRowsCountNoIssue = 0;
+$totalRowsCountDamage = 0;
+$totalRowsCountLost = 0;
 // Function to generate table rows based on filtered data
 function generateRows($con, $start_date, $end_date, $searchValue, $borrowerIdFromDB) {
+
+    global $totalRowsCount, $totalRowsCountApproved, $totalRowsCountPendingBorrow, $totalRowsCountPendingReserve, $totalRowsCountApproveReserve, $totalRowsCountReturned,
+    $totalRowsCountNoIssue, $totalRowsCountDamage, $totalRowsCountLost;
+
     // Retrieve search query from GET parameter
     $searchValue = isset($_GET['search']) ? $_GET['search'] : '';
 
@@ -150,6 +162,29 @@ function generateRows($con, $start_date, $end_date, $searchValue, $borrowerIdFro
                 $itemStatus = $row['itemreqstatus'] ?? '---';
                 $rows .= "<td>{$itemStatus}</td>";
 
+                // Increment the total rows count
+                $totalRowsCount++;
+
+                switch ($itemStatus) {
+                    case "Approved":
+                        $totalRowsCountApproved++;
+                        break;
+                    case "Pending Borrow":
+                        $totalRowsCountPendingBorrow++;
+                        break;
+                    case "Pending Reserve":
+                        $totalRowsCountPendingReserve++;
+                        break;
+                    case "Approve Reserve":
+                        $totalRowsCountApproveReserve++;
+                        break;
+                    case "Returned":
+                        $totalRowsCountReturned++;
+                        break;
+                    default:
+                        // If status doesn't match any of the above, do nothing
+                        break;
+                }
                 // Similarly, check other fields and display --- if NULL
                 $itemName = $row['subcategoryname'] ?? 'Item Not Found';
                 $rows .= "<td>{$itemName}</td>";
@@ -169,6 +204,20 @@ function generateRows($con, $start_date, $end_date, $searchValue, $borrowerIdFro
                 // Check if the value is NULL, if so, display ---
                 $dateTimeReturn = $row['datetimereturn'] ? date("F d, Y g:i A", strtotime($row['datetimereturn'])) : '---';
                 $rows .= "<td class='text-center'>{$dateTimeReturn}</td>";
+
+                switch ($row['returnitemcondition']) {
+                    case 'No Issue':
+                        $totalRowsCountNoIssue++;
+                        break;
+                    case 'Damage':
+                        $totalRowsCountDamage++;
+                        break;
+                    case 'Lost':
+                        $totalRowsCountLost++;
+                        break;
+                    default:
+                        break;
+                }
 
                 $returncondition = $row['returnitemcondition'] ?? '---';
                 $rows .= "<td class='text-center'>{$returncondition}</td>";
@@ -218,7 +267,7 @@ if ($rowStaff = mysqli_fetch_assoc($resultStaff)) {
 }
 $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetTitle("Borrowers Report");
+$pdf->SetTitle("Reports of $borrowerName");
 $pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
 $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -242,7 +291,7 @@ $content .= '
     <p style="margin: 0; text-align: center;">University Of Cebu Lapu-lapu & Mandue</p>
     <p style="margin: 0; text-align: center;">As of ' . $current_date . '</p>
     <p style="margin-bottom: 0px; text-align: right;">Date Filter: ' . ($_GET['start_date'] ?? '') . ' - ' . ($_GET['end_date'] ?? '') .' | Search: ' . ($_GET['search'] ?? 'none') . '</p>
-    <h4 style="margin-top: 0px; ">Report of <u>'.$borrowerSalutation.' '.$borrowerName.' ('. $borrowerRow['usertype'].')</u></h4>
+    <h3 style="margin-top: 0px; ">Reports of <u>'.$borrowerSalutation.' '.$borrowerName.' ('. $borrowerRow['usertype'].')</u></h3>
     <table border="1" cellspacing="0" cellpadding="3">
         <tr align="center">
             <th>Status</th>
@@ -257,6 +306,9 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '', $borrowerIdFromDB);
 $content .= '</table>';
+$content .= '<p>Total Rows: '.$totalRowsCount.'<br>';
+$content .= 'Status: • Approved '.$totalRowsCountApproved.' • Returned '.$totalRowsCountReturned.' • Pending Borrow '.$totalRowsCountPendingBorrow.' • Pending Reserve '.$totalRowsCountPendingReserve.' •  Approve Reserve '.$totalRowsCountApproveReserve.'<br>';
+$content .= 'Return Condition: • No Issue '.$totalRowsCountNoIssue.' • Damage '.$totalRowsCountDamage.' • Lost '.$totalRowsCountLost.'';
 $content .= '<h3>Prepared by:<br></h3>';
 $content .= '<br><br><h3 style="margin-top: 20px;"><u>' . strtoupper($staffSalutation) . ' ' . strtoupper($staffName) . '</u><br>'. $usertypeStaff .'</h3>';
 $content .= '<h3><br></h3>';
@@ -265,7 +317,7 @@ $content .= '<h3 style="margin-top: 20px;"><u>DR. ' . strtoupper($deanName) . '<
 
 // Write the HTML content to the PDF and output it
 $pdf->writeHTML($content);
-$pdf->Output('borrowerdata.pdf', 'I');
+$pdf->Output('Inventoryborrowerreports.pdf', 'I');
 ob_end_flush();
 ?>
     <!-- Google Fonts -->
