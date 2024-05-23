@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2024 at 02:46 AM
+-- Generation Time: May 15, 2024 at 08:05 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -86,8 +86,7 @@ INSERT INTO `tblborrowingreports` (`id`, `itemid`, `approvebyid`, `approvereserv
 (1353, 87, 0, 3, NULL, NULL, 19104629, 'Canceled', NULL, '2024-05-15 23:08:19', NULL, '2024-05-15 23:14:00', '2024-05-15 23:09:10', '2024-05-15 23:08:30', NULL, '2024-05-15 23:09:48', NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
 (1354, 89, 0, 3, NULL, NULL, 19104629, 'Expired Reservation', NULL, '2024-05-15 23:08:19', NULL, '2024-05-15 23:14:00', '2024-05-15 23:09:10', '2024-05-15 23:08:30', NULL, NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
 (1355, 83, 0, NULL, 3, NULL, 19104629, 'Rejected', NULL, '2024-05-15 23:10:22', NULL, '2024-05-15 23:15:00', NULL, NULL, '2024-05-15 23:10:35', NULL, NULL, NULL, NULL, '', NULL, 'sad', 'sad'),
-(1356, 83, 0, NULL, 3, NULL, 19104629, 'Rejected', '2024-05-15 23:38:36', NULL, NULL, NULL, NULL, NULL, '2024-05-15 23:41:05', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL),
-(1357, 144, 3, NULL, NULL, NULL, 19116243, 'Approved', '2024-05-16 22:37:58', NULL, '2024-05-16 22:58:06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', NULL, NULL, NULL);
+(1356, 83, 0, NULL, 3, NULL, 19104629, 'Rejected', '2024-05-15 23:38:36', NULL, NULL, NULL, NULL, NULL, '2024-05-15 23:41:05', NULL, NULL, NULL, NULL, '', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -141,7 +140,7 @@ INSERT INTO `tblitembrand` (`id`, `staffid`, `staffname`, `itembrand`, `category
 (141, 3, 'Gian Mahusay', 'A4tech', 'Phones and Other Devices', 'Webcam', 'Yes', '', 'PKS-810G', 'SN-2020-AYIN', 500, 'Available', 'New', '2024-05-10 14:17:24', '', '2024-05-10'),
 (142, 3, 'Gian Mahusay', 'Logitech Stereo', 'Phones and Other Devices', 'Speaker', 'Yes', '', '', 'SN-4123-DVSW', 0, 'Available', 'New', '2024-05-10 14:18:59', '', '2024-05-10'),
 (143, 3, 'Gian Mahusay', 'Mini Display Port', 'Phones and Other Devices', 'VGA', 'Yes', '', '', 'SN-4675-XBIN', 0, 'Available', 'New', '2024-05-10 14:20:50', '', '2024-05-10'),
-(144, 3, 'Gian Mahusay', 'Super Vision Gaming Monitor HD 1080p 165HZ', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-7232-SQAA', 0, 'Borrowed', 'New', '2024-05-10 18:52:16', '', '2024-05-10'),
+(144, 3, 'Gian Mahusay', 'Super Vision Gaming Monitor HD 1080p 165HZ', 'Computer Hardware and Projector', 'Monitor', 'Yes', '', '', 'SN-7232-SQAA', 0, 'Available', 'New', '2024-05-10 18:52:16', '', '2024-05-10'),
 (145, 3, 'Gian Mahusay', 'Epson', 'Appliances', 'Stand Fan', 'Yes', '', '', 'SN-8456-EPSL', 0, 'Available', 'New', '2024-05-10 23:25:15', '', '2024-05-10'),
 (146, 3, 'Gian Mahusay', 'Epson', 'Appliances', 'Stand Fan', 'No', '', '', 'SN-8231-XADD', 0, 'Standby', 'New', '2024-05-10 23:25:15', '', '2024-05-10');
 
@@ -311,7 +310,7 @@ INSERT INTO `tblusers` (`id`, `addedbyid`, `usertype`, `fname`, `lname`, `passwo
 (3, 0, 'CCS Staff', 'Gian', 'Mahusay', 'uclm-3', 'offline', 'Active', 'Mahusay3@gmail.com', 'Female', '', NULL, NULL, NULL),
 (15, 15, 'Admin', 'John', 'Neil', 'admin', 'offline', 'Active', 'admin@gmail.com', '', '', NULL, NULL, NULL),
 (69, 0, 'Student', 'Sample', 'Sample', 'Ayingneil100', 'offline', 'Pending', 'ayingneil2215@gmail.com', 'Female', 'Sample', NULL, '2024-05-15 23:36:05', NULL),
-(19104629, 0, 'Student', 'John Neil', 'Aying', 'Uclm-19104629', 'offline', 'Active', 'ayingneil15@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-11 06:20:55', '2024-05-15 20:29:24'),
+(19104629, 0, 'Student', 'John Neil', 'Aying', 'Uclm-19104629', 'online', 'Active', 'ayingneil15@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-11 06:20:55', '2024-05-15 20:29:24'),
 (19116243, 15, 'Student', 'John Wilson', 'Solamo', 'uclm-19116243', 'offline', 'Active', 'johnwilson@gmail.com', 'Male', 'College of Computer Studies', NULL, '2024-05-10 08:19:42', '2024-05-10 08:19:42'),
 (20169219, 0, 'Student', 'Lance Carvin', 'Tinapay', 'Uclm-20169219', 'offline', 'Active', 'tinapaylance@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-10 14:39:55', '2024-05-10 14:40:20'),
 (20169225, 0, 'Student', 'James Rovic', 'Amistoso', 'Uclm-20169225', 'offline', 'Active', 'Rovic.amistoso@gmail.com', 'Male', 'College of Computer Studies', 'Gian Mahusay', '2024-05-10 14:38:32', '2024-05-10 14:40:18'),
@@ -397,7 +396,7 @@ ALTER TABLE `tblborrowernotifreports`
 -- AUTO_INCREMENT for table `tblborrowingreports`
 --
 ALTER TABLE `tblborrowingreports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1358;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1357;
 
 --
 -- AUTO_INCREMENT for table `tblitembrand`

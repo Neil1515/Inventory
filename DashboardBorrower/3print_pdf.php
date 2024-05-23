@@ -306,7 +306,7 @@ $content .= '
 
 $content .= generateRows($con, $_GET['start_date'] ?? '', $_GET['end_date'] ?? '', $_GET['search'] ?? '', $borrowerIdFromDB);
 $content .= '</table>';
-$content .= '<p>Total Rows: '.$totalRowsCount.'<br>';
+$content .= '<p>Total Records: '.$totalRowsCount.'<br>';
 $content .= 'Status: • Approved '.$totalRowsCountApproved.' • Returned '.$totalRowsCountReturned.' • Pending Borrow '.$totalRowsCountPendingBorrow.' • Pending Reserve '.$totalRowsCountPendingReserve.' •  Approve Reserve '.$totalRowsCountApproveReserve.'<br>';
 $content .= 'Return Condition: • No Issue '.$totalRowsCountNoIssue.' • Damage '.$totalRowsCountDamage.' • Lost '.$totalRowsCountLost.'';
 $content .= '<h3>Prepared by:<br></h3>';
